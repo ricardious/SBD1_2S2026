@@ -14,6 +14,7 @@
 \lstset{language=SQL,basicstyle=\ttfamily\footnotesize,backgroundcolor=\color{codebg},frame=single,breaklines=true,showstringspaces=false,keywordstyle=\bfseries\color{accent},commentstyle=\itshape\color{muted}}
 \lstdefinestyle{salidaoracle}{language={},basicstyle=\ttfamily\fontsize{4.6}{5.1}\selectfont,backgroundcolor=\color{codebg},frame=single,breaklines=false,columns=fullflexible,keepspaces=true,showstringspaces=false}
 \newcommand{\modelo}[2]{\begin{figure}[H]\centering\includegraphics[width=\textwidth,height=.62\textheight,keepaspectratio]{#1}\caption{#2}\end{figure}}
+\newcommand{\modeloconceptual}[2]{\begin{figure}[H]\centering\includegraphics[width=\textwidth,height=.72\textheight,keepaspectratio]{#1}\caption{#2}\end{figure}}
 \newcommand{\evidencia}[2]{\begin{figure}[H]\centering\includegraphics[width=\textwidth,height=.68\textheight,keepaspectratio]{#1}\caption{#2}\end{figure}}
 \newcommand{\importacion}[4]{\begin{figure}[H]\centering\textbf{Selección de la hoja #3 en el asistente de importación}\par\smallskip\includegraphics[width=.94\textwidth,height=.30\textheight,keepaspectratio]{#1}\par\medskip\textbf{Datos cargados en la tabla #3 de Oracle}\par\smallskip\includegraphics[width=.94\textwidth,height=.30\textheight,keepaspectratio]{#2}\caption{Importación de #3: origen Excel y comprobación visual en Oracle; #4 registros esperados.}\end{figure}\clearpage}
 \newcommand{\bloqueddl}[2]{\par\noindent\begin{minipage}{\textwidth}\lstinputlisting[firstline=#1,lastline=#2]{../entrega/03_creacion_DB.sql}\end{minipage}\par\smallskip}
@@ -43,8 +44,8 @@ La arquitectura se divide en cuatro áreas: catálogos y ubicación; personas y 
 
 \section{Modelos de datos}
 \subsection{Conceptual}
-El modelo conceptual muestra entidades y cardinalidades sin decisiones físicas. Una venta pertenece a una tienda, cliente, empleado y estado; contiene uno o más detalles y admite uno o más pagos según el negocio.
-\modelo{../modelos/modelo_conceptual.pdf}{Modelo conceptual entidad--relación.}
+El modelo conceptual sigue la notación Barker presentada en el curso: muestra únicamente las entidades y sus relaciones bidireccionales, sin atributos, llaves ni tipos físicos. La barra representa singularidad, el círculo opcionalidad y la pata de gallo pluralidad. Las relaciones muchos a muchos tienda--producto y venta--producto se transforman posteriormente en \texttt{catalogo\_producto} y \texttt{detalle\_venta} dentro de los modelos lógico y relacional.
+\modeloconceptual{../modelos/modelo_conceptual.pdf}{Modelo conceptual entidad--relación en notación Barker.}
 \subsection{Lógico}
 El modelo lógico incorpora atributos, identificadores, obligatoriedad y claves candidatas. El símbolo \# identifica clave primaria, * referencia y UQ unicidad.
 \modelo{../modelos/Logical.pdf}{Modelo lógico nativo exportado desde Oracle SQL Developer Data Modeler.}

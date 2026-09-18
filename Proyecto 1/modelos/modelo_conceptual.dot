@@ -1,30 +1,111 @@
-digraph conceptual {
-  graph [rankdir=LR, bgcolor="white", pad=0.3, nodesep=0.45, ranksep=0.9, fontname="DejaVu Sans"];
-  node [shape=box, style="rounded,filled", fillcolor="#F7EDEF", color="#A6192E", fontname="DejaVu Sans", margin="0.14,0.08"];
-  edge [color="#667085", fontname="DejaVu Sans", fontsize=9];
-  pais; departamento; municipio; tipo_tienda; tienda; persona; empleado; cliente;
-  cargo; tipo_identificacion; categoria; marca; producto; catalogo_producto;
-  venta; estado_venta; detalle_venta; pago; metodo_pago;
-  pais -> departamento [label="1:N"];
-  departamento -> municipio [label="1:N"];
-  municipio -> tienda [label="1:N"];
-  municipio -> persona [label="1:N"];
-  tipo_tienda -> tienda [label="1:N"];
-  persona -> empleado [label="1:0..1"];
-  persona -> cliente [label="1:0..1"];
-  tienda -> empleado [label="1:N"];
-  cargo -> empleado [label="1:N"];
-  tipo_identificacion -> cliente [label="1:N"];
-  categoria -> producto [label="1:N"];
-  marca -> producto [label="1:N"];
-  tienda -> catalogo_producto [label="1:N"];
-  producto -> catalogo_producto [label="1:N"];
-  tienda -> venta [label="1:N"];
-  empleado -> venta [label="1:N"];
-  cliente -> venta [label="1:N"];
-  estado_venta -> venta [label="1:N"];
-  venta -> detalle_venta [label="1:N"];
-  producto -> detalle_venta [label="1:N"];
-  venta -> pago [label="1:N"];
-  metodo_pago -> pago [label="1:N"];
+graph conceptual {
+  graph [
+    layout=neato,
+    bgcolor="white",
+    pad=0.32,
+    splines=true,
+    overlap=false,
+    outputorder=edgesfirst,
+    fontname="DejaVu Sans"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    color="#7C3AED",
+    fillcolor="#F3EFFF",
+    fontcolor="#172033",
+    fontname="DejaVu Sans Bold",
+    fontsize=12,
+    penwidth=1.4,
+    margin="0.15,0.10",
+    pin=true
+  ];
+
+  edge [
+    dir=both,
+    color="#64748B",
+    fontcolor="#475467",
+    fontname="DejaVu Sans",
+    fontsize=9,
+    penwidth=1.25,
+    arrowsize=0.72
+  ];
+
+  TITULO [
+    shape=plain,
+    pos="450,805!",
+    label=<<FONT POINT-SIZE="22" COLOR="#172033"><B>MODELO CONCEPTUAL</B></FONT><BR/><FONT POINT-SIZE="12" COLOR="#667085">Comercial La Estrella · Notación Barker</FONT>>
+  ];
+
+  DOM_UBICACION [shape=plain, pos="80,755!", label=<<FONT POINT-SIZE="11" COLOR="#2563EB"><B>UBICACIÓN</B></FONT>>];
+  DOM_ORGANIZACION [shape=plain, pos="330,755!", label=<<FONT POINT-SIZE="11" COLOR="#7C3AED"><B>ORGANIZACIÓN Y PERSONAS</B></FONT>>];
+  DOM_PRODUCTOS [shape=plain, pos="690,755!", label=<<FONT POINT-SIZE="11" COLOR="#0891B2"><B>PRODUCTOS</B></FONT>>];
+  DOM_VENTAS [shape=plain, pos="690,345!", label=<<FONT POINT-SIZE="11" COLOR="#2563EB"><B>VENTAS Y PAGOS</B></FONT>>];
+
+  PAIS [pos="80,690!", fillcolor="#EEF5FF", color="#2563EB"];
+  DEPARTAMENTO [pos="80,595!", fillcolor="#EEF5FF", color="#2563EB"];
+  MUNICIPIO [pos="80,500!", fillcolor="#EEF5FF", color="#2563EB"];
+
+  TIPO_TIENDA [pos="275,690!"];
+  TIENDA [pos="275,595!"];
+  PERSONA [pos="275,455!"];
+  EMPLEADO [pos="455,500!"];
+  CLIENTE [pos="455,405!"];
+  CARGO [pos="455,610!"];
+  TIPO_IDENTIFICACION [pos="455,300!"];
+
+  CATEGORIA [pos="650,690!", fillcolor="#ECFEFF", color="#06B6D4"];
+  MARCA [pos="805,690!", fillcolor="#ECFEFF", color="#06B6D4"];
+  PRODUCTO [pos="725,590!", fillcolor="#ECFEFF", color="#06B6D4"];
+
+  VENTA [pos="700,410!", fillcolor="#EEF5FF", color="#2563EB"];
+  ESTADO_VENTA [pos="850,455!", fillcolor="#EEF5FF", color="#2563EB"];
+  PAGO [pos="700,220!", fillcolor="#EEF5FF", color="#2563EB"];
+  METODO_PAGO [pos="850,220!", fillcolor="#EEF5FF", color="#2563EB"];
+
+  PAIS -- DEPARTAMENTO [label="agrupa / pertenece", arrowtail=tee, arrowhead=crowodot];
+  DEPARTAMENTO -- MUNICIPIO [label="agrupa / pertenece", arrowtail=tee, arrowhead=crowodot];
+  MUNICIPIO -- TIENDA [label="ubica / se ubica", arrowtail=tee, arrowhead=crowodot];
+  MUNICIPIO -- PERSONA [label="registra / reside", arrowtail=tee, arrowhead=crowodot];
+
+  TIPO_TIENDA -- TIENDA [label="clasifica / pertenece", arrowtail=tee, arrowhead=crowodot];
+  PERSONA -- EMPLEADO [label="actúa como / corresponde", arrowtail=tee, arrowhead=odottee];
+  PERSONA -- CLIENTE [label="actúa como / corresponde", arrowtail=tee, arrowhead=odottee];
+  TIENDA -- EMPLEADO [label="emplea / trabaja", arrowtail=tee, arrowhead=crowodot];
+  CARGO -- EMPLEADO [label="asigna / ocupa", arrowtail=tee, arrowhead=crowodot];
+  TIPO_IDENTIFICACION -- CLIENTE [label="identifica / utiliza", arrowtail=tee, arrowhead=crowodot];
+
+  CATEGORIA -- PRODUCTO [label="contiene / pertenece", arrowtail=tee, arrowhead=crowodot];
+  MARCA -- PRODUCTO [label="distingue / pertenece", arrowtail=tee, arrowhead=crowodot];
+  TIENDA -- PRODUCTO [
+    label="ofrece / disponible en",
+    arrowtail=crowodot,
+    arrowhead=crowodot,
+    color="#7C3AED",
+    fontcolor="#7C3AED"
+  ];
+
+  TIENDA -- VENTA [label="registra / ocurre en", arrowtail=tee, arrowhead=crowodot];
+  EMPLEADO -- VENTA [label="atiende / atendida por", arrowtail=tee, arrowhead=crowodot];
+  CLIENTE -- VENTA [label="realiza / pertenece", arrowtail=tee, arrowhead=crowodot];
+  ESTADO_VENTA -- VENTA [label="clasifica / tiene", arrowtail=tee, arrowhead=crowodot];
+  PRODUCTO -- VENTA [
+    label="aparece / incluye",
+    arrowtail=crowodot,
+    arrowhead=crowtee,
+    color="#7C3AED",
+    fontcolor="#7C3AED"
+  ];
+  VENTA -- PAGO [label="recibe / corresponde", arrowtail=tee, arrowhead=crowodot];
+  METODO_PAGO -- PAGO [label="se usa en / utiliza", arrowtail=tee, arrowhead=crowodot];
+
+  LEYENDA [
+    shape=plain,
+    pos="450,85!",
+    label=<<TABLE BORDER="0" CELLBORDER="1" COLOR="#D8E1F0" CELLSPACING="0" CELLPADDING="6">
+      <TR><TD BGCOLOR="#F3EFFF"><FONT COLOR="#7C3AED"><B>LECTURA DE LA NOTACIÓN</B></FONT></TD></TR>
+      <TR><TD><FONT POINT-SIZE="9" COLOR="#475467">barra = singular · círculo = opcional · pata de gallo = plural</FONT></TD></TR>
+    </TABLE>>
+  ];
 }
