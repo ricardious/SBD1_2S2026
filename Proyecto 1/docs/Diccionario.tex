@@ -1,24 +1,80 @@
-\documentclass[9pt,letterpaper]{article}
+\documentclass[10pt,letterpaper]{article}
 \usepackage[spanish,es-nodecimaldot]{babel}
 \usepackage{fontspec}
-\usepackage[letterpaper,margin=1.5cm]{geometry}
-\usepackage{xcolor,longtable,array,booktabs,fancyhdr,hyperref}
-\usepackage{pdflscape,multicol,soul}
-\definecolor{accent}{HTML}{A6192E}\definecolor{muted}{HTML}{667085}
+\setmainfont{TeX Gyre Heros}
+\setmonofont{Nimbus Mono PS}[Scale=0.86]
+\usepackage[letterpaper,top=1.8cm,bottom=1.8cm,left=1.7cm,right=1.7cm]{geometry}
+\setlength{\headheight}{21pt}
+\usepackage[table]{xcolor}
+\usepackage{graphicx,longtable,array,booktabs,fancyhdr,hyperref}
+\usepackage{pdflscape,multicol,soul,tikz,titlesec,lastpage,needspace}
+\usetikzlibrary{positioning}
+\definecolor{accent}{HTML}{7C3AED}
+\definecolor{accentblue}{HTML}{2563EB}
+\definecolor{accentcyan}{HTML}{06B6D4}
+\definecolor{ink}{HTML}{172033}
+\definecolor{muted}{HTML}{667085}
+\definecolor{softpurple}{HTML}{F3EFFF}
+\definecolor{softblue}{HTML}{EEF5FF}
+\definecolor{linecolor}{HTML}{D8E1F0}
 \definecolor{entidadmark}{HTML}{FFE45C}
 \definecolor{atributomark}{HTML}{FF8FA3}
 \definecolor{relacionmark}{HTML}{8EE7A2}
-\hypersetup{colorlinks=true,linkcolor=accent,pdftitle={Diccionario de datos - Comercial La Estrella},pdfauthor={Alex Ricardo Castaneda Rodriguez}}
-\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\color{accent}Proyecto 1 · Comercial La Estrella}\fancyhead[R]{Diccionario de datos}\fancyfoot[C]{\thepage}
-\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}\renewcommand{\arraystretch}{1.15}
-\newcommand{\tabla}[2]{\section{#1}\textcolor{muted}{#2}\par\smallskip}
-\newenvironment{dic}{\begin{longtable}{>{\ttfamily}p{2.8cm}p{2.3cm}p{1.1cm}p{1.5cm}p{7.3cm}}\toprule Columna & Tipo & Nulo & Clave & Restricción y descripción\\\midrule\endhead}{\end{longtable}}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accentblue,pdftitle={Diccionario de datos - Comercial La Estrella},pdfauthor={Alex Ricardo Castaneda Rodriguez}}
+\AtBeginDocument{\color{ink}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\color{accent}\bfseries Base de Datos 1 · Proyecto 1}
+\fancyhead[R]{\color{accentblue}Diccionario de datos}
+\fancyfoot[L]{\color{muted}\footnotesize Comercial La Estrella}
+\fancyfoot[R]{\color{accent}\footnotesize\thepage/\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{.8pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{accentblue}\leaders\hrule height \headrulewidth\hfill}}
+\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}\renewcommand{\arraystretch}{1.3}
+\setlength{\LTpre}{5pt}\setlength{\LTpost}{11pt}
+\titleformat{\section}[hang]{\Large\bfseries\color{accentblue}}{\colorbox{accent}{\color{white}\strut\thesection}}{.7em}{}
+\titlespacing*{\section}{0pt}{1.1em}{.4em}
+\newcommand{\gradientrule}[1]{\begin{tikzpicture}\shade[left color=accent,right color=accentblue] (0,0) rectangle (\textwidth,#1);\end{tikzpicture}}
+\newcommand{\tabla}[2]{\Needspace{16\baselineskip}\section{#1}\noindent\colorbox{softpurple}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{\color{muted}\small #2}}\par\smallskip}
+\newenvironment{dic}{%
+\small\arrayrulecolor{linecolor}\rowcolors{2}{softblue}{white}%
+\begin{longtable}{>{\ttfamily\color{accent}}p{3.45cm}p{2.75cm}>{\centering\arraybackslash}p{1.05cm}>{\centering\arraybackslash\bfseries\color{accentblue}}p{1.45cm}p{7.25cm}}
+\rowcolor{accentblue}\multicolumn{1}{p{3.45cm}}{\color{white}\bfseries Columna} & \color{white}\bfseries Tipo & \color{white}\bfseries Nulo & \color{white}\bfseries Clave & \color{white}\bfseries Restricción y descripción\\
+\endfirsthead
+\rowcolor{accentblue}\multicolumn{1}{p{3.45cm}}{\color{white}\bfseries Columna} & \color{white}\bfseries Tipo & \color{white}\bfseries Nulo & \color{white}\bfseries Clave & \color{white}\bfseries Restricción y descripción\\
+\endhead}{\\\bottomrule\end{longtable}\rowcolors{2}{}{}}
 \newcommand{\entidad}[1]{{\sethlcolor{entidadmark}\hl{#1}}}
 \newcommand{\atributo}[1]{{\sethlcolor{atributomark}\hl{#1}}}
 \newcommand{\relacion}[1]{{\sethlcolor{relacionmark}\hl{#1}}}
 \begin{document}
+\begin{titlepage}\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+\shade[inner color=accent!15,outer color=white] ([xshift=-.4cm,yshift=-.8cm]current page.north east) circle (5.2cm);
+\shade[inner color=accentblue!12,outer color=white] ([xshift=.4cm,yshift=.4cm]current page.south west) circle (4.6cm);
+\shade[left color=accent,right color=accentblue] (current page.north west) rectangle ([yshift=-.34cm]current page.north east);
+\shade[left color=accentblue,right color=accentcyan] ([yshift=.24cm]current page.south west) rectangle (current page.south east);
+\end{tikzpicture}
+\begin{center}\vspace*{.15cm}
+\begin{tikzpicture}\node[circle,shade,inner color=white,outer color=accent!18,draw=accentblue,line width=1.2pt,inner sep=7pt]{\includegraphics[width=3.05cm]{assets/escudo.png}};\end{tikzpicture}\par\medskip
+{\Large\bfseries\color{accent}UNIVERSIDAD DE SAN CARLOS DE GUATEMALA}\par\smallskip
+{\large\color{accentblue}Facultad de Ingeniería · Escuela de Ciencias y Sistemas}\par\vfill
+\begin{tikzpicture}\node[rectangle,rounded corners=11pt,shade,left color=accent,right color=accentblue,text=white,align=center,text width=.86\textwidth,inner sep=17pt]{{\Huge\bfseries DICCIONARIO DE DATOS}\par\medskip{\Large Diseño e implementación de una base de datos\\para el control de ventas}};\end{tikzpicture}\par\medskip
+{\Large\bfseries\color{accentblue}Comercial La Estrella}\par\vfill
+\begin{tikzpicture}[node distance=.45cm]
+\node[rounded corners=7pt,fill=softpurple,draw=accent!30,minimum width=3.2cm,minimum height=1.45cm,align=center] (a) {{\LARGE\bfseries\color{accent}19}\\[-1pt]{\small TABLAS}};
+\node[right=.45cm of a,rounded corners=7pt,fill=softblue,draw=accentblue!30,minimum width=3.2cm,minimum height=1.45cm,align=center] (b) {{\LARGE\bfseries\color{accentblue}68}\\[-1pt]{\small ATRIBUTOS}};
+\node[right=.45cm of b,rounded corners=7pt,fill=accentcyan!8,draw=accentcyan!35,minimum width=3.2cm,minimum height=1.45cm,align=center] (c) {{\LARGE\bfseries\color{accentcyan}3FN}\\[-1pt]{\small NORMALIZACIÓN}};
+\end{tikzpicture}\par\vfill
+\begin{tabular}{rl}\textbf{Estudiante:}&Alex Ricardo Castañeda Rodríguez\\\textbf{Carné:}&202300476\\\textbf{Curso:}&Bases de Datos 1\\\textbf{Proyecto:}&1\\\textbf{Fecha:}&Septiembre de 2026\end{tabular}\par\vfill
+{\small\color{muted}Guatemala, 2026}
+\end{center}
+\end{titlepage}
+
 \begin{landscape}
 \thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+\shade[left color=accent,right color=accentblue] (current page.north west) rectangle ([yshift=-.22cm]current page.north east);
+\shade[inner color=accentblue!8,outer color=white] ([xshift=-.2cm,yshift=-.2cm]current page.south east) circle (3.8cm);
+\end{tikzpicture}
 {\small\bfseries\color{accent}BASES DE DATOS 1 · PROYECTO 1}\par\smallskip
 {\Huge\bfseries Análisis del enunciado}\par
 {\large\color{muted}Identificación visual de entidades, atributos y relaciones}\par\medskip
@@ -69,8 +125,10 @@ La empresa necesita generar reportes sobre las ventas realizadas, los productos 
 \end{landscape}
 \clearpage
 
-\begin{center}{\Huge\bfseries\color{accent}Diccionario de datos}\par\medskip{\Large Comercial La Estrella}\par\bigskip
-Alex Ricardo Castañeda Rodríguez · 202300476 · Bases de Datos 1 · 2026\end{center}
+{\Huge\bfseries\color{accent}Índice del diccionario}\par\smallskip
+{\large\color{muted}Estructura documentada de la base de datos Comercial La Estrella}\par\smallskip
+\gradientrule{.08cm}\par\medskip
+\noindent\colorbox{softpurple}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{\small\textbf{Convenciones:}\quad \textcolor{accent}{\textbf{PK}} clave primaria \quad \textcolor{accentblue}{\textbf{FK}} clave foránea \quad \textcolor{accentcyan}{\textbf{UQ}} unicidad \quad * restricción compuesta}}\par\medskip
 \tableofcontents\clearpage
 
 \tabla{PAIS}{Catálogo de países donde opera la empresa.}
@@ -112,6 +170,15 @@ Alex Ricardo Castañeda Rodríguez · 202300476 · Bases de Datos 1 · 2026\end{
 \tabla{PAGO}{Abono individual aplicado a una venta.}
 \begin{dic}id\_pago&NUMBER(10)&No&PK&Identificador del pago.\\monto&NUMBER(12,2)&No&&Mayor que cero.\\id\_metodo\_pago&NUMBER(10)&No&FK&Método utilizado.\\id\_venta&NUMBER(10)&No&FK&Venta receptora.\end{dic}
 
-\section*{Leyenda y alcance}
-PK: llave primaria; FK: llave foránea; UQ: unicidad; el asterisco indica una restricción compuesta. Todas las columnas marcadas ``No'' son \texttt{NOT NULL}. Las reglas que dependen de agregados o de la fecha actual se comprueban en \texttt{05\_validaciones.sql}, porque Oracle no permite expresarlas como \texttt{CHECK} declarativo entre filas/tablas.
+\Needspace{8\baselineskip}
+{\Large\bfseries\color{accent}Leyenda y alcance}\par\smallskip
+\gradientrule{.06cm}\par\smallskip
+\begin{tikzpicture}
+\node[rounded corners=7pt,fill=softpurple,draw=accent!25,text width=.94\textwidth,inner sep=10pt]{%
+\textcolor{accent}{\textbf{PK}}: llave primaria \quad
+\textcolor{accentblue}{\textbf{FK}}: llave foránea \quad
+\textcolor{accentcyan}{\textbf{UQ}}: unicidad \quad
+\textbf{*}: restricción compuesta.\par\medskip
+Todas las columnas marcadas ``No'' son \texttt{NOT NULL}. Las reglas que dependen de agregados o de la fecha actual se comprueban en \texttt{05\_validaciones.sql}, porque Oracle no permite expresarlas como \texttt{CHECK} declarativo entre filas o tablas.};
+\end{tikzpicture}
 \end{document}
