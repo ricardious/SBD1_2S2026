@@ -3,13 +3,72 @@
 \usepackage{fontspec}
 \usepackage[letterpaper,margin=1.5cm]{geometry}
 \usepackage{xcolor,longtable,array,booktabs,fancyhdr,hyperref}
+\usepackage{pdflscape,multicol,soul}
 \definecolor{accent}{HTML}{A6192E}\definecolor{muted}{HTML}{667085}
+\definecolor{entidadmark}{HTML}{FFE45C}
+\definecolor{atributomark}{HTML}{FF8FA3}
+\definecolor{relacionmark}{HTML}{8EE7A2}
 \hypersetup{colorlinks=true,linkcolor=accent,pdftitle={Diccionario de datos - Comercial La Estrella},pdfauthor={Alex Ricardo Castaneda Rodriguez}}
 \pagestyle{fancy}\fancyhf{}\fancyhead[L]{\color{accent}Proyecto 1 · Comercial La Estrella}\fancyhead[R]{Diccionario de datos}\fancyfoot[C]{\thepage}
 \setlength{\parindent}{0pt}\setlength{\parskip}{4pt}\renewcommand{\arraystretch}{1.15}
 \newcommand{\tabla}[2]{\section{#1}\textcolor{muted}{#2}\par\smallskip}
 \newenvironment{dic}{\begin{longtable}{>{\ttfamily}p{2.8cm}p{2.3cm}p{1.1cm}p{1.5cm}p{7.3cm}}\toprule Columna & Tipo & Nulo & Clave & Restricción y descripción\\\midrule\endhead}{\end{longtable}}
+\newcommand{\entidad}[1]{{\sethlcolor{entidadmark}\hl{#1}}}
+\newcommand{\atributo}[1]{{\sethlcolor{atributomark}\hl{#1}}}
+\newcommand{\relacion}[1]{{\sethlcolor{relacionmark}\hl{#1}}}
 \begin{document}
+\begin{landscape}
+\thispagestyle{empty}
+{\small\bfseries\color{accent}BASES DE DATOS 1 · PROYECTO 1}\par\smallskip
+{\Huge\bfseries Análisis del enunciado}\par
+{\large\color{muted}Identificación visual de entidades, atributos y relaciones}\par\medskip
+
+\noindent\colorbox{entidadmark}{\strut\bfseries ENTIDADES}\hspace{1em}
+\colorbox{atributomark}{\strut\bfseries ATRIBUTOS}\hspace{1em}
+\colorbox{relacionmark}{\strut\bfseries RELACIONES Y REGLAS}\par\medskip
+
+\begingroup
+\fontsize{8.2}{10.2}\selectfont
+\setlength{\columnsep}{1cm}
+\begin{multicols}{2}
+La empresa comercial \entidad{Comercial La Estrella} opera una red de \entidad{tiendas} dedicadas a la venta de \entidad{productos} de consumo general. La empresa requiere diseñar e implementar una base de datos relacional que permita administrar la información básica de sus tiendas, empleados, clientes, productos y ventas, así como obtener reportes que apoyen el análisis de sus operaciones comerciales.
+
+\medskip
+La empresa opera en distintos \entidad{países}. \relacion{Cada país se identifica mediante un código y un nombre}. Dentro de cada país existen varios \entidad{departamentos} y cada departamento agrupa varios \entidad{municipios}. \relacion{Un departamento pertenece a un único país y un municipio pertenece a un único departamento}.
+
+\medskip
+Cada \entidad{tienda} se identifica mediante un \atributo{código único}. De cada tienda se debe registrar su \atributo{nombre, dirección, teléfono y municipio} donde se encuentra ubicada. Además, cada tienda pertenece a un \entidad{tipo de tienda}, por ejemplo: tienda de conveniencia, supermercado, tienda mayorista o tienda especializada. \relacion{Un tipo de tienda puede clasificar a varias tiendas, pero cada tienda pertenece a un único tipo}.
+
+\medskip
+La empresa cuenta con \entidad{empleados} asignados a sus tiendas. De cada empleado se debe registrar un \atributo{código, nombres, apellidos, correo electrónico, teléfono, fecha de contratación y tienda a la que pertenece}. Cada empleado ocupa un \entidad{cargo} dentro de la empresa, por ejemplo: gerente de tienda, supervisor, vendedor o cajero. \relacion{Un cargo puede estar asignado a varios empleados; sin embargo, un empleado tiene un único cargo y pertenece a una única tienda}.
+
+\medskip
+Los \entidad{clientes} pueden realizar compras en cualquiera de las tiendas de la empresa. De cada cliente se debe almacenar un \atributo{código, nombres, apellidos, tipo de identificación, número de identificación, teléfono, correo electrónico, dirección y municipio de residencia}. Cada cliente registra un único \entidad{tipo de identificación}, mientras que \relacion{un mismo tipo de identificación puede utilizarse para varios clientes}.
+
+\columnbreak
+
+\medskip
+La empresa administra un \entidad{catálogo de productos}. Cada \entidad{producto} posee un \atributo{código, nombre, descripción, precio vigente de venta y existencia actual}. Los productos se clasifican por \entidad{categoría} y \entidad{marca}. Cada categoría y cada marca poseen un \atributo{código y un nombre}. \relacion{Una categoría puede contener varios productos y una marca puede estar asociada con varios productos; cada producto pertenece a una única categoría y a una única marca}.
+
+\medskip
+Las \entidad{ventas} se realizan en una tienda y son atendidas por un empleado. Cada venta debe registrar un \atributo{número único, fecha, cliente, tienda, empleado responsable y estado actual}. Los \entidad{estados de una venta} incluyen, como mínimo: registrada, pagada y anulada. \relacion{Un cliente puede realizar varias ventas; una tienda puede registrar muchas ventas; y un empleado puede atender varias ventas}.
+
+\medskip
+Cada venta puede incluir uno o varios \entidad{productos}. Por cada producto vendido se debe registrar la \atributo{cantidad, el precio unitario aplicado durante la venta y el subtotal}. \relacion{El precio unitario del detalle debe conservar el valor aplicado al momento de realizar la operación, aunque el precio vigente del producto cambie posteriormente}.
+
+\medskip
+Una venta puede registrarse con uno o varios \entidad{pagos}. Para cada pago se debe indicar el \atributo{método de pago utilizado y el monto pagado}. La empresa maneja distintos \entidad{métodos de pago}, tales como efectivo, tarjeta de débito, tarjeta de crédito o transferencia. \relacion{La suma de los pagos de una venta pagada debe corresponder al total de los detalles de la venta}.
+
+\medskip
+La empresa necesita generar reportes sobre las ventas realizadas, los productos más vendidos, las categorías y marcas con mayor facturación, el desempeño de los empleados, las ventas por tienda y tipo de tienda, las compras realizadas por los clientes y los métodos de pago utilizados.
+\end{multicols}
+\endgroup
+
+\vfill
+\color{muted}\footnotesize Anexo del Diccionario de datos · Comercial La Estrella
+\end{landscape}
+\clearpage
+
 \begin{center}{\Huge\bfseries\color{accent}Diccionario de datos}\par\medskip{\Large Comercial La Estrella}\par\bigskip
 Alex Ricardo Castañeda Rodríguez · 202300476 · Bases de Datos 1 · 2026\end{center}
 \tableofcontents\clearpage
