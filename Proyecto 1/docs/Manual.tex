@@ -44,8 +44,8 @@ La arquitectura se divide en cuatro áreas: catálogos y ubicación; personas y 
 
 \section{Modelos de datos}
 \subsection{Conceptual}
-El modelo conceptual sigue la notación Barker presentada en el curso: muestra únicamente las entidades y sus relaciones bidireccionales, sin atributos, llaves ni tipos físicos. La barra representa singularidad, el círculo opcionalidad y la pata de gallo pluralidad. Las relaciones muchos a muchos tienda--producto y venta--producto se transforman posteriormente en \texttt{catalogo\_producto} y \texttt{detalle\_venta} dentro de los modelos lógico y relacional.
-\modeloconceptual{../modelos/modelo_conceptual.pdf}{Modelo conceptual entidad--relación en notación Barker.}
+El modelo conceptual presenta únicamente las entidades identificadas y las conexiones generales que existen entre ellas. Conforme al formato explicado en el curso, no incluye atributos, llaves, tipos de datos, cardinalidad, opcionalidad ni flechas. \texttt{catalogo\_producto} y \texttt{detalle\_venta} se muestran como entidades intermedias porque enlazan los conceptos participantes y almacenan información propia del negocio.
+\modeloconceptual{../modelos/modelo_conceptual.pdf}{Modelo conceptual: entidades y relaciones generales de Comercial La Estrella.}
 \subsection{Lógico}
 El modelo lógico incorpora atributos, identificadores, obligatoriedad y claves candidatas. El símbolo \# identifica clave primaria, * referencia y UQ unicidad.
 \modelo{../modelos/Logical.pdf}{Modelo lógico nativo exportado desde Oracle SQL Developer Data Modeler.}
