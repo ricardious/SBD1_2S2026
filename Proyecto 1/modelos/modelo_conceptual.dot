@@ -25,28 +25,28 @@ graph conceptual {
     penwidth=1.25
   ];
 
-  PAIS [pos="75,690!", fillcolor="#DCEBFF", color="#5B8DEF"];
-  DEPARTAMENTO [pos="75,590!", fillcolor="#DCEBFF", color="#5B8DEF"];
-  MUNICIPIO [pos="75,490!", fillcolor="#DCEBFF", color="#5B8DEF"];
+  PAIS [pos="75,700!", fillcolor="#DCEBFF", color="#5B8DEF"];
+  DEPARTAMENTO [pos="75,610!", fillcolor="#DCEBFF", color="#5B8DEF"];
+  MUNICIPIO [pos="75,520!", fillcolor="#DCEBFF", color="#5B8DEF"];
 
-  TIPO_TIENDA [pos="270,690!", fillcolor="#EEE7FF", color="#8B5CF6"];
-  TIENDA [pos="270,590!", fillcolor="#EEE7FF", color="#8B5CF6"];
-  PERSONA [pos="270,410!", fillcolor="#EEE7FF", color="#8B5CF6"];
-  EMPLEADO [pos="465,485!", fillcolor="#EEE7FF", color="#8B5CF6"];
-  CLIENTE [pos="465,365!", fillcolor="#EEE7FF", color="#8B5CF6"];
-  CARGO [pos="465,590!", fillcolor="#EEE7FF", color="#8B5CF6"];
-  TIPO_IDENTIFICACION [pos="465,255!", fillcolor="#EEE7FF", color="#8B5CF6"];
+  TIPO_TIENDA [pos="300,700!", fillcolor="#EEE7FF", color="#8B5CF6"];
+  TIENDA [pos="300,600!", fillcolor="#EEE7FF", color="#8B5CF6"];
+  PERSONA [pos="300,350!", fillcolor="#EEE7FF", color="#8B5CF6"];
+  EMPLEADO [pos="470,400!", fillcolor="#EEE7FF", color="#8B5CF6"];
+  CLIENTE [pos="470,250!", fillcolor="#EEE7FF", color="#8B5CF6"];
+  CARGO [pos="470,500!", fillcolor="#EEE7FF", color="#8B5CF6"];
+  TIPO_IDENTIFICACION [pos="470,145!", fillcolor="#EEE7FF", color="#8B5CF6"];
 
-  CATEGORIA [pos="690,710!", fillcolor="#DFF8F7", color="#1AA6A6"];
-  MARCA [pos="840,710!", fillcolor="#DFF8F7", color="#1AA6A6"];
-  PRODUCTO [pos="765,610!", fillcolor="#DFF8F7", color="#1AA6A6"];
-  CATALOGO_PRODUCTO [pos="505,650!", fillcolor="#E5F4E7", color="#67A96B"];
+  CATEGORIA [pos="700,760!", fillcolor="#DFF8F7", color="#1AA6A6"];
+  MARCA [pos="850,760!", fillcolor="#DFF8F7", color="#1AA6A6"];
+  PRODUCTO [pos="775,660!", fillcolor="#DFF8F7", color="#1AA6A6"];
+  CATALOGO_PRODUCTO [pos="520,700!", fillcolor="#E5F4E7", color="#67A96B"];
 
-  DETALLE_VENTA [pos="765,500!", fillcolor="#E5F4E7", color="#67A96B"];
-  VENTA [pos="690,385!", fillcolor="#FFF0D8", color="#E6A23C"];
-  ESTADO_VENTA [pos="850,405!", fillcolor="#FFF0D8", color="#E6A23C"];
-  PAGO [pos="690,225!", fillcolor="#FFF0D8", color="#E6A23C"];
-  METODO_PAGO [pos="850,225!", fillcolor="#FFF0D8", color="#E6A23C"];
+  DETALLE_VENTA [pos="775,560!", fillcolor="#E5F4E7", color="#67A96B"];
+  VENTA [pos="700,500!", fillcolor="#FFF0D8", color="#E6A23C"];
+  ESTADO_VENTA [pos="865,500!", fillcolor="#FFF0D8", color="#E6A23C"];
+  PAGO [pos="700,300!", fillcolor="#FFF0D8", color="#E6A23C"];
+  METODO_PAGO [pos="865,300!", fillcolor="#FFF0D8", color="#E6A23C"];
 
   PAIS -- DEPARTAMENTO;
   DEPARTAMENTO -- MUNICIPIO;
