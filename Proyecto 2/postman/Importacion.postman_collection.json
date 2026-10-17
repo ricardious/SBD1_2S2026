@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Carga inicial historica - ejecutar una vez",
+    "description": "Activar IMPORT_ENABLED, definir importKey local y seleccionar data/historico.json como Body binary. Desactivar al terminar. No exportar la clave.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:3000/api"
+    },
+    {
+      "key": "importKey",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Importar historico original (una sola vez)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Import-Key",
+            "value": "{{importKey}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/importacion",
+        "body": {
+          "mode": "file",
+          "file": {
+            "src": "../data/historico.json"
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
