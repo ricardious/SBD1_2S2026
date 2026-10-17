@@ -14,6 +14,7 @@ Repositorio de prácticas y proyectos del curso **Bases de Datos 1**, correspond
 | Proyecto | Descripción | Tecnologías |
 | --- | --- | --- |
 | [Proyecto 1 — Comercial La Estrella](./Proyecto%201/) | Diseño e implementación de una base de datos Oracle normalizada a tercera forma normal para la gestión de tiendas, productos, ventas y pagos. | Oracle Database, Oracle SQL Developer y Oracle SQL Developer Data Modeler |
+| [Proyecto 2 — Backend Comercial La Estrella](./Proyecto%202/) | API REST, migración del histórico, vistas y triggers en SQL Server dockerizado. | TypeScript, Express, TypeORM, SQL Server 2022, Docker y Postman |
 
 ## Contenido
 

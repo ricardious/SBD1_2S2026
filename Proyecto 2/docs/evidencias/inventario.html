@@ -1,0 +1,58 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Protección y descuento de inventario</title><style>body{margin:0;background:#eef1f4;color:#182330;font:16px Arial,sans-serif}
+main{max-width:1120px;margin:32px auto;padding:28px;background:white;border:1px solid #d7dfe6}
+h1{font-size:30px;margin:8px 0 12px}h2{font-size:20px;margin:0 0 12px}p{line-height:1.5}
+.meta{color:#46576a;font-size:14px}.ok{background:#e8f4ec;padding:12px;border-left:4px solid #267a47}
+article{border-top:1px solid #c6d0d9;padding-top:20px;margin-top:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+pre{margin:8px 0;background:#f4f6f8;padding:14px;font:14px/1.5 monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.status{font-weight:bold;color:#245f40}footer{margin-top:24px;color:#46576a;font-size:14px}</style>
+      <main><p class="meta">USAC · Bases de Datos 1 · Proyecto Fase 2 · Carné 202300476</p><h1>Protección y descuento de inventario</h1>
+      <p>Registro real de peticiones ejecutadas por el CLI oficial de Postman contra SQL Server 2022 en Docker.</p>
+      <p class="ok">Colección completa: 144 peticiones y 155 aserciones correctas. Sin fallos.</p>
+      <p class="meta">Inicio de la ejecución: 2026-10-17T00:26:32+00:00</p><article><h2>Stock insuficiente: pedir 11</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>POST http://127.0.0.1:3000/api/detalle_venta
+{
+  &quot;id_venta&quot;: 1546939428,
+  &quot;id_producto&quot;: 1546939428,
+  &quot;cantidad&quot;: 11,
+  &quot;precio_unitario&quot;: 25,
+  &quot;subtotal&quot;: 275
+}</pre></div>
+          <div><strong class="status">HTTP 400 · Bad Request</strong><pre>{
+  &quot;error&quot;: &quot;Stock insuficiente&quot;
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 400: passed; Mensaje del trigger: passed</p></article><article><h2>Inventario sigue en 10</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>GET http://127.0.0.1:3000/api/catalogo_producto/1/1546939428
+</pre></div>
+          <div><strong class="status">HTTP 200 · OK</strong><pre>{
+  &quot;precio_vigente&quot;: 25,
+  &quot;existencia_actual&quot;: 10,
+  &quot;id_tienda&quot;: 1,
+  &quot;id_producto&quot;: 1546939428
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 200: passed; Rollback sin descuento: passed</p></article><article><h2>Venta valida: pedir 2</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>POST http://127.0.0.1:3000/api/detalle_venta
+{
+  &quot;id_venta&quot;: 1546939428,
+  &quot;id_producto&quot;: 1546939428,
+  &quot;cantidad&quot;: 2,
+  &quot;precio_unitario&quot;: 25,
+  &quot;subtotal&quot;: 50
+}</pre></div>
+          <div><strong class="status">HTTP 201 · Created</strong><pre>{
+  &quot;cantidad&quot;: 2,
+  &quot;precio_unitario&quot;: 25,
+  &quot;subtotal&quot;: 50,
+  &quot;id_venta&quot;: 1546939428,
+  &quot;id_producto&quot;: 1546939428
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 201: passed</p></article><article><h2>Inventario reducido a 8</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>GET http://127.0.0.1:3000/api/catalogo_producto/1/1546939428
+</pre></div>
+          <div><strong class="status">HTTP 200 · OK</strong><pre>{
+  &quot;precio_vigente&quot;: 25,
+  &quot;existencia_actual&quot;: 8,
+  &quot;id_tienda&quot;: 1,
+  &quot;id_producto&quot;: 1546939428
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 200: passed; Descuento automatico: passed</p></article>
+      <footer>Fuente verificable: postman-oficial.json. Esta página representa el registro HTTP; no es una captura de la aplicación Postman.</footer></main></html>

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+coverage/
+entrega/
+
+# Comprimidos locales de entrega
+*.rar
+*.RAR
+*.zip
