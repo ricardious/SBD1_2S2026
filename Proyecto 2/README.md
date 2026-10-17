@@ -4,6 +4,8 @@
 
 Repositorio: <https://github.com/ricardious/SBD1_2S2026>
 
+Manual técnico detallado: [PDF](docs/output/pdf/Manual_Tecnico_Fase2.pdf) · [Fuente LaTeX](docs/Manual_Tecnico_Fase2.tex). Para regenerarlo con XeLaTeX y las fuentes TeX Gyre: `python3 scripts/generate-manual.py --build`.
+
 API REST con Express 5, TypeScript y TypeORM. SQL Server 2022 se ejecuta en Docker y conserva las 19 tablas del modelo de la fase 1. Incluye importación de los 9,068 registros originales por HTTP, las tres vistas solicitadas, los triggers `Insert_Detalle` e `Insert_Pago`, Postman y pruebas contra el motor real. El frontend no forma parte de los entregables exigidos.
 
 ## 1. Requisitos
