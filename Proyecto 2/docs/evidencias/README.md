@@ -11,7 +11,15 @@ Se ejecutaron las pruebas sobre SQL Server 2022 en Docker. Toda manipulación de
 | Persistencia | Importación y venta pagada idénticas antes y después de reiniciar SQL Server. |
 | Dependencias | `npm audit`: 0 vulnerabilidades al verificar la entrega. |
 
-## Capturas del registro HTTP
+## Capturas y registros HTTP
+
+### Capturas directas utilizadas en el manual
+
+`capturas-api/` contiene 12 capturas directas de un navegador consultando la API local, sin reconstrucción HTML ni sustitución de respuestas. Incluyen conexión, estado de carga, CRUD, inventario antes y después de las operaciones, abonos y los tres reportes. Son capturas de la respuesta JSON servida por la API, no de la interfaz de Postman.
+
+`manual-http.json` conserva las 21 peticiones del escenario, sus cuerpos, códigos y respuestas, junto con fecha, URL y SHA-256 de cada imagen. Las capturas de reportes muestran el extracto visible de la ventana; el registro conserva las respuestas completas. `scripts/capture-manual.py` permite repetir la ejecución con la API disponible y `agent-browser`/Chromium instalados; crea nuevos registros de demostración.
+
+### Representaciones del registro anterior
 
 Las imágenes muestran una representación legible de **respuestas reales** guardadas por el CLI oficial de Postman. No representan la interfaz gráfica de Postman. Los HTML correspondientes permiten consultar el registro sin herramientas adicionales.
 

@@ -62,229 +62,147 @@
 \end{center}\end{titlepage}
 \hypersetup{pageanchor=true}
 \tableofcontents\clearpage
-\section{Propósito, alcance y entregables}
-Este manual explica cómo instalar, ejecutar, verificar y defender la segunda fase de Comercial La Estrella. El sistema conserva el modelo de 19 tablas de la fase 1 y lo implementa en SQL Server 2022. La API REST utiliza Node.js, Express, TypeScript y TypeORM; el motor se ejecuta en Docker y sus reglas operativas se aplican mediante restricciones y triggers de T-SQL.
-
-El cliente de demostración es Postman. El enunciado no exige una interfaz frontend. DBeaver se utiliza para inspección estructural de solo lectura; durante la calificación, las altas, modificaciones y eliminaciones se realizan mediante la API. El diseño está preparado para uso local, con la API y el puerto SQL publicados en la interfaz de loopback.
-
-\subsection{Correspondencia con el enunciado}
-La sección 4 del enunciado solicita infraestructura, backend, colección de pruebas y documentación técnica. La documentación puede entregarse como README o PDF e incluye arranque del contenedor, ejecución del servidor y evidencias de los triggers. La hoja de calificación asigna 15 puntos a documentación.
 
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{3.9cm}>{\raggedright\arraybackslash}p{12.2cm}}\toprule
+\section{Sistema implementado}
+Comercial La Estrella administra el inventario de productos por tienda, el registro de ventas y sus abonos. La segunda fase traslada el modelo de 19 tablas a SQL Server 2022 y expone sus operaciones mediante una API REST. La instalación incluye el motor en Docker, la inicialización automática de su estructura, el servidor Express y las colecciones de Postman utilizadas para operar y verificar el sistema.
 
-\textbf{Requisito}&\textbf{Implementación y ubicación}\\\midrule\endfirsthead\textbf{Requisito}&\textbf{Implementación y ubicación}\\\midrule\endhead
+La estructura de datos conserva las claves del proyecto anterior. Las existencias se gestionan por combinación de tienda y producto; el detalle conserva el precio aplicado al vender y los pagos se acumulan por venta. Las reglas de inventario y de estado se ejecutan en SQL Server, de manera que una petición HTTP no puede confirmar un movimiento que incumpla esas reglas.
 
-\bottomrule\endfoot
+La operación se realiza desde Postman. La consulta estructural de tablas, restricciones, vistas y triggers puede efectuarse con DBeaver. La solución entregada no incluye frontend: las operaciones solicitadas se exponen y demuestran mediante los endpoints del backend.
 
-Infraestructura y DDL&\path{docker-compose.yml}, \path{init.sql} y \path{docker/init.sh}.\\
-
-Backend completo&\path{src/}, \path{package.json}, \path{package-lock.json} y \path{tsconfig.json}.\\
-
-CRUD de las 19 tablas&Módulos en \path{src/routes/}; controlador compartido en \path{src/controllers/crud.ts}.\\
-
-Vistas y triggers&Definidos en \path{init.sql}; los reportes se consultan por HTTP.\\
-
-Postman&Colección principal, entorno local y colección de importación en \path{postman/}.\\
-
-Documentación y evidencias&Este manual, README, referencia de API y \path{docs/evidencias/}.\\
-
-Repositorio&\url{https://github.com/ricardious/SBD1_2S2026}.\\
-
-\end{longtable}
-
-
-\subsection{Cómo utilizar el manual}
-Para ejecutar en una máquina nueva, seguir las secciones de requisitos, configuración, Docker, API e importación. Para volver a demostrar una instalación existente, utilizar el apartado de arranque diario y la guía de Postman. La referencia de entidades detalla campos y ejemplos; el anexo de peticiones relaciona cada operación con su código HTTP esperado. Los listados de vistas y triggers reproducen el código de la implementación.
-
-\section{Arquitectura de la solución}
+\subsection{Distribución de los componentes}
 \begin{center}
 \begin{tikzpicture}[node distance=7mm,box/.style={draw=accentblue!60,rounded corners=4pt,fill=codebg,text width=13cm,align=center,inner sep=7pt},arr/.style={-{Latex},thick,accentblue}]
-\node[box] (client) {\textbf{Postman / cliente de importación}\\HTTP con cuerpos y respuestas JSON};
-\node[box,below=of client] (api) {\textbf{Express + TypeScript}\\Rutas, validación Zod, controlador CRUD y manejo de errores};
-\node[box,below=of api] (orm) {\textbf{TypeORM + controlador mssql}\\Repositorios, parámetros y conexiones agrupadas en pools};
-\node[box,below=of orm] (db) {\textbf{SQL Server 2022 en Docker}\\Tablas, PK/FK, restricciones, índices, vistas y triggers};
-\node[box,below=of db] (volume) {\textbf{Volumen persistente}\\Archivos de la base de datos en /var/opt/mssql};
+\node[box] (client) {\textbf{Postman}\\Peticiones CRUD, importación y consultas analíticas};
+\node[box,below=of client] (api) {\textbf{Express y TypeScript}\\Rutas por entidad, validación, controladores y respuestas HTTP};
+\node[box,below=of api] (orm) {\textbf{TypeORM y mssql}\\Repositorios, parámetros, pools y transacción de importación};
+\node[box,below=of orm] (db) {\textbf{SQL Server 2022}\\Tablas, integridad referencial, inventario, pagos y reportes};
+\node[box,below=of db] (volume) {\textbf{Docker Compose y volumen persistente}\\Motor aislado, inicialización y conservación de datos};
 \draw[arr] (client)--(api);\draw[arr] (api)--(orm);\draw[arr] (orm)--(db);\draw[arr] (db)--(volume);
 \end{tikzpicture}
 \end{center}
-\subsection{Responsabilidad de cada capa}
-\begin{itemize}
-\item \textbf{Postman:} construye peticiones, sustituye variables y evalúa aserciones de respuesta. No se conecta directamente al motor.
-\item \textbf{Express:} recibe HTTP, interpreta JSON y dirige la petición al módulo correspondiente. El cuerpo máximo configurado es 10 MB.
-\item \textbf{Zod:} comprueba tipos, rangos, fechas, claves y campos permitidos antes de escribir.
-\item \textbf{Controlador CRUD:} aplica el contrato común y usa repositorios; los casos especiales de venta y pago están explicitados.
-\item \textbf{TypeORM:} convierte objetos a operaciones SQL. Los metadatos se declaran con EntitySchema; no se activa sincronización automática.
-\item \textbf{SQL Server:} protege relaciones y reglas de negocio. El descuento de inventario y el estado de pago pertenecen al motor, no a un cálculo paralelo en Node.
-\item \textbf{Docker Compose:} coordina el motor y la inicialización, el volumen, la comprobación de salud y la publicación del puerto.
-\end{itemize}
 
-\subsection{Recorrido de una petición de venta}
-Un POST a detalle de venta llega a Express; la ruta obtiene sus metadatos, Zod valida el cuerpo y el repositorio ejecuta INSERT. SQL Server evalúa restricciones y activa Insert\_Detalle en la misma transacción. Si existe stock, descuenta y confirma; si falta stock, el trigger lanza un error y se revierte toda la sentencia. El middleware convierte el error de negocio en HTTP 400 con el mensaje Stock insuficiente. Tras una escritura correcta se consulta el registro y se devuelve HTTP 201.
+\subsection{Secuencia de atención de una operación}
+Express recibe el JSON y selecciona el módulo de rutas de la entidad. La validación comprueba campos, tipos y claves antes de llegar al repositorio. TypeORM ejecuta la escritura con valores parametrizados. SQL Server evalúa las restricciones y los triggers dentro de la misma operación; si se produce un rechazo, la API comunica el código y el mensaje correspondientes. Después de una escritura correcta, el servidor consulta el registro resultante para devolver su estado efectivo.
 
-\section{Organización del proyecto}
-\begin{lstlisting}
-Proyecto 2/
-  .env.example             Plantilla sin credenciales reales
-  docker-compose.yml       SQL Server y servicio db-init
-  init.sql                 Tablas, permisos, vistas y triggers
-  docker/init.sh           Ejecucion automatica del DDL
-  data/                    Historico JSON y manifiesto
-  src/
-    config/                Entorno y conexiones SQL
-    entities/              Metadatos y EntitySchema
-    controllers/           CRUD y lotes
-    middleware/            Errores HTTP
-    routes/                Entidades, importacion y reportes
-    services/              Validacion e importacion
-    app.ts                 Aplicacion Express
-    server.ts              Inicio y cierre de conexiones
-  postman/                 Colecciones y entorno
-  tests/                   Pruebas unitarias y de integracion
-  scripts/                 Configuracion, importacion y entrega
-  docs/                    Enunciado, guias, evidencias y manual
-\end{lstlisting}
-La carpeta node\_modules contiene dependencias instaladas y dist contiene JavaScript compilado. Ninguna se versiona. El archivo .env es local y privado. El histórico de datos sí forma parte de la entrega para reproducir la importación.
+En una venta, esta secuencia es especialmente importante: el resultado del POST de detalle depende de las existencias de la tienda y el estado posterior de la venta depende de los pagos efectivamente almacenados. El backend no mantiene una copia del stock ni calcula un estado independiente del motor.
 
-\section{Requisitos y preparación del equipo}
-\subsection{Herramientas}
-Se requiere Linux x86-64 con Docker Engine y el complemento Docker Compose, o Docker Desktop con contenedores Linux; Node.js 22 o superior; npm; Python 3 para las utilidades de preparación; y Postman. Python no interviene en las peticiones normales del backend. Para recompilar este documento se necesita XeLaTeX y las fuentes TeX Gyre Heros y TeX Gyre Cursor.
+\section{Instalación y puesta en servicio}
+\subsection{Condiciones del entorno}
+Se utiliza Docker con contenedores Linux y el complemento Docker Compose, Node.js 22 o superior, npm y Python 3 para preparar la configuración. Postman se utiliza como cliente del servicio. Los puertos predeterminados son 1433 para SQL Server y 3000 para la API. Ambos se publican en la interfaz local.
 
-SQL Server tiene configurado un presupuesto interno de memoria de 2048 MB. No es un límite cgroup del contenedor ni una garantía sobre el consumo total. Se necesita margen adicional para el sistema operativo, la API, Postman, DBeaver y cualquier grabación. Los recursos disponibles dependen del resto de aplicaciones en ejecución.
-\begin{lstlisting}
-docker --version
-docker compose version
-node --version
-npm --version
-python3 --version
-\end{lstlisting}
-Los puertos predeterminados son 1433 para SQL Server y 3000 para la API. Si están ocupados, ajustar .env y la variable baseUrl de Postman. Ejecutar los comandos de este manual desde la raíz de Proyecto 2, salvo que se indique lo contrario.
+SQL Server tiene un presupuesto interno configurado de 2048 MB. Además del motor, el equipo debe disponer de memoria para Node, Postman y el sistema operativo. Ese valor no constituye un límite de memoria del contenedor. Las dependencias se instalan desde package-lock.json para conservar la versión del árbol utilizado por el proyecto.
 
-\subsection{Obtener el código}
-\begin{lstlisting}
-git clone https://github.com/ricardious/SBD1_2S2026.git
-cd "SBD1_2S2026/Proyecto 2"
-\end{lstlisting}
-Si ya se dispone de la carpeta local, abrir una terminal directamente en ella. El nombre contiene un espacio; por eso se entrecomilla al utilizar cd.
-
-\section{Configuración de variables y credenciales}
-\subsection{Creación inicial}
+\subsection{Preparación de la configuración}
+Los comandos se ejecutan en la raíz de \texttt{Proyecto 2}:
 \begin{lstlisting}
 python3 scripts/setup-env.py
 npm ci
 \end{lstlisting}
-El generador toma la plantilla .env.example, genera secretos aleatorios y crea .env con permisos privados. Si el archivo existe, no lo sobrescribe. npm ci instala exactamente el árbol del archivo package-lock.json. Las contraseñas de este manual no se incluyen: cada instalación usa sus propias credenciales.
+El primer comando crea .env a partir de la plantilla y asigna secretos aleatorios. No reemplaza un archivo existente. La configuración distingue el usuario administrativo del contenedor, el usuario normal del backend y el usuario exclusivo de la carga histórica.
 
+\begin{itemize}
+\item \path{DB_HOST}, \path{DB_PORT} y \path{DB_NAME}: servidor, puerto y base ComercialLaEstrella.
+\item \path{DB_USER} y \path{DB_PASSWORD}: credenciales del login estrella\_api.
+\item \path{IMPORT_DB_USER} y \path{IMPORT_DB_PASSWORD}: credenciales de estrella\_import.
+\item \path{IMPORT_ENABLED}: false durante la operación habitual.
+\item \path{HOST} y \path{PORT}: dirección y puerto de escucha HTTP.
+\end{itemize}
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{5.5cm}>{\raggedright\arraybackslash}p{10.6cm}}\toprule
+El archivo local de credenciales no forma parte del repositorio ni de la entrega. Modificar una contraseña en .env no actualiza un login ya creado en el volumen: la contraseña del motor y la del archivo deben mantenerse coordinadas.
 
-\textbf{Variable}&\textbf{Propósito y valor de referencia}\\\midrule\endfirsthead\textbf{Variable}&\textbf{Propósito y valor de referencia}\\\midrule\endhead
-
-\bottomrule\endfoot
-
-\texttt{MSSQL\_SA\_PASSWORD}&Contraseña administrativa del motor, usada por Docker y db-init.\\
-
-\texttt{DB\_HOST / DB\_PORT}&Conexión del backend: 127.0.0.1 y 1433 por defecto.\\
-
-\texttt{DB\_NAME}&\texttt{ComercialLaEstrella}\\
-
-\texttt{DB\_USER / DB\_PASSWORD}&Login estrella\_api y su contraseña; operaciones habituales.\\
-
-\texttt{IMPORT\_DB\_USER}&\texttt{estrella\_import}\\
-
-\texttt{IMPORT\_DB\_PASSWORD}&Contraseña del login separado para la carga histórica.\\
-
-\texttt{IMPORT\_KEY}&Secreto de al menos 32 caracteres, enviado en X-Import-Key.\\
-
-\texttt{IMPORT\_ENABLED}&false normalmente; true solo durante la primera carga.\\
-
-\texttt{HOST / PORT}&Dirección de escucha de la API: 127.0.0.1 y 3000.\\
-
-\end{longtable}
-
-
-\subsection{Reglas de configuración}
-DB\_PASSWORD e IMPORT\_DB\_PASSWORD deben tener de 16 a 128 caracteres de los conjuntos A-Z, a-z, 0-9, guion, guion bajo y signo de exclamación. init.sh valida ese conjunto antes de sustituir valores en los literales de sqlcmd. Las variables numéricas y booleanas del backend se validan al iniciar; una configuración inválida impide el arranque.
-
-Cambiar una contraseña en .env no rota automáticamente un login que ya existe dentro del volumen. El DDL solo crea logins ausentes. En una instalación existente se conservan las claves originales o se realiza una rotación administrativa coordinada. No se borra el volumen para corregir una contraseña.
-
-\section{Arranque de SQL Server con Docker}
-\subsection{Crear los servicios}
+\subsection{Inicio del motor e inicialización}
 \begin{lstlisting}
 docker compose up -d
 docker compose ps -a
 docker compose logs db-init
 \end{lstlisting}
-Se crean dos servicios. sqlserver mantiene el motor y los datos; db-init es una tarea que ejecuta init.sql cuando el motor está saludable. Es normal que db-init quede detenido después de finalizar: debe terminar con código 0. Comprobar ambos resultados; la salud del motor por sí sola no demuestra que el esquema esté listo.
+El servicio sqlserver inicia SQL Server 2022 y conserva sus archivos en el volumen del proyecto. La imagen está fijada por digest. La comprobación de salud ejecuta una consulta al motor; después de que sea satisfactoria, db-init ejecuta init.sql mediante sqlcmd.
 
-La imagen de SQL Server 2022 está fijada por digest en Compose. La edición Developer se utiliza para desarrollo y evaluación. El puerto del contenedor se publica únicamente en 127.0.0.1. Los montajes del DDL son de solo lectura; la opción z permite el etiquetado compartido en sistemas con SELinux.
+La instalación se considera preparada cuando el motor está saludable y db-init ha terminado con código 0. El inicializador crea ComercialLaEstrella, las tablas ausentes, las restricciones, los índices, las vistas, los triggers y los usuarios. No inserta los registros del histórico. Las vistas y los triggers se definen con CREATE OR ALTER, mientras que las tablas y los logins se crean únicamente si no existen.
 
-\subsection{Qué hace la inicialización}
-\begin{enumerate}
-\item Verifica la contraseña de los dos usuarios de aplicación.
-\item Ejecuta sqlcmd con autenticación administrativa, confianza en el certificado local y salida con error si falla un lote.
-\item Crea ComercialLaEstrella si no existe y crea las tablas ausentes.
-\item Define restricciones, índices y la tabla de control de importación.
-\item Crea o actualiza vistas y triggers.
-\item Crea los logins y usuarios ausentes y concede permisos por objeto.
-\end{enumerate}
-La inicialización crea estructura; no carga registros de negocio. El histórico se envía por HTTP. Si se necesita volver a aplicar el script sin eliminar los datos:
+Para reaplicar la inicialización sobre el esquema previsto sin eliminar datos:
 \begin{lstlisting}
 docker compose run --rm db-init
 \end{lstlisting}
-El script permite repetir su ejecución sobre el esquema esperado. No reemplaza una herramienta general de migraciones: las tablas existentes no se reconstruyen automáticamente cuando cambia su definición.
+La repetición del script no constituye una migración automática de tablas que hayan cambiado de definición. Cualquier modificación estructural posterior requiere revisar el DDL antes de aplicarla a una base existente.
 
-\subsection{Persistencia y detención}
-\begin{lstlisting}
-# Detener o volver a iniciar sin borrar datos
-docker compose stop
-docker compose start
-
-# Reiniciar solamente el motor
-docker compose restart sqlserver
-\end{lstlisting}
-Los archivos se guardan en el volumen sqlserver-data del proyecto Compose. docker compose down elimina los contenedores y la red, pero conserva el volumen. La opción down -v también elimina el volumen y sus datos; no se utiliza en el reinicio habitual ni antes de la demostración.
-
-\section{Compilación y ejecución de la API}
+\subsection{Inicio y comprobación del backend}
 \begin{lstlisting}
 npm run build
 npm start
 \end{lstlisting}
-build compila TypeScript a dist; start ejecuta dist/server.js. La terminal queda ocupada mientras se atienden peticiones. Para trabajar con recarga automática puede utilizarse npm run dev. Si se modifica el código y se usa npm start, primero se recompila; editar TypeScript no cambia un compilado previo por sí solo.
+El servidor establece su conexión SQL antes de abrir el puerto HTTP. Si no consigue autenticarse o encontrar la base, no inicia el servicio normalmente. La terminal permanece abierta mientras la API está disponible. El cierre con Ctrl+C detiene la escucha y libera los pools.
 
-El servidor inicializa primero el pool de base de datos. Solo después abre el puerto HTTP. Al recibir SIGINT o SIGTERM cierra el servidor y las conexiones, evitando dejar el proceso de Node activo innecesariamente.
+La comprobación inicial se realiza con GET /api/health. El servidor ejecuta SELECT 1; la respuesta satisfactoria es HTTP 200 con estado ok y database SQL Server 2022. Esta consulta permite distinguir un backend activo y conectado de un proceso que únicamente tiene abierto el puerto.
+
+
+
+\subsection{Comprobación sobre la instalación en servicio}
+
+Las capturas se obtuvieron directamente en un navegador que consultó la API local. Muestran el JSON servido por el backend, con el formato de lectura del navegador. No se reconstruyeron las respuestas en una página de presentación ni se simula la interfaz de Postman. La ejecución y sus códigos HTTP se conservaron en el registro de operaciones asociado.
+
+\Needspace{28\baselineskip}\subsubsection*{Disponibilidad y estado de la carga}
+
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/01_conexion.png}\caption{GET /api/health sobre el servidor activo: estado ok y conexión con SQL Server 2022.}\end{figure}
+
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/02_carga.png}\caption{GET /api/admin/importacion: histórico confirmado, 9068 filas originales y ruta de carga deshabilitada.}\end{figure}
+
+
+
+\subsection{Arranque de una instalación existente}
+Cuando el histórico ya está cargado, se inicia Compose, se verifica el motor y se ejecuta npm start con IMPORT\_ENABLED=false. No se vuelve a importar ni a generar credenciales. Si se ha modificado TypeScript, se compila antes de iniciar; para desarrollo se dispone de npm run dev.
+
+Los reinicios conservan el volumen. docker compose stop y docker compose start permiten detener y recuperar los servicios. docker compose down conserva los datos; down -v elimina el volumen y no se utiliza como procedimiento de reinicio.
+
+\section{Persistencia y adaptación del modelo}
+El modelo se organiza en ubicación, catálogos comerciales, personas y establecimientos, productos e inventario, y transacciones. pais, departamento y municipio establecen la jerarquía territorial. persona contiene los datos compartidos por cliente y empleado; tienda identifica el establecimiento donde se realiza la venta.
+
+producto conserva descripción, categoría y marca. catalogo\_producto añade el precio vigente y la existencia de ese producto en una tienda concreta. Esta separación permite que un mismo producto tenga distinta disponibilidad y precio en cada establecimiento. La venta identifica tienda, empleado, cliente, fecha y estado; detalle\_venta conserva cantidades y precios históricos; pago registra cada abono y su método.
+
+\subsection{Claves y consistencia entre establecimientos}
+catalogo\_producto utiliza la PK compuesta id\_tienda, id\_producto. detalle\_venta utiliza id\_venta, id\_producto. Estas claves impiden duplicar la misma asociación y se conservan en el orden de los segmentos HTTP.
+
+La FK compuesta de venta sobre empleado(id\_empleado,id\_tienda) impide registrar una operación en una tienda distinta de la asignada al empleado. La integridad no depende de que Postman seleccione correctamente el empleado: el motor rechaza la combinación inválida.
+
+\subsection{Tipos y conservación de los datos}
+Los identificadores se mantienen explícitos y no utilizan IDENTITY. Los valores NUMBER de la fase anterior se expresan como INT o DECIMAL(12,2); los textos se almacenan como NVARCHAR y las fechas como DATETIME2(0). Los valores de fecha se interpretan en UTC para evitar desplazamientos durante la carga y la lectura.
+
+Los 45 correos ausentes del histórico se conservan como NULL. El índice único filtrado de persona incluye únicamente correos no nulos; así se permiten varios registros sin correo y se conserva la unicidad de los correos presentes. Los importes deben ser positivos, las existencias no negativas y el subtotal debe coincidir con cantidad por precio unitario.
+
+\section{Carga histórica y conciliación}
+La carga inicial procede de las 19 hojas del dataset de la fase 1. Se entrega su conversión JSON y un manifiesto de conteos. El proceso conserva identificadores, importes, fechas, estados y existencias originales. El resumen de filas se presenta al final de esta sección.
+
+\subsection{Procedimiento de carga inicial}
+La importación solo se realiza sobre las 19 tablas de negocio vacías. Se detiene la API, se habilita temporalmente IMPORT\_ENABLED=true y se inicia de nuevo. Desde otra terminal se ejecuta:
 \begin{lstlisting}
-curl http://127.0.0.1:3000/api/health
+npm run import:historico
 \end{lstlisting}
-\textbf{Resultado esperado:} HTTP 200 y el siguiente objeto:
-\begin{lstlisting}
-{"estado":"ok","database":"SQL Server 2022"}
-\end{lstlisting}
-La comprobación ejecuta SELECT 1 contra el motor; confirma comunicación con SQL Server, no solo que Express esté escuchando.
+El cliente envía POST /api/admin/importacion con el archivo completo y la cabecera X-Import-Key. La respuesta correcta es HTTP 201, mensaje Historico importado y conciliado y total 9068. Terminada la carga, se restaura IMPORT\_ENABLED=false y se reinicia el backend. GET /api/admin/importacion debe confirmar importado=true y detalle.filas=9068.
 
-\subsection{Arranque diario con la carga ya realizada}
-\begin{enumerate}
-\item Abrir Proyecto 2 y ejecutar docker compose up -d.
-\item Verificar motor saludable e inicialización correcta.
-\item Mantener IMPORT\_ENABLED=false e iniciar npm start.
-\item Consultar health y el estado de importación.
-\item Seleccionar el entorno local de Postman y comenzar una nueva ejecución.
-\end{enumerate}
-No es necesario importar de nuevo, reinstalar dependencias ni recrear la base para cada sesión. Reiniciar Node tampoco cambia los identificadores que Postman conserva.
+La colección separada de importación permite enviar el mismo archivo desde Postman mediante Body en modo binary. La clave se define localmente. Esta colección no interviene en las ejecuciones habituales de CRUD y triggers.
 
-\section{Migración del modelo y del histórico}
-\subsection{Cambios entre Oracle y SQL Server}
-La fase 2 mantiene las entidades, claves y dependencias de la fase 1. Los tipos se adaptan al motor: NUMBER de identificadores pasa a INT; importes a DECIMAL(12,2); VARCHAR2 a NVARCHAR para conservar Unicode; y fechas a DATETIME2(0). No se utiliza IDENTITY porque los identificadores originales deben preservarse.
+\subsection{Control del archivo y exclusión de cargas simultáneas}
+El servicio compara la representación canónica del cuerpo con el archivo original mediante SHA-256 y valida cada campo con las reglas de la entidad. Un archivo modificado se rechaza antes de escribir. La exclusión en memoria se reserva antes de la primera lectura asíncrona; dentro de SQL se adquiere además un bloqueo exclusivo de aplicación asociado a la transacción.
 
-persona concentra los datos compartidos de clientes y empleados. catalogo\_producto representa el par tienda-producto y almacena precio vigente y existencia por tienda. detalle\_venta conserva el precio histórico aplicado a una venta; este precio puede diferir del vigente sin que exista un error. La FK compuesta de venta hacia empleado garantiza que el empleado pertenece a la tienda indicada.
+La transacción SERIALIZABLE consulta el registro de importación y comprueba que las tablas están vacías. La carga se realiza en orden de dependencias y en bloques de 50 filas. Una segunda carga completa se rechaza con 409; una ruta deshabilitada responde 404 y una clave incorrecta, cuando está habilitada, responde 401.
 
-\subsection{Conteos de referencia}
-La fuente es el libro dataset\_comercial\_la\_estrella.xlsx de la fase 1. data/historico.json contiene su conversión y data/manifest.json registra el origen y los conteos. Los 45 correos ausentes se conservan como NULL; un índice único filtrado excluye los nulos y mantiene la unicidad de los correos presentes.
+\subsection{Conservación del inventario histórico}
+Las existencias del dataset ya representan su situación histórica. Descontar nuevamente todos sus detalles produciría un saldo distinto del original. Para esta única carga se utiliza estrella\_import, miembro del rol importador, y un contexto de sesión temporal. Los triggers operativos reconocen la combinación de ambas condiciones para omitir el descuento y el recálculo del estado durante la importación.
+
+Las PK, FK, CHECK e índices siguen activos. El login normal de la API no pertenece al rol y no puede habilitar esa excepción únicamente asignando el contexto. La excepción tampoco permite introducir un archivo arbitrario: la comparación previa exige el contenido original.
+
+\subsection{Conciliación antes de confirmar}
+El servicio vuelve a leer todas las tablas, ordena por clave y compara todos sus valores con el contenido de origen. Las fechas se normalizan antes de comparar. Si difiere un valor o falla una sentencia, se revierte la carga completa. Solo después de conciliar se registra fecha, número de filas y hash y se confirma la transacción. Finalmente se limpia el contexto y se destruye el pool especial, incluso en una salida por error.
+
+El total 9068 corresponde a esa carga, no al conteo permanente de la base. Las operaciones de prueba posteriores pueden añadir filas sin cambiar el registro de importación.
+
 
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{8.1cm}}\toprule
 
-\textbf{Tabla}&\textbf{Filas históricas}&\textbf{Clave primaria}\\\midrule\endfirsthead\textbf{Tabla}&\textbf{Filas históricas}&\textbf{Clave primaria}\\\midrule\endhead
+\textbf{Tabla}&\textbf{Filas originales}&\textbf{Clave primaria}\\\midrule\endfirsthead\textbf{Tabla}&\textbf{Filas originales}&\textbf{Clave primaria}\\\midrule\endhead
 
 \bottomrule\endfoot
 
@@ -326,1664 +244,279 @@ La fuente es el libro dataset\_comercial\_la\_estrella.xlsx de la fase 1. data/h
 
 \texttt{pago}&1,389&\texttt{id\_pago}\\
 
-\textbf{TOTAL}&\textbf{9,068}&19 tablas de negocio\\
+\textbf{Total}&\textbf{9,068}&19 tablas de negocio\\
 
 \end{longtable}
 
 
-\subsection{Primera importación: solo sobre una instalación vacía}
-\begin{enumerate}
-\item Detener la API y cambiar temporalmente IMPORT\_ENABLED a true en .env.
-\item Iniciar la API y, desde otra terminal, ejecutar npm run import:historico.
-\item Comprobar HTTP 201, el mensaje Historico importado y conciliado y total 9068.
-\item Detener la API, restaurar IMPORT\_ENABLED=false y volver a iniciarla.
-\item Consultar GET /api/admin/importacion; debe indicar importado=true, detalle.filas=9068 y habilitada=false.
-\end{enumerate}
-El script cliente envía el archivo mediante POST /api/admin/importacion con X-Import-Key. No escribe directamente en SQL. La colección de importación ofrece una alternativa manual: definir importKey localmente, elegir el archivo histórico en Body, modo binary, y enviar Content-Type application/json. No exportar el secreto.
 
-\subsection{Transacción, seguridad y conciliación}
-\begin{enumerate}
-\item El servicio reserva una exclusión en memoria antes de su primera operación asíncrona.
-\item Compara el SHA-256 canónico del cuerpo con el del archivo histórico incluido. Cambiar el orden de propiedades no cambia la representación canónica; alterar valores o el orden de las filas sí puede cambiarla.
-\item Valida cada registro con las reglas de su entidad.
-\item Abre el pool estrella\_import e inicia una transacción SERIALIZABLE.
-\item Adquiere un bloqueo de aplicación exclusivo con sp\_getapplock y verifica ausencia de carga previa y de filas en las 19 tablas.
-\item Activa un contexto de sesión de importación y carga en orden de dependencias, en bloques de 50 filas.
-\item Vuelve a leer y compara todos los valores de cada tabla ordenados por clave; normaliza las fechas para una comparación estable.
-\item Registra la carga en importacion\_historica, limpia el contexto y confirma. Ante cualquier fallo revierte la transacción.
-\item Libera la conexión, destruye el pool especial y libera la exclusión, incluso cuando hay un error.
-\end{enumerate}
-La excepción histórica requiere simultáneamente pertenecer al rol importador y tener el contexto activo. Esto evita volver a descontar existencias que ya representan el estado histórico del Excel. Las PK, FK, CHECK e índices únicos siguen evaluándose. El usuario estrella\_api no pertenece a ese rol y no puede activar la excepción únicamente fijando el contexto.
+\section{Operación del servicio REST}
+La base de las peticiones es \url{http://127.0.0.1:3000/api}. POST y PUT utilizan Content-Type application/json. La API admite campos declarados por entidad; un campo desconocido, una clave primaria en PUT o un objeto de actualización vacío se rechazan antes de la escritura.
 
+\subsection{Alta, consulta, modificación y eliminación}
+POST /api/entidad crea un registro con sus identificadores explícitos y devuelve 201 con el objeto almacenado. GET del listado devuelve data, total, limit y offset. GET de una clave devuelve el registro o 404. PUT modifica uno o varios campos permitidos y devuelve el registro actualizado. DELETE devuelve 204 sin cuerpo; las referencias o protecciones de negocio pueden impedirlo con 409.
 
-Hash registrado en la evidencia de carga:\par\smallskip\path{80e4d18ae9300bcedbdc1354eddb17b29d2415e053085a9e05d0fae6462882ab}\par
+Los listados se ordenan por PK. limit admite 1 a 500 y usa 100 por defecto; offset comienza en cero. Para recorrer una tabla grande se conserva el límite y se aumenta offset. El valor total indica las filas de la entidad y no solo las de la página.
 
 
-\nota{El contador 9068 describe la importación original. Las pruebas posteriores crean registros adicionales; el total actual de las tablas puede ser mayor sin invalidar la conciliación histórica. No borrar la base para hacer coincidir esos números.}
 
-\section{Contrato HTTP, validación y errores}
-La dirección base es \url{http://127.0.0.1:3000/api}. Los cuerpos POST y PUT se envían como JSON con Content-Type application/json. Los identificadores se proporcionan explícitamente; no los asigna automáticamente el servidor.
+\subsection{Comprobación del ciclo de actualización y eliminación}
 
+La operación registrada creó un país auxiliar, modificó su nombre mediante PUT y consultó el objeto actualizado. Después lo eliminó con DELETE y verificó la ausencia mediante GET. El registro de la ejecución confirmó 201, 200, 204 y 404 en los pasos correspondientes. Las capturas muestran el contenido obtenido antes y después de la eliminación.
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{7cm}>{\raggedright\arraybackslash}p{7.1cm}}\toprule
+\Needspace{28\baselineskip}\subsubsection*{Actualización y eliminación verificadas}
 
-\textbf{Método}&\textbf{Ruta de ejemplo}&\textbf{Respuesta}\\\midrule\endfirsthead\textbf{Método}&\textbf{Ruta de ejemplo}&\textbf{Respuesta}\\\midrule\endhead
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/03_crud_actualizado.png}\caption{GET /api/pais/1731155899: nombre actualizado conservado en el registro de prueba.}\end{figure}
 
-\bottomrule\endfoot
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/04_crud_eliminado.png}\caption{GET /api/pais/1731155899 después de DELETE: Registro no encontrado, correspondiente al HTTP 404 registrado.}\end{figure}
 
-\texttt{POST}&\path{/api/pais}&201 y registro creado.\\
 
-\texttt{GET}&\path{/api/pais?limit=5&offset=0}&200 con data, total, limit y offset.\\
 
-\texttt{GET}&\path{/api/pais/1}&200 con objeto; 404 si no existe.\\
+\subsection{Validación aplicada}
+Los IDs y las cantidades se envían como números enteros positivos; existencia\_actual admite cero. Los importes se envían como números JSON con hasta dos decimales. Las fechas aceptan YYYY-MM-DD o YYYY-MM-DDTHH:mm:ss; el servidor puede devolverlas con Z al representarlas en JSON. correo admite una dirección válida o NULL. Las longitudes de texto corresponden al esquema SQL.
 
-\texttt{PUT}&\path{/api/pais/1}&200 con registro actualizado.\\
+En pago, id\_venta no puede cambiarse mediante PUT. En venta, las restricciones adicionales dependen del estado y de la existencia de detalles o pagos. Los errores de integridad se traducen a respuestas HTTP sin exponer consultas completas ni credenciales.
 
-\texttt{DELETE}&\path{/api/pais/1}&204, sin cuerpo de respuesta.\\
 
-\end{longtable}
 
+\subsection{Rutas por entidad}
 
-PUT admite uno o más campos modificables: no obliga a reenviar el registro completo. No admite claves primarias, campos desconocidos ni un objeto vacío. En pago tampoco se admite trasladar el registro a otra venta mediante id\_venta.
-
-\subsection{Listados y paginación}
-limit es un entero de 1 a 500, con valor predeterminado 100; offset es un entero no negativo, con valor predeterminado 0. El listado se ordena por clave primaria. Los parámetros no reconocidos se rechazan. total representa el número total de registros de esa entidad, no solo los de la página.
-\begin{lstlisting}
-{
-  "data": [{"id_pais": 1, "nombre": "Guatemala"}],
-  "total": 3,
-  "limit": 1,
-  "offset": 0
-}
-\end{lstlisting}
-El total del ejemplo corresponde al histórico de países; puede aumentar si se dejan registros de prueba.
-
-\subsection{Tipos y restricciones de entrada}
-\begin{itemize}
-\item Los enteros se envían como números JSON, no como cadenas. IDs y cantidades deben ser positivos y caber en INT; existencia\_actual permite cero.
-\item Los importes deben ser positivos, con máximo dos decimales y dentro de DECIMAL(12,2). El subtotal debe coincidir con cantidad por precio.
-\item Los textos tienen longitud máxima según entidad y no pueden contener únicamente espacios. correo admite NULL o una dirección válida.
-\item Las fechas aceptan YYYY-MM-DD o YYYY-MM-DDTHH:mm:ss. Se interpretan en UTC; en las respuestas pueden aparecer con Z y milisegundos. La entrada no utiliza sufijo Z porque el validador espera los formatos indicados.
-\item Las claves de ruta deben ser enteros positivos sin signos ni decimales. Para claves compuestas se respetan los dos segmentos y su orden.
-\end{itemize}
-
-\needspace{19\baselineskip}\subsection{Códigos HTTP y lectura de fallos}
-
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{14.1cm}}\toprule
-
-\textbf{Código}&\textbf{Significado en esta API}\\\midrule
-
-200&Consulta o actualización correcta.\\
-
-201&Creación, lote o importación correcta.\\
-
-204&Eliminación correcta; no hay JSON que mostrar.\\
-
-400&Datos o JSON inválidos, histórico alterado o stock insuficiente.\\
-
-401&Clave de importación incorrecta con la ruta habilitada.\\
-
-404&Registro o ruta inexistente; importación deshabilitada.\\
-
-409&Duplicado, referencias, operación protegida, carga previa o conflicto concurrente.\\
-
-413&Cuerpo de la petición superior al tamaño permitido.\\
-
-500&Error interno no clasificado; revisar terminal del servidor.\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-
-Los mensajes de negocio se devuelven en error; la validación también puede incluir detalles con campo y mensaje. Los números SQL 2601 y 2627 se traducen a Registro duplicado; 547 a conflicto de integridad; 1205 y 1222 a conflicto concurrente. El error 51001 de los triggers se convierte en 400 y Stock insuficiente; el 51002 se comunica como 409. No se exponen consultas completas ni contraseñas en las respuestas de error interno.
-
-\section{TypeORM y acceso a datos}
-Los metadatos de src/entities/schema.json describen tabla, claves, tipos, longitudes y nulabilidad. src/entities/index.ts los valida y crea un EntitySchema por tabla, con esquema dbo. Las relaciones físicas y restricciones se mantienen en init.sql. No se duplican mediante sincronización automática del ORM.
-
-\begin{itemize}
-\item synchronize=false y migrationsRun=false: el esquema lo administra el DDL explícito.
-\item El pool normal permite hasta cinco conexiones; el de importación, una. No se abre una sesión nueva por cada petición.
-\item encrypt=true y trustServerCertificate=true permiten cifrado con el certificado local del contenedor. Esa confianza se ha definido para la instalación local.
-\item useUTC=true conserva una interpretación uniforme de fechas; requestTimeout es 120000 ms.
-\item disableOutputReturning=true evita OUTPUT sin INTO, incompatible con escrituras en tablas con triggers habilitados. Después de insertar o actualizar se consulta el resultado.
-\end{itemize}
-Las rutas de entidades llaman a una fábrica de CRUD; así conservan módulos separados y comparten el contrato de validación. Los nombres de tabla proceden de metadatos internos, nunca de un nombre arbitrario recibido por HTTP. Los valores se pasan como parámetros o mediante operaciones de repositorio.
-
-\section{Inventario: trigger Insert\_Detalle}
-\subsection{Qué es un trigger}
-Un trigger DML es código almacenado que SQL Server ejecuta automáticamente como respuesta a INSERT, UPDATE o DELETE sobre una tabla. El cliente no lo invoca con una ruta especial. Forma parte de la transacción que modificó la tabla: si lanza un error, no se debe conservar una parte de la venta y otra parte del inventario.
-
-Insert\_Detalle se define como AFTER INSERT, UPDATE, DELETE. Se ejecuta una vez por sentencia y trabaja con los conjuntos inserted y deleted. En INSERT solo hay filas nuevas; en DELETE solo anteriores; en UPDATE hay ambas versiones. No se presupone una sola fila.
-
-\subsection{Cálculo del ajuste}
-El trigger reúne las ventas afectadas, bloquea sus encabezados, comprueba que estén REGISTRADA y sin pagos, y agrupa por tienda y producto:
-\[
-\Delta_{t,p}=\sum\text{cantidad nueva}_{t,p}-\sum\text{cantidad anterior}_{t,p}
-\qquad
-\text{stock final}_{t,p}=\text{stock actual}_{t,p}-\Delta_{t,p}
-\]
-En una inserción de 2 unidades el delta es 2 y se descuentan 2. Si se modifica de 2 a 3, el delta es 1: solo se descuenta una unidad adicional. Si se elimina un detalle de 3, el delta es -3 y se devuelven tres.
-
-\subsection{Actualización atómica y rollback}
-La actualización del catálogo utiliza UPDLOCK y HOLDLOCK, junto con una condición que exige stock suficiente. Después compara las filas realmente actualizadas con el número de grupos del delta. Si falta un catálogo o alguna cantidad supera el disponible, lanza THROW 51001. SET XACT\_ABORT ON y el error impiden conservar ajustes parciales.
-
-En un lote que solicita 4 y 7 unidades del mismo producto en una tienda con 10, se considera el total 11. No se aceptan ambas filas por separado. En competencia concurrente, las solicitudes no deben consumir simultáneamente las mismas últimas unidades; los bloqueos y las condiciones se evalúan en el motor. Un conflicto de bloqueo puede responder 409 y requerir reintento.
-
-\subsection{Demostración mínima}
-Crear un producto de prueba, su catálogo en tienda 1 con existencia 10 y una venta REGISTRADA. Pedir 11 unidades debe devolver 400, sin crear el detalle y conservando 10. Pedir 2 debe devolver 201; consultar el catálogo debe mostrar 8. Los dos resultados se verifican por HTTP, sin modificar directamente la tabla.
-
-\section{Pagos: trigger Insert\_Pago y estados}
-Insert\_Pago se ejecuta después de INSERT, UPDATE y DELETE en pago. Reúne ventas afectadas, toma bloqueos sobre los encabezados, rechaza ventas anuladas y evita recibir pagos si no existen detalles.
-\[
-T=\sum\text{subtotal de detalles}\qquad P=\sum\text{monto de pagos}
-\]
-Si T es mayor que cero y P es mayor o igual a T, el estado pasa a PAGADA; en otro caso, a REGISTRADA. La implementación acepta sobrepago y puede mostrar un saldo negativo: no debe afirmarse que lo prohíbe. Actualizar o eliminar un abono recalcula el estado con los importes restantes.
-
-\subsection{Ejemplo de venta de Q50}
-\begin{enumerate}
-\item Registrar dos unidades con precio Q25 y subtotal Q50.
-\item Registrar un primer pago de Q20; GET de la venta muestra REGISTRADA, total 50, pagado 20 y saldo 30.
-\item Registrar un segundo pago de Q30; el motor cambia a PAGADA, total pagado 50 y saldo 0.
-\item Reducir o eliminar el segundo pago en una prueba separada permite observar el regreso a REGISTRADA si el total pagado deja de cubrir la venta.
-\end{enumerate}
-El backend no asigna PAGADA como parte del POST de pago. SQL Server realiza la transición; el GET posterior permite observar su resultado.
-
-\section{Protecciones complementarias del negocio}
-\subsection{Validar\_Venta}
-Una venta nueva debe comenzar REGISTRADA. No se permite marcar PAGADA manualmente. El trigger reconoce la actualización anidada originada por Insert\_Pago para permitir el cambio interno válido. Cuando una venta ya tiene detalles o pagos se protegen tienda, empleado, cliente y fecha; cambiar esos valores alteraría el significado de movimientos existentes.
-
-Una venta REGISTRADA sin pagos puede cambiar a ANULADA. La transición agrupa sus detalles y devuelve existencias al catálogo una sola vez. Repetir la anulación se rechaza, por lo que no duplica la devolución. Una venta anulada queda protegida. Las FK impiden borrar ventas con registros asociados; no hay una eliminación en cascada de transacciones financieras.
-
-\subsection{Proteger\_Catalogo y Proteger\_Estados}
-Proteger\_Catalogo impide eliminar una combinación tienda-producto si existen detalles de ventas que necesitan ese contexto. Permite actualizar precio o existencias; no elimina el registro histórico del detalle.
-
-Proteger\_Estados conserva el contrato fijo: 1=REGISTRADA, 2=PAGADA y 3=ANULADA. Los módulos CRUD existen para esa entidad, pero las escrituras incompatibles se rechazan con 409. Su prueba correcta es demostrar la protección, no cambiar los nombres del sistema.
-
-\subsection{Resumen de dependencias}
-Las altas respetan la secuencia de catálogos, personas, tiendas, empleados/clientes, productos, catálogo, ventas, detalles y pagos. Para borrar auxiliares se usa el orden inverso. Un 409 por FK significa que existe una referencia que debe tratarse conforme al negocio; no se desactiva la restricción para forzar la operación.
-
-\section{Vistas y reportes SQL}
-Una vista guarda una definición SELECT reutilizable. Las tres vistas solicitadas encapsulan JOIN y agregaciones en el motor. Los endpoints de reportes ejecutan SELECT sobre esos objetos y aplican un orden estable; no reconstruyen los reportes mediante relaciones del ORM.
-
-\subsection{Vista\_Ventas\_Ubicacion}
-Ruta: \path{GET /api/reportes/ventas-ubicacion}. Devuelve id\_tienda, tienda, municipio, departamento, pais, cantidad\_ventas y total\_facturado. Preagrupa los subtotales por venta antes de contar y sumar, y excluye ANULADA. Parte de las ventas existentes; una tienda sin ventas no aparece por el solo hecho de existir.
-
-\subsection{Vista\_Top\_Productos}
-Ruta: \path{GET /api/reportes/top-productos}. Devuelve codigo\_producto, nombre, categoria, marca, unidades\_vendidas y monto\_total. Agrega detalles de ventas no anuladas y usa BIGINT en la suma de unidades. El endpoint ordena por unidades descendentes y código de producto como desempate. El reporte no está limitado a los primeros diez: devuelve todos los productos presentes en esa agregación.
-
-\subsection{Vista\_Saldos\_Pendientes y vista auxiliar}
-Ruta: \path{GET /api/reportes/saldos-pendientes}. Devuelve id\_venta, total\_venta, total\_pagado y saldo\_pendiente para ventas REGISTRADA. Se apoya en Vista\_Consulta\_Ventas, que también enriquece los GET de venta con estado e importes. COALESCE convierte la ausencia de detalles o abonos en cero.
-
-\subsection{Por qué se agregan detalles y pagos por separado}
-Si una venta tiene dos detalles y tres pagos, unir ambos conjuntos directamente genera seis filas. Eso repetiría los subtotales tres veces y los pagos dos veces. Las expresiones de tabla comunes agrupan cada conjunto por id\_venta antes de unirlos al encabezado. El saldo se calcula como total de detalles menos total de pagos.
-
-Todos los endpoints de reportes responden HTTP 200 con un objeto que contiene data como arreglo. En los resultados del controlador mssql, ciertos agregados BIGINT pueden representarse como cadenas JSON; por ejemplo, cantidad\_ventas o unidades\_vendidas. Los totales pueden cambiar después de las pruebas; una cifra fija de una captura no sustituye la comprobación de la fórmula.
-
-\section{Postman: importación, variables y ejecución}
-\subsection{Importar los archivos correctos}
-En Postman seleccionar Import, Files y abrir los siguientes archivos de la carpeta postman:
-\begin{itemize}
-\item ComercialLaEstrella.postman\_collection.json: crea la colección Comercial La Estrella - Fase 2.
-\item local.postman\_environment.json: crea el entorno Comercial La Estrella local.
-\end{itemize}
-Seleccionar el entorno arriba a la derecha. La colección aparece en Collections y el entorno en Environments. Importar JSON no ejecuta peticiones ni crea tablas o registros.
-
-
-\begin{longtable}{>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{10.5cm}}\toprule
-
-\textbf{Carpeta}&\textbf{Uso}\\\midrule\endfirsthead\textbf{Carpeta}&\textbf{Uso}\\\midrule\endhead
-
-\bottomrule\endfoot
-
-\texttt{00 Preparacion}&Comprueba conexión, genera IDs y crea dependencias auxiliares.\\
-
-\texttt{01 CRUD por entidad}&Prueba cada entidad; contiene 19 subcarpetas.\\
-
-\texttt{02 Limpieza auxiliares}&Elimina las dependencias temporales del CRUD.\\
-
-\texttt{03 Triggers}&Demuestra inventario, pagos y anulación con resultados observables.\\
-
-\texttt{04 Vistas}&Consulta los tres reportes.\\
-
-\end{longtable}
-
-
-\subsection{Qué significan las llaves dobles}
-Una expresión como \texttt{\{\{baseUrl\}\}} es una referencia a una variable. Antes de enviar, Postman sustituye su valor. baseUrl está en el entorno local y también como respaldo en la colección. Su valor predeterminado es http://127.0.0.1:3000/api.
-
-runId, auxId y payId son variables de colección creadas por el script Pre-request de la primera petición, Iniciar ejecucion y comprobar conexion. Se pueden inspeccionar en Scripts de esa petición y en Variables de la colección después de ejecutarla.
-\begin{lstlisting}
-const id = 1500000000 + Math.floor(Math.random() * 100000000);
-pm.collectionVariables.set('runId', id);
-pm.collectionVariables.set('auxId', id + 1);
-pm.collectionVariables.set('payId', id + 2);
-\end{lstlisting}
-El rango aleatorio reduce la probabilidad de colisión, pero no garantiza unicidad absoluta. Si se vuelve a enviar Crear con el mismo runId, el primer POST puede dar 201 y el segundo 409. Esto es esperado porque se intenta repetir la PK. Si un ID nuevo coincide con uno existente, volver a iniciar la preparación antes de comenzar otra ejecución.
-
-\subsection{Cómo repetir mañana la demostración}
-Ejecutar una vez la primera petición de preparación y continuar en el orden original. Esa petición genera nuevos IDs; no borra datos ni reinicia la base. Reiniciar Node o Docker no cambia las variables de Postman. No volver a ejecutar la primera petición a mitad de un CRUD: se perdería la referencia al registro que se pretendía consultar o eliminar.
-
-La forma más reproducible es hacer clic derecho en la colección, Run collection, seleccionar todas las carpetas y ejecutar una iteración. El orden evita fallos por dependencias. Para pruebas manuales se utiliza Send y se conserva el mismo runId durante toda la secuencia. Test Results muestra las aserciones aprobadas o fallidas. Un código 400, 404 o 409 puede ser precisamente lo que la prueba espera.
-
-\subsection{Ejemplo manual de CRUD}
-Ejecutar primero la preparación. En pais: Crear devuelve 201, Listar 200, Buscar por clave 200, Actualizar 200, Eliminar 204 y Confirmar eliminacion 404. Tras la eliminación, el 404 demuestra que el registro ya no está. Los nombres Demo y los IDs altos permiten distinguir estos registros del histórico.
-
-\subsection{Colección de importación}
-Importacion.postman\_collection.json se reserva para una base vacía con la ruta de carga habilitada. No se ejecuta como parte de la demostración habitual. Si el histórico ya está cargado, basta con consultar su estado. El backend impide repetir la carga; no existe una petición de reinicio de base incluida en la colección.
-
-\section{Lotes, atomicidad y concurrencia}
-Las rutas POST /api/detalle\_venta/lote y POST /api/pago/lote admiten arreglos de 1 a 100 objetos con los mismos campos del POST individual. Devuelven 201 con insertados igual a la cantidad de filas. La inserción es una sola sentencia; el trigger considera el conjunto completo y cualquier error revierte el lote.
-
-Atomicidad significa que se conserva todo el cambio o ninguno. La prueba de lotes debe incluir un caso cuyo consumo agregado exceda el stock y verificar que no permanezcan detalles ni descuentos parciales. La prueba concurrente lanza solicitudes que compiten por las últimas unidades y comprueba que no se sobrevende. No se concluye concurrencia correcta únicamente porque dos peticiones separadas funcionen en serie.
-
-\section{Pruebas y resultados registrados}
-\subsection{Comandos reproducibles}
-\begin{lstlisting}
-npm run build
-npm test
-# API encendida e historico cargado:
-npm run test:integration
-npm run postman
-\end{lstlisting}
-Las pruebas unitarias no necesitan la API levantada. Las de integración y Postman escriben registros reales mediante HTTP y requieren el histórico. No son una simulación sin efectos. El CLI oficial de Postman se incluye como dependencia de desarrollo; no depende de una instalación gráfica para ejecutar la colección.
-
+Los listados y altas utilizan el nombre de la entidad; las operaciones sobre un registro añaden las claves de esta tabla. Las rutas de lote preceden a las rutas individuales para evitar interpretar lote como un ID.
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{11.1cm}}\toprule
 
-\textbf{Comprobación registrada}&\textbf{Resultado y alcance}\\\midrule\endfirsthead\textbf{Comprobación registrada}&\textbf{Resultado y alcance}\\\midrule\endhead
+\textbf{Entidad}&\textbf{Ruta individual a partir de /api}\\\midrule\endfirsthead\textbf{Entidad}&\textbf{Ruta individual a partir de /api}\\\midrule\endhead
 
 \bottomrule\endfoot
 
-Carga histórica&9068 filas; todos los campos de las 19 tablas conciliados antes del commit.\\
+\texttt{pais}&\path{/pais/:id_pais}\\
 
-Pruebas unitarias&4 correctas: validación de entradas y exclusión de importación.\\
+\texttt{departamento}&\path{/departamento/:id_departamento}\\
 
-Integración HTTP&8 escenarios correctos; el ejecutor también cuenta el test padre.\\
+\texttt{municipio}&\path{/municipio/:id_municipio}\\
 
-Postman CLI oficial&144 peticiones y 155 aserciones; 0 fallos.\\
+\texttt{tipo\_tienda}&\path{/tipo_tienda/:id_tipo_tienda}\\
 
-Persistencia&Estado de importación y venta PAGADA idénticos antes y después de reiniciar el motor.\\
+\texttt{tipo\_identificacion}&\path{/tipo_identificacion/:id_tipo_identificacion}\\
 
-Dependencias&La evidencia guardada registra 0 vulnerabilidades en la auditoría de esa ejecución.\\
+\texttt{cargo}&\path{/cargo/:id_cargo}\\
+
+\texttt{categoria}&\path{/categoria/:id_categoria}\\
+
+\texttt{marca}&\path{/marca/:id_marca}\\
+
+\texttt{estado\_venta}&\path{/estado_venta/:id_estado_venta}\\
+
+\texttt{metodo\_pago}&\path{/metodo_pago/:id_metodo_pago}\\
+
+\texttt{persona}&\path{/persona/:id_persona}\\
+
+\texttt{tienda}&\path{/tienda/:id_tienda}\\
+
+\texttt{empleado}&\path{/empleado/:id_empleado}\\
+
+\texttt{cliente}&\path{/cliente/:id_cliente}\\
+
+\texttt{producto}&\path{/producto/:id_producto}\\
+
+\texttt{catalogo\_producto}&\path{/catalogo_producto/:id_tienda/:id_producto}\\
+
+\texttt{venta}&\path{/venta/:id_venta}\\
+
+\texttt{detalle\_venta}&\path{/detalle_venta/:id_venta/:id_producto}\\
+
+\texttt{pago}&\path{/pago/:id_pago}\\
 
 \end{longtable}
 
 
-Estos números proceden de docs/evidencias/validacion.json y sus registros asociados; describen la ejecución guardada, no una garantía sobre cambios futuros. Los archivos registran fechas UTC del 17 de octubre, que pueden corresponder todavía al 16 de octubre en Guatemala. Para un resultado actualizado se vuelven a ejecutar las comprobaciones.
 
-\subsection{Escenarios de integración}
-\begin{enumerate}
-\item Estado del histórico protegido y conciliado.
-\item CRUD de catálogos y entidades relacionadas, incluyendo conflictos.
-\item Stock insuficiente, rollback y ajustes por UPDATE y DELETE.
-\item Abonos parciales, sobrepago, correcciones y protecciones.
-\item Lotes con consumo agregado, rollback total y varios pagos.
-\item Competencia concurrente por las últimas unidades.
-\item Anulación con devolución única e impacto en reportes.
-\item Comparación de las tres vistas con una referencia calculada desde los datos obtenidos por la API.
-\end{enumerate}
-En las evidencias de integración, los listados grandes se guardan como muestras identificadas. No deben interpretarse como si solo existieran las filas visibles en la muestra. La comprobación automatizada consulta las páginas necesarias.
+\section{Gestión del inventario y registro del detalle}
+El alta de un detalle requiere una venta REGISTRADA sin pagos y un catálogo del producto en la tienda de esa venta. El precio unitario se conserva en el detalle; no se recalcula a partir del precio vigente al consultar operaciones históricas. cantidad debe ser positiva y subtotal igual a cantidad multiplicada por precio\_unitario.
 
-\section{Evidencias de inventario y pagos}
-Las imágenes siguientes se generaron a partir de respuestas reales guardadas por el CLI oficial de Postman. Son capturas de una representación HTML del registro HTTP, no capturas de la interfaz gráfica de Postman. Las respuestas y aserciones originales están en postman-oficial.json; los HTML permiten inspeccionar el mismo contenido con un navegador.
+\subsection{Ajuste aplicado por Insert\_Detalle}
+Insert\_Detalle reúne las ventas afectadas, bloquea sus encabezados y verifica que admitan cambios. Después agrupa las filas nuevas y anteriores por tienda y producto. El ajuste utilizado es la suma de cantidades nuevas menos la suma de cantidades anteriores.
 
-\subsection{Inventario: rechazo, conservación y descuento}
-La secuencia muestra stock inicial 10, intento inválido de 11, respuesta Stock insuficiente y conservación del inventario. A continuación, una venta de 2 unidades produce stock 8. La evidencia combina la respuesta del POST y el GET posterior para comprobar el efecto en la base.
-\evidencia{evidencias/inventario.png}{Respuestas reales del CLI de Postman: error de stock, rollback y descuento válido. Representación del registro HTTP.}
-\clearpage
-\subsection{Abonos y cambio automático de estado}
-La segunda secuencia muestra una venta de total 50, un abono parcial de 20 y el abono restante de 30. El GET de la venta permite comprobar REGISTRADA antes de completar el pago y PAGADA con saldo cero después.
-\evidencia{evidencias/pagos.png}{Respuestas reales del CLI de Postman: pagos parciales y transición automática a PAGADA. Representación del registro HTTP.}
-\clearpage
-\subsection{Comprobación de persistencia}
-El archivo persistencia.json conserva el estado del histórico y la misma venta pagada antes y después de reiniciar SQL Server. El id de la venta de esa evidencia es 1546939428; total y pagado permanecen en 50 y saldo en 0. Es un ejemplo de la ejecución registrada, no el ID de cada nueva demostración.
+Con una inserción de dos unidades se descuentan dos. Al modificar de dos a tres se descuenta solo una adicional. Al eliminar ese detalle se devuelven las tres unidades. La operación se calcula por conjunto de filas, por lo que también cubre los lotes.
 
-Para reproducirla, consultar el estado de importación y una venta de prueba, guardar las respuestas, reiniciar únicamente sqlserver, esperar su disponibilidad y repetir los GET. Comparar identificadores, estados, importes y hash. Esta prueba verifica el volumen; no requiere borrar ni volver a importar nada.
+La actualización del catálogo exige existencias suficientes y usa UPDLOCK y HOLDLOCK. El trigger comprueba que se hayan actualizado todos los grupos del movimiento. Si falta un catálogo o no alcanza alguna existencia, lanza el error 51001; la API devuelve 400 con Stock insuficiente. Se revierten tanto el detalle como los descuentos efectuados por esa sentencia.
 
-\section{Inspección estructural con DBeaver}
-Crear una conexión SQL Server hacia 127.0.0.1, puerto 1433 y base ComercialLaEstrella, usando las credenciales DB\_USER y DB\_PASSWORD de .env. Para el certificado local se utiliza encrypt=true y trustServerCertificate=true. No copiar las contraseñas al manual ni a capturas públicas.
-
-En la instalación local se guardó la conexión Comercial La Estrella. Expandir base, esquemas, dbo y tablas para mostrar su estructura; las vistas y triggers se inspeccionan en sus nodos correspondientes. El modo de solo lectura del cliente ayuda a evitar cambios accidentales, pero no convierte por sí mismo al login de la API en un usuario SQL con permisos exclusivamente SELECT.
-
-Durante la evaluación no ejecutar INSERT, UPDATE ni DELETE directamente desde DBeaver. Las operaciones de negocio se muestran en Postman y las consultas de estructura se mantienen separadas de las pruebas CRUD.
-
-\section{Guion detallado para la demostración}
-\begin{enumerate}
-\item Mostrar el repositorio y ubicar Compose e init.sql en la raíz del proyecto. Explicar que SQL Server se ejecuta dentro de Docker y la API en Node en el equipo.
-\item Mostrar docker compose ps -a y el resultado de db-init. Identificar motor saludable, inicializador terminado correctamente y volumen persistente.
-\item Ejecutar health y consultar admin/importacion. Explicar los 9068 registros históricos y por qué los conteos actuales pueden incluir pruebas.
-\item Seleccionar el entorno local e iniciar una sola vez la preparación. Explicar baseUrl y los IDs generados por el script.
-\item Demostrar CRUD de pais. Leer el cuerpo de creación, consultar, actualizar, eliminar y justificar el 404 final.
-\item Mostrar una ruta de clave compuesta y explicar por qué catálogo necesita tienda más producto y detalle necesita venta más producto.
-\item Ejecutar las pruebas de inventario. Justificar 400 al pedir 11 con stock 10 y el GET que confirma 10; luego vender 2 y comprobar 8.
-\item Ejecutar abonos 20 y 30 de la venta de 50. Mostrar el GET entre ambos y el estado PAGADA final; ubicar Insert\_Pago en SQL.
-\item Mostrar anulación sin pagos y devolución única. Explicar por qué repetirla se rechaza.
-\item Ejecutar las tres vistas y explicar las columnas, JOIN, exclusión de anuladas y preagregación.
-\item Abrir Test Results o el resumen del runner; interpretar fallos esperados frente a aserciones fallidas.
-\item Mostrar el PDF, la colección exportada y el código. Realizar cualquier ejercicio práctico con validación y una prueba HTTP del comportamiento modificado.
-\end{enumerate}
-
-\subsection{Preparación de una grabación}
-Antes de grabar, realizar una ejecución completa para confirmar conexión y orden; mantener visibles los códigos y el JSON; ampliar texto si hace falta y ocultar credenciales. Para la toma definitiva iniciar otra preparación y seguir la misma secuencia. No depender de un ID de una sesión anterior ni reiniciar a mitad de una transacción de demostración. Mostrar el resultado del test junto con la respuesta evita interpretar un 400 esperado como un fallo del proyecto.
-
-\section{Solución de problemas}
+\subsection{Resultado de una venta válida y de un rechazo}
+La comprobación realizada para este manual utiliza un producto nuevo, existencia 10 y una venta registrada en tienda 1. Una solicitud de 11 unidades se rechaza y la consulta posterior conserva existencia 10; tampoco existe el detalle rechazado. Una solicitud de dos unidades se acepta y deja existencia 8. Las capturas de la sección de resultados corresponden al GET de la API después de cada operación.
 
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{11.1cm}}\toprule
 
-\textbf{Síntoma}&\textbf{Comprobación y acción}\\\midrule\endfirsthead\textbf{Síntoma}&\textbf{Comprobación y acción}\\\midrule\endhead
+\subsection{Petición rechazada y resultado conservado}
 
-\bottomrule\endfoot
-
-ECONNREFUSED en Postman&Verificar npm start, baseUrl, puerto 3000 y health. Mantener abierta la terminal de la API.\\
-
-La API no inicia por SQL&Revisar motor saludable, logs de db-init y credenciales del volumen. Una contraseña editada en .env no cambia un login existente.\\
-
-Variables sin resolver&Seleccionar el entorno correcto y ejecutar la primera petición de preparación. Revisar Variables de la colección.\\
-
-409 al repetir Crear&Ya existe esa clave. No repetir el POST sobre el mismo ID salvo para demostrar el conflicto; comenzar una ejecución nueva desde preparación.\\
-
-404 después de eliminar&Es el resultado esperado de Confirmar eliminacion. Revisar la aserción correspondiente.\\
-
-409 al borrar una entidad&Tiene referencias o una protección de negocio. Eliminar auxiliares en orden inverso y no desactivar FK.\\
-
-400 por stock&Consultar el catálogo de la tienda correcta; comprobar cantidad y clave compuesta. El intento fallido no debe descontar nada.\\
-
-400 por fecha o decimal&Usar los formatos de fecha admitidos y números JSON con hasta dos decimales; no enviar símbolos de moneda.\\
-
-Importación devuelve 404&La ruta está deshabilitada. Si el histórico ya existe, esto es normal y no debe habilitarse para repetirlo.\\
-
-Código editado sin efecto&Recompilar antes de npm start o utilizar npm run dev para recarga de desarrollo.\\
-
-Más filas que el manifiesto&Las pruebas agregan datos Demo/QA. Diferenciar el histórico importado de los registros actuales.\\
-
-db-init aparece Exited&Es normal si terminó con código 0. Si terminó con otro código, revisar su log antes de continuar.\\
-
-\end{longtable}
-
-
-\clearpage\section{Seguridad, límites y entrega reproducible}
-Los logins de aplicación no son administradores. estrella\_api recibe permisos CRUD por tabla y SELECT de vistas/control; estrella\_import tiene permisos para la carga y su registro de control, y pertenece al rol importador. Ninguno necesita crear tablas desde la API. El login sa se reserva para el bootstrap de la infraestructura.
-
-La aplicación no implementa autenticación general de usuarios, autorización por roles HTTP ni exposición pública. Su alcance es evaluación local. La protección de importación combina habilitación temporal, clave de cabecera, archivo permitido, rol SQL y transacción. No es un endpoint de carga arbitraria para cualquier conjunto de datos.
-
-El archivo .env, node\_modules, dist, logs y los comprimidos de entrega se excluyen de Git. El ZIP se genera bajo demanda con npm run package y usa el formato exigido por el enunciado, [BD1]\_ProyectoFase2\_202300476.zip. No hace falta mantenerlo en el repositorio. El script excluye las credenciales y los artefactos de ejecución; quien recibe la entrega genera su propio .env, instala dependencias y compila.
-
-\subsection{Documentación editable}
-La fuente de este manual es docs/Manual\_Tecnico\_Fase2.tex. El generador scripts/generate-manual.py obtiene los campos de las entidades, ejemplos de Postman, respuestas esperadas y conteos desde los archivos del proyecto. El diseño conserva la portada institucional y la paleta morada y azul del manual de la fase 1.
-\begin{lstlisting}
-# Desde Proyecto 2: regenerar LaTeX y compilar el PDF
-python3 scripts/generate-manual.py --build
-\end{lstlisting}
-El PDF final se guarda en docs/output/pdf/Manual\_Tecnico\_Fase2.pdf. La compilación utiliza un directorio temporal; no deja archivos auxiliares de LaTeX en la entrega. Si se ajusta contenido narrativo generado, editar el generador y regenerar para conservar la reproducibilidad.
-
-\clearpage\section{Preguntas de estudio y respuestas}
-
-
-\needspace{4\baselineskip}\textbf{¿Qué diferencia hay entre API y base de datos?}\par La API ofrece HTTP y valida la entrada; SQL Server almacena registros y aplica integridad y reglas transaccionales. Postman habla con la API.\par
-
-\needspace{4\baselineskip}\textbf{¿Por qué TypeORM si existe init.sql?}\par TypeORM facilita el acceso parametrizado y los repositorios. El DDL explícito permite revisar y reproducir constraints, vistas y triggers sin depender de sincronización automática.\par
-
-\needspace{4\baselineskip}\textbf{¿Por qué el stock no pertenece al producto?}\par Una tienda puede tener precio y existencia distintos para el mismo producto; por eso el stock depende de la clave tienda-producto.\par
-
-\needspace{4\baselineskip}\textbf{¿Qué contienen inserted y deleted?}\par Son conjuntos de filas de la sentencia que activó el trigger. inserted contiene versiones nuevas y deleted versiones anteriores; UPDATE usa ambos.\par
-
-\needspace{4\baselineskip}\textbf{¿Quién cambia la venta a PAGADA?}\par El trigger Insert\_Pago en SQL Server compara totales y actualiza el estado. Node comunica el resultado y el GET lo permite observar.\par
-
-\needspace{4\baselineskip}\textbf{¿Qué es rollback?}\par Deshacer los cambios de una transacción fallida. Un detalle con stock insuficiente no debe dejar un descuento parcial de inventario.\par
-
-\needspace{4\baselineskip}\textbf{¿Qué diferencia hay entre PK y FK?}\par La PK identifica de manera única una fila. La FK exige que la referencia exista en otra clave válida y evita registros huérfanos.\par
-
-\needspace{4\baselineskip}\textbf{¿Por qué no unir detalles y pagos directamente?}\par Porque varios detalles y varios pagos se multiplican en el JOIN. Se suman por separado y luego se unen por venta.\par
-
-\needspace{4\baselineskip}\textbf{¿Qué cambia al reiniciar el backend?}\par Se reinician el proceso y sus conexiones; los datos permanecen en SQL y las variables de Postman no se regeneran.\par
-
-\needspace{4\baselineskip}\textbf{¿Qué cambia al ejecutar la primera petición de Postman?}\par Su Pre-request genera IDs para una nueva prueba y después comprueba health. No borra tablas ni vuelve a cargar el histórico.\par
-
-\needspace{4\baselineskip}\textbf{¿Por qué se omite el descuento en la carga original?}\par El dataset ya contiene existencias históricas. Tratar esos detalles como ventas nuevas descontaría dos veces. La excepción es controlada y exclusiva para el archivo original.\par
-
-\needspace{4\baselineskip}\textbf{¿Una respuesta roja significa error de la prueba?}\par No necesariamente. Si se está probando un rechazo y la respuesta coincide con lo esperado, la aserción pasa aunque el código HTTP sea 400, 404 o 409.\par
-
-\clearpage\appendix\section{Referencia detallada de las 19 entidades}
-
-Las siguientes fichas se obtienen de los metadatos reales y de la colección entregada. Cada una muestra clave, ruta individual, campos, dependencias y cuerpos de ejemplo. Para todas las entidades, POST y GET de listado utilizan /api/ seguido del nombre de tabla; GET individual, PUT y DELETE usan la ruta individual. Los ejemplos con llaves dobles se envían desde Postman después de la preparación. No son JSON independiente hasta que Postman sustituye las variables.
-
-
-\needspace{24\baselineskip}\subsection{pais}
-
-Catálogo de países para ubicar departamentos.\par No depende de otras entidades. El nombre es único.
-
-\textbf{Ruta individual:} \path{/api/pais/:id_pais}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_pais}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
+\textbf{Operación ejecutada:} \path{POST /api/detalle_venta}
 
 \begin{lstlisting}[language={}]
 {
-  "id_pais": {{runId}},
-  "nombre": "Demo pais {{runId}}"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo pais {{runId}}"
-}
-\end{lstlisting}
-
-\needspace{24\baselineskip}\subsection{departamento}
-
-División territorial asociada a un país.\par id\_pais referencia pais. El nombre es único dentro de cada país.
-
-\textbf{Ruta individual:} \path{/api/departamento/:id_departamento}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_departamento}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_pais}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_departamento": {{runId}},
-  "nombre": "Demo departamento {{runId}}",
-  "id_pais": 1
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo departamento {{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{municipio}
-
-Municipio utilizado por personas y tiendas.\par id\_departamento referencia departamento. El nombre es único dentro del departamento.
-
-\textbf{Ruta individual:} \path{/api/municipio/:id_municipio}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_municipio}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_departamento}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_municipio": {{runId}},
-  "nombre": "Demo municipio {{runId}}",
-  "id_departamento": 1
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo municipio {{runId}}"
-}
-\end{lstlisting}
-
-\needspace{24\baselineskip}\subsection{tipo\_tienda}
-
-Clasificación comercial de las tiendas.\par No depende de otras entidades. El nombre es único.
-
-\textbf{Ruta individual:} \path{/api/tipo_tienda/:id_tipo_tienda}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_tipo\_tienda}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_tipo_tienda": {{runId}},
-  "nombre": "Demo tipo_tienda {{runId}}"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo tipo_tienda {{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{tipo\_identificacion}
-
-Tipos de documento de los clientes.\par No depende de otras entidades. El nombre es único.
-
-\textbf{Ruta individual:} \path{/api/tipo_identificacion/:id_tipo_identificacion}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_tipo\_identificacion}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(50)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_tipo_identificacion": {{runId}},
-  "nombre": "Demo tipo_identificacion {{runId}}"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo tipo_identificacion {{runId}}"
-}
-\end{lstlisting}
-
-\needspace{24\baselineskip}\subsection{cargo}
-
-Catálogo de cargos del personal.\par No depende de otras entidades. El nombre es único.
-
-\textbf{Ruta individual:} \path{/api/cargo/:id_cargo}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_cargo}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_cargo": {{runId}},
-  "nombre": "Demo cargo {{runId}}"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo cargo {{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{categoria}
-
-Categoría de los productos.\par No depende de otras entidades. El nombre es único.
-
-\textbf{Ruta individual:} \path{/api/categoria/:id_categoria}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_categoria}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_categoria": {{runId}},
-  "nombre": "Demo categoria {{runId}}"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo categoria {{runId}}"
-}
-\end{lstlisting}
-
-\needspace{24\baselineskip}\subsection{marca}
-
-Marca comercial de los productos.\par No depende de otras entidades. El nombre es único.
-
-\textbf{Ruta individual:} \path{/api/marca/:id_marca}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_marca}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_marca": {{runId}},
-  "nombre": "Demo marca {{runId}}"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo marca {{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{estado\_venta}
-
-Estados fijos del ciclo de venta.\par 1 REGISTRADA, 2 PAGADA, 3 ANULADA. Nombres y claves del sistema protegidos; escrituras de prueba devuelven 409.
-
-\textbf{Ruta individual:} \path{/api/estado_venta/:id_estado_venta}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_estado\_venta}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(30)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_estado_venta": 1,
-  "nombre": "REGISTRADA"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "REGISTRADA"
-}
-\end{lstlisting}
-
-Estos cuerpos son pruebas de rechazo: el POST duplicado y el PUT protegido deben responder 409. No crean nuevos estados.
-
-\needspace{24\baselineskip}\subsection{metodo\_pago}
-
-Formas de pago permitidas.\par No depende de otras entidades. El nombre es único.
-
-\textbf{Ruta individual:} \path{/api/metodo_pago/:id_metodo_pago}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_metodo\_pago}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(80)}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_metodo_pago": {{runId}},
-  "nombre": "Demo metodo_pago {{runId}}"
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo metodo_pago {{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{persona}
-
-Datos personales compartidos por clientes y empleados.\par id\_municipio referencia municipio. correo es nullable y único solo cuando no es NULL.
-
-\textbf{Ruta individual:} \path{/api/persona/:id_persona}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_persona}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombres}&\texttt{NVARCHAR(100)}&Requerido en POST; modificable en PUT\\
-
-\texttt{apellidos}&\texttt{NVARCHAR(100)}&Requerido en POST; modificable en PUT\\
-
-\texttt{telefono}&\texttt{NVARCHAR(25)}&Requerido en POST; modificable en PUT\\
-
-\texttt{correo}&\texttt{NVARCHAR(150)}&Campo requerido en POST; admite NULL\\
-
-\texttt{direccion}&\texttt{NVARCHAR(200)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_municipio}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_persona": {{runId}},
-  "nombres": "Cristina",
-  "apellidos": "Garcia",
-  "telefono": "59398441",
-  "correo": null,
-  "direccion": "13 Calle 3-74 zona 4",
-  "id_municipio": 41
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombres": "Cristina"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{tienda}
-
-Establecimiento donde se gestionan inventario y ventas.\par Referencia municipio y tipo\_tienda. Su nombre es único.
-
-\textbf{Ruta individual:} \path{/api/tienda/:id_tienda}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_tienda}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(120)}&Requerido en POST; modificable en PUT\\
-
-\texttt{direccion}&\texttt{NVARCHAR(200)}&Requerido en POST; modificable en PUT\\
-
-\texttt{telefono}&\texttt{NVARCHAR(25)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_municipio}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_tipo\_tienda}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_tienda": {{runId}},
-  "nombre": "Demo tienda {{runId}}",
-  "direccion": "18 Avenida 7-38 zona 15",
-  "telefono": "24335942",
-  "id_municipio": 41,
-  "id_tipo_tienda": 1
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo tienda {{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{empleado}
-
-Asignación de una persona a tienda y cargo.\par Referencia persona, tienda y cargo. Una persona tiene una sola fila de empleado; la clave alternativa empleado-tienda es referenciada por venta.
-
-\textbf{Ruta individual:} \path{/api/empleado/:id_empleado}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_empleado}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{fecha\_contratacion}&\texttt{DATETIME2(0)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_tienda}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_cargo}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_persona}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_empleado": {{runId}},
-  "fecha_contratacion": "2021-09-15T00:00:00",
-  "id_tienda": 1,
-  "id_cargo": 1,
-  "id_persona": {{auxId}}
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "fecha_contratacion": "2021-09-15T00:00:00"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{cliente}
-
-Identificación comercial de una persona compradora.\par Referencia persona y tipo\_identificacion. Persona es única y el par tipo-número de documento también.
-
-\textbf{Ruta individual:} \path{/api/cliente/:id_cliente}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_cliente}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{id\_tipo\_identificacion}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{numero\_identificacion}&\texttt{NVARCHAR(30)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_persona}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_cliente": {{runId}},
-  "id_tipo_identificacion": 1,
-  "numero_identificacion": "DOC{{runId}}",
-  "id_persona": {{auxId}}
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "numero_identificacion": "DOC{{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{producto}
-
-Datos maestros de productos, sin stock global.\par Referencia categoria y marca. El precio y las existencias se mantienen en catalogo\_producto.
-
-\textbf{Ruta individual:} \path{/api/producto/:id_producto}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_producto}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{nombre}&\texttt{NVARCHAR(120)}&Requerido en POST; modificable en PUT\\
-
-\texttt{descripcion}&\texttt{NVARCHAR(300)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_categoria}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_marca}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_producto": {{runId}},
-  "nombre": "Demo producto {{runId}}",
-  "descripcion": "Agua pura presentacion original, categoria Bebidas",
-  "id_categoria": 1,
-  "id_marca": 4
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "nombre": "Demo producto {{runId}}"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{catalogo\_producto}
-
-Precio vigente y stock de un producto en una tienda.\par Referencia tienda y producto. Precio positivo, stock no negativo y clave compuesta. No se elimina si hay detalles asociados.
-
-\textbf{Ruta individual:} \path{/api/catalogo_producto/:id_tienda/:id_producto}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{precio\_vigente}&\texttt{DECIMAL(12,2)}&Requerido en POST; modificable en PUT\\
-
-\texttt{existencia\_actual}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_tienda}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{id\_producto}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_tienda": 1,
-  "id_producto": {{auxId}},
-  "precio_vigente": 25,
-  "existencia_actual": 10
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "precio_vigente": 25
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{venta}
-
-Encabezado de la transacción comercial.\par Referencia cliente, estado\_venta y el par empleado-tienda. Debe comenzar REGISTRADA; consultar devuelve estado y totales calculados.
-
-\textbf{Ruta individual:} \path{/api/venta/:id_venta}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{id\_venta}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{fecha\_venta}&\texttt{DATETIME2(0)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_tienda}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_empleado}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_cliente}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_estado\_venta}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_venta": {{runId}},
-  "fecha_venta": "2026-10-16T12:00:00",
-  "id_tienda": 1,
-  "id_empleado": 1,
-  "id_cliente": 1,
-  "id_estado_venta": 1
-}
-\end{lstlisting}
-
-\textbf{Cuerpo de PUT de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "fecha_venta": "2026-10-16T12:00:00"
-}
-\end{lstlisting}
-
-\clearpage
-
-\needspace{24\baselineskip}\subsection{detalle\_venta}
-
-Producto, cantidad y precio histórico de una venta.\par Referencia venta y producto. El trigger exige catálogo de la tienda, stock suficiente y venta registrada sin pagos. subtotal=cantidad*precio\_unitario.
-
-\textbf{Ruta individual:} \path{/api/detalle_venta/:id_venta/:id_producto}\par
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
-
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
-
-\texttt{cantidad}&\texttt{INT}&Requerido en POST; modificable en PUT\\
-
-\texttt{precio\_unitario}&\texttt{DECIMAL(12,2)}&Requerido en POST; modificable en PUT\\
-
-\texttt{subtotal}&\texttt{DECIMAL(12,2)}&Requerido en POST; modificable en PUT\\
-
-\texttt{id\_venta}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\texttt{id\_producto}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\textbf{Cuerpo de POST de la colección:}
-
-\begin{lstlisting}[language={}]
-{
-  "id_venta": {{auxId}},
-  "id_producto": {{auxId}},
-  "cantidad": 2,
+  "id_venta": 1731155899,
+  "id_producto": 1731155899,
+  "cantidad": 11,
   "precio_unitario": 25,
-  "subtotal": 50
+  "subtotal": 275
 }
 \end{lstlisting}
 
-\textbf{Cuerpo de PUT de la colección:}
+\textbf{Respuesta recibida: HTTP 400}
 
 \begin{lstlisting}[language={}]
 {
-  "cantidad": 3,
-  "subtotal": 75
+  "error": "Stock insuficiente"
 }
 \end{lstlisting}
 
-La subcarpeta incluye una petición previa de preparación. Ejecutarla antes del CRUD y conservar el orden de toda la colección.
+Después del rechazo se consultó también el detalle y se obtuvo 404. Esto confirma que la transacción no dejó registrado el movimiento que intentaba vender 11 unidades. La siguiente petición utilizó cantidad 2, precio 25 y subtotal 50; respondió 201 y permitió observar el descuento a 8.
 
-\clearpage
+\Needspace{28\baselineskip}\subsubsection*{Existencias antes y después de las operaciones}
 
-\needspace{24\baselineskip}\subsection{pago}
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/05_stock_inicial.png}\caption{Catálogo del producto 1731155899 en tienda 1, antes de registrar detalles: existencia\_actual 10.}\end{figure}
 
-Abono aplicado a una venta por un método de pago.\par Referencia venta y metodo\_pago. Monto positivo. No se permite trasladar id\_venta en PUT; su trigger recalcula el estado.
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/06_stock_tras_rechazo.png}\caption{Consulta posterior al POST rechazado por stock: se conservan las 10 unidades.}\end{figure}
 
-\textbf{Ruta individual:} \path{/api/pago/:id_pago}\par
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/07_stock_descontado.png}\caption{Consulta posterior al POST válido de dos unidades: existencia\_actual 8.}\end{figure}
 
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{6.8cm}}\toprule
 
-\textbf{Campo}&\textbf{Tipo SQL}&\textbf{Contrato de escritura}\\\midrule
 
-\texttt{id\_pago}&\texttt{INT}&PK; requerido en POST, inmutable en PUT\\
+\subsection{Lotes y solicitudes concurrentes}
+POST /api/detalle\_venta/lote admite de 1 a 100 objetos. La inserción se envía como una sola sentencia. Si dos filas del lote consumen el mismo producto de una tienda, el trigger valida su suma; no evalúa cada fila como si dispusiera del stock inicial por separado. Si una falla, el lote no conserva cambios parciales.
 
-\texttt{monto}&\texttt{DECIMAL(12,2)}&Requerido en POST; modificable en PUT\\
+Las solicitudes concurrentes también se resuelven en el motor. La condición de disponibilidad y los bloqueos protegen las mismas existencias frente a operaciones que llegan simultáneamente. Los conflictos de bloqueo clasificados por el middleware responden 409 y pueden requerir reintento. La prueba de concurrencia verifica que no se vendan las mismas últimas unidades dos veces.
 
-\texttt{id\_metodo\_pago}&\texttt{INT}&Requerido en POST; modificable en PUT\\
+\section{Registro de pagos y conciliación de la venta}
+Cada pago almacena venta, método e importe. La venta debe tener detalles y no estar anulada. El pago se registra con un ID propio y no se traslada posteriormente a otra venta. La corrección de su monto o su eliminación sí provoca un nuevo cálculo del estado.
 
-\texttt{id\_venta}&\texttt{INT}&Requerido en POST; inmutable en PUT\\
+\subsection{Actualización realizada por Insert\_Pago}
+El trigger identifica las ventas afectadas y bloquea sus encabezados. Obtiene por separado la suma de subtotales y la suma de abonos. Si el total de la venta es mayor que cero y los abonos lo cubren o superan, asigna PAGADA; en otro caso mantiene o restablece REGISTRADA.
 
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
+La implementación acepta un importe abonado superior al total. En ese caso el saldo calculado puede ser negativo. El comportamiento no debe confundirse con un rechazo por sobrepago: el criterio del estado es cobertura del total, no igualdad estricta.
 
-\textbf{Cuerpo de POST de la colección:}
+\subsection{Secuencia comprobada con abonos}
+En la venta de dos unidades a Q25 el total es Q50. El primer pago de Q20 conserva REGISTRADA, total\_pagado=20 y saldo\_pendiente=30. El segundo pago de Q30 hace que SQL Server asigne PAGADA, con total\_pagado=50 y saldo\_pendiente=0. El resultado se obtiene mediante GET de la venta, que consulta la vista auxiliar con los importes consolidados.
+
+
+
+\subsection{Abonos ejecutados sobre la misma venta}
+
+Primer abono enviado por HTTP:
 
 \begin{lstlisting}[language={}]
 {
-  "id_pago": {{runId}},
-  "id_venta": {{auxId}},
+  "id_pago": 1731155899,
+  "id_venta": 1731155899,
   "id_metodo_pago": 1,
   "monto": 20
 }
 \end{lstlisting}
 
-\textbf{Cuerpo de PUT de la colección:}
+El segundo abono conserva la venta y utiliza un ID de pago distinto y monto 30. Ambos POST respondieron 201. Las consultas siguientes corresponden a esa misma venta y permiten comprobar que el estado cambió por el registro de los abonos, sin un PUT manual que asignara PAGADA.
 
-\begin{lstlisting}[language={}]
-{
-  "monto": 50
-}
+\Needspace{28\baselineskip}\subsubsection*{Conciliación observada en la API}
+
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/08_abono_parcial.png}\caption{GET /api/venta/1731155899 después del abono de Q20: REGISTRADA, total 50, pagado 20 y saldo 30.}\end{figure}
+
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/09_venta_pagada.png}\caption{La misma venta después del abono restante de Q30: PAGADA, total\_pagado 50 y saldo\_pendiente 0.}\end{figure}
+
+
+
+\subsection{Correcciones y protección de movimientos}
+Reducir o eliminar un abono puede devolver la venta a REGISTRADA cuando los pagos restantes no cubren el total. Los detalles no se modifican mientras existen pagos, evitando que una venta abonada cambie de importe por una edición del detalle. Una venta sin detalles no recibe pagos y una venta anulada tampoco admite nuevos abonos.
+
+\section{Cambios de estado, anulación y protección del histórico}
+Las ventas nuevas comienzan REGISTRADA. Validar\_Venta bloquea el cambio manual a PAGADA y permite el cambio interno que realiza Insert\_Pago. Cuando existen detalles o pagos, la tienda, el empleado, el cliente y la fecha dejan de ser modificables: cambiar esos datos alteraría la asociación de movimientos ya registrados.
+
+Una venta REGISTRADA sin pagos puede anularse. El trigger agrupa las cantidades de sus detalles y devuelve el inventario a cada catálogo. La devolución ocurre únicamente en la transición al estado ANULADA. Un intento posterior de repetir la transición se rechaza, evitando devolver las unidades más de una vez. La venta anulada queda protegida y se excluye de los reportes operativos.
+
+Proteger\_Catalogo impide borrar un catálogo que da contexto a detalles existentes. Las FK impiden borrar ventas con detalles o pagos asociados. No se configura borrado en cascada de esos movimientos. Los estados del sistema se mantienen fijos: 1 REGISTRADA, 2 PAGADA y 3 ANULADA; su modificación o eliminación se rechaza.
+
+\section{Consultas analíticas}
+Los endpoints de reportes consultan las vistas definidas en init.sql. Las agregaciones se ejecutan en SQL Server y el backend aplica un orden de presentación. Las respuestas contienen data como arreglo; los valores reflejan los datos presentes al momento de la consulta, incluidos los movimientos de prueba que no se hayan eliminado.
+
+\subsection{Ventas por ubicación}
+Vista\_Ventas\_Ubicacion relaciona la venta con tienda, municipio, departamento y país. Antes de agrupar por tienda obtiene el total de cada venta desde sus detalles; así el número de ventas no se multiplica por la cantidad de productos de cada una. Excluye ventas ANULADA y devuelve cantidad\_ventas y total\_facturado junto con la ubicación.
+
+La vista parte de las ventas existentes. Una tienda sin ventas no aparece solamente por existir en el catálogo de tiendas. El endpoint /api/reportes/ventas-ubicacion ordena por id\_tienda.
+
+\subsection{Productos vendidos}
+Vista\_Top\_Productos agrupa los detalles de ventas no anuladas por producto, categoría y marca. Suma unidades e importe vendido y conserva el código del producto. El endpoint /api/reportes/top-productos ordena por unidades descendentes y código como desempate; devuelve todos los productos presentes en la agregación, no únicamente diez.
+
+\subsection{Saldos y consulta consolidada de ventas}
+Vista\_Consulta\_Ventas preagrupa los detalles y los pagos en dos conjuntos distintos, y después los relaciona con el encabezado. Una unión directa de varios detalles con varios abonos repetiría los importes. Al agregarlos antes, cada venta recibe un único total vendido y un único total pagado. COALESCE representa los conjuntos ausentes con cero.
+
+El saldo se calcula como total\_venta menos total\_pagado. Vista\_Saldos\_Pendientes selecciona de esa consulta las ventas REGISTRADA. El endpoint /api/reportes/saldos-pendientes devuelve sus IDs e importes. Los GET de venta utilizan la vista auxiliar para mostrar también estado y saldos. Algunos agregados BIGINT pueden aparecer como cadenas JSON en la respuesta del controlador.
+
+
+
+\subsection{Resultados consultados en el servidor}
+
+Las capturas siguientes muestran el inicio de cada respuesta JSON obtenida directamente del endpoint. Se visualiza un extracto por el tamaño de la ventana; el registro de la ejecución conserva los arreglos completos. Las cifras corresponden al estado de la base tras las pruebas y no deben interpretarse como totales exclusivos del archivo histórico.
+
+\Needspace{28\baselineskip}\subsubsection*{Consultas de las vistas}
+
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/10_ventas_ubicacion.png}\caption{GET /api/reportes/ventas-ubicacion: extracto de tiendas con ubicación, cantidad de ventas e importe facturado.}\end{figure}
+
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/11_top_productos.png}\caption{GET /api/reportes/top-productos: extracto ordenado por unidades vendidas; incluye categoría, marca e importe.}\end{figure}
+
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{evidencias/capturas-api/12_saldos.png}\caption{GET /api/reportes/saldos-pendientes: extracto de ventas registradas con total, pagado y saldo calculado.}\end{figure}
+
+
+
+\section{Uso de las colecciones de Postman}
+Se importan ComercialLaEstrella.postman\_collection.json y local.postman\_environment.json. El primero crea Comercial La Estrella - Fase 2 en Collections; el segundo crea Comercial La Estrella local en Environments. Debe seleccionarse el entorno antes de enviar las peticiones.
+
+La colección se ejecuta en el orden Preparacion, CRUD por entidad, Limpieza auxiliares, Triggers y Vistas. La preparación crea las dependencias que necesitan las entidades posteriores; la limpieza elimina los auxiliares del CRUD respetando sus referencias. Las pruebas de triggers mantienen movimientos identificables para consultar sus resultados.
+
+\subsection{Preparación de cada ejecución}
+baseUrl toma la dirección del servidor. runId, auxId y payId se generan en el script Pre-request de Iniciar ejecucion y comprobar conexion. Se conserva ese conjunto de identificadores durante toda la ejecución. Repetir un POST Crear sin regenerarlos vuelve a intentar la misma PK y puede responder 409.
+
+Para una nueva sesión se ejecuta una vez esa primera petición y se continúa en orden. No borra registros, no reinicia el backend y no repite la carga histórica. Tampoco se debe ejecutar a mitad de un CRUD: las consultas siguientes pasarían a referirse a otros IDs. El rango aleatorio reduce colisiones, pero no garantiza que nunca coincidan con una ejecución anterior.
+
+\subsection{Interpretación de los resultados}
+El CRUD habitual debe producir 201 al crear, 200 al listar, buscar y actualizar, 204 al eliminar y 404 al confirmar que ya no existe. En estado\_venta se esperan 409 en las escrituras protegidas. En inventario se espera 400 al pedir más unidades que las disponibles. En cada caso se verifica la aserción de Test Results y el cuerpo, no solamente el color del código HTTP.
+
+Run collection con una iteración ejecuta la secuencia completa. Las carpetas aisladas requieren haber preparado antes las dependencias correspondientes. La colección de importación se reserva para la carga inicial de una base vacía y no forma parte de este recorrido habitual.
+
+\section{Acceso a datos y control de errores}
+El backend utiliza un módulo de rutas por entidad y un controlador común construido desde los metadatos declarados. Los campos del JSON y sus restricciones se validan con Zod. EntitySchema conserva nombres, claves y tipos SQL; las relaciones físicas se mantienen en el DDL. synchronize y migrationsRun permanecen desactivados para que el arranque del ORM no reescriba la estructura.
+
+El pool habitual permite hasta cinco conexiones y el de importación una. disableOutputReturning evita que el ORM genere OUTPUT sin INTO en escrituras sobre tablas con triggers. Después de insertar o actualizar, el controlador consulta el registro y devuelve el resultado definitivo.
+
+El error SQL 51001 se traduce a 400 con Stock insuficiente. Los rechazos de negocio 51002 se comunican como 409. Los duplicados 2601 y 2627, las referencias 547 y los conflictos de bloqueo clasificados también se comunican como 409. La entrada inválida responde 400; un recurso inexistente, 404; y un cuerpo que supera el límite de 10 MB, 413. Los errores no clasificados responden 500 sin divulgar consultas o credenciales.
+
+\section{Verificación de la instalación y mantenimiento}
+\subsection{Comprobaciones automatizadas}
+\begin{lstlisting}
+npm test
+npm run test:integration
+npm run postman
 \end{lstlisting}
+Las pruebas de integración y Postman requieren la API iniciada y el histórico cargado. Realizan escrituras por HTTP y dejan algunos escenarios de demostración. La evidencia de la ejecución inicial registra cuatro pruebas unitarias, ocho escenarios de integración y 144 peticiones de Postman con 155 aserciones aprobadas.
 
-La subcarpeta incluye una petición previa de preparación. Ejecutarla antes del CRUD y conservar el orden de toda la colección.
+La cobertura incluye CRUD de entidades relacionadas, rechazos de entrada, ajustes de inventario por inserción, actualización y eliminación, abonos y correcciones, lotes atómicos, competencia por existencias, anulación y comparación de las vistas con una referencia calculada a partir de las consultas HTTP.
 
-\clearpage\section{Matriz de todas las peticiones de Postman}
+\subsection{Persistencia}
+La verificación de persistencia conserva las respuestas del estado de importación y de una venta pagada, reinicia SQL Server y vuelve a consultarlas. Se comparan ID, estado, total vendido, total abonado, saldo y hash del histórico. El registro guardado confirma que se conservaron después del reinicio. Esta operación utiliza el volumen existente y no requiere cargar nuevamente los datos.
 
-Esta matriz se genera desde los scripts de prueba de la colección. Los códigos de rechazo son resultados esperados. Las verificaciones adicionales indican qué valor funcional comprobar junto con el estado HTTP. Una ejecución completa utiliza 144 peticiones y 155 aserciones en la versión documentada.
+\subsection{Diagnóstico operativo}
+Si Postman no puede conectarse, se revisan la terminal de Node, baseUrl y el puerto de la API. Si falla la autenticación SQL, se comprueban salud del motor, salida de db-init y coincidencia de las credenciales con el volumen. Un db-init terminado con código 0 es normal; cualquier otro código requiere revisar su log antes de operar.
 
+Un 409 de duplicado exige revisar el ID utilizado; uno por referencias exige tratar los registros asociados en el orden del negocio. Un 400 de inventario se verifica consultando el catálogo de la tienda y producto de la venta. Una ruta de importación deshabilitada devuelve 404 de forma prevista. Ninguno de esos casos se corrige borrando el volumen o desactivando restricciones.
 
-\needspace{15\baselineskip}\subsection{00 Preparacion}
+\subsection{Inspección y resguardo}
+DBeaver se conecta a ComercialLaEstrella con los parámetros locales y permite revisar el esquema dbo, sus restricciones, vistas y triggers. Las modificaciones de negocio se realizan mediante la API. El modo de solo lectura de la herramienta no sustituye los permisos SQL del usuario utilizado.
 
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
+Las credenciales se conservan en .env fuera del control de versiones. El acceso HTTP y SQL se mantiene local; el backend no implementa autenticación general para publicación en Internet. La entrega se prepara con el código, el DDL, Compose, datos, colecciones y documentación, excluyendo secretos y dependencias instaladas.
 
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
 
-Iniciar ejecucion y comprobar conexion&\texttt{GET}&200&\path{/health}\\
+\clearpage\appendix\section{Implementación de las consultas y controles transaccionales}
 
-Verificar carga historica\newline{\scriptsize detalle.filas=9068}&\texttt{GET}&200&\path{/admin/importacion}\\
-
-Persona auxiliar&\texttt{POST}&201&\path{/persona}\\
-
-Producto auxiliar&\texttt{POST}&201&\path{/producto}\\
-
-Venta auxiliar&\texttt{POST}&201&\path{/venta}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{7\baselineskip}\subsection{01 CRUD por entidad}
-
-\needspace{15\baselineskip}\subsubsection{pais}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/pais}\\
-
-Listar&\texttt{GET}&200&\path{/pais?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/pais/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/pais/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/pais/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/pais/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{departamento}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/departamento}\\
-
-Listar&\texttt{GET}&200&\path{/departamento?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/departamento/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/departamento/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/departamento/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/departamento/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{municipio}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/municipio}\\
-
-Listar&\texttt{GET}&200&\path{/municipio?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/municipio/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/municipio/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/municipio/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/municipio/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{tipo\_tienda}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/tipo_tienda}\\
-
-Listar&\texttt{GET}&200&\path{/tipo_tienda?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/tipo_tienda/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/tipo_tienda/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/tipo_tienda/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/tipo_tienda/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{tipo\_identificacion}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/tipo_identificacion}\\
-
-Listar&\texttt{GET}&200&\path{/tipo_identificacion?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/tipo_identificacion/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/tipo_identificacion/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/tipo_identificacion/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/tipo_identificacion/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{cargo}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/cargo}\\
-
-Listar&\texttt{GET}&200&\path{/cargo?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/cargo/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/cargo/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/cargo/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/cargo/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{categoria}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/categoria}\\
-
-Listar&\texttt{GET}&200&\path{/categoria?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/categoria/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/categoria/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/categoria/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/categoria/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{marca}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/marca}\\
-
-Listar&\texttt{GET}&200&\path{/marca?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/marca/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/marca/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/marca/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/marca/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{estado\_venta (catalogo protegido)}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Listar&\texttt{GET}&200&\path{/estado_venta}\\
-
-Buscar&\texttt{GET}&200&\path{/estado_venta/1}\\
-
-POST duplicado&\texttt{POST}&409&\path{/estado_venta}\\
-
-PUT protegido&\texttt{PUT}&409&\path{/estado_venta/1}\\
-
-DELETE protegido&\texttt{DELETE}&409&\path{/estado_venta/1}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{metodo\_pago}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/metodo_pago}\\
-
-Listar&\texttt{GET}&200&\path{/metodo_pago?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/metodo_pago/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/metodo_pago/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/metodo_pago/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/metodo_pago/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{persona}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/persona}\\
-
-Listar&\texttt{GET}&200&\path{/persona?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/persona/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/persona/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/persona/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/persona/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{tienda}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/tienda}\\
-
-Listar&\texttt{GET}&200&\path{/tienda?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/tienda/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/tienda/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/tienda/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/tienda/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{empleado}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/empleado}\\
-
-Listar&\texttt{GET}&200&\path{/empleado?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/empleado/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/empleado/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/empleado/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/empleado/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{cliente}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/cliente}\\
-
-Listar&\texttt{GET}&200&\path{/cliente?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/cliente/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/cliente/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/cliente/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/cliente/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{producto}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/producto}\\
-
-Listar&\texttt{GET}&200&\path{/producto?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/producto/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/producto/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/producto/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/producto/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{catalogo\_producto}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/catalogo_producto}\\
-
-Listar&\texttt{GET}&200&\path{/catalogo_producto?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/catalogo_producto/1/{{auxId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/catalogo_producto/1/{{auxId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/catalogo_producto/1/{{auxId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/catalogo_producto/1/{{auxId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{venta}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Crear&\texttt{POST}&201&\path{/venta}\\
-
-Listar&\texttt{GET}&200&\path{/venta?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/venta/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/venta/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/venta/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/venta/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{detalle\_venta}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Preparar inventario auxiliar&\texttt{POST}&201&\path{/catalogo_producto}\\
-
-Crear&\texttt{POST}&201&\path{/detalle_venta}\\
-
-Listar&\texttt{GET}&200&\path{/detalle_venta?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/detalle_venta/{{auxId}}/{{auxId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/detalle_venta/{{auxId}}/{{auxId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/detalle_venta/{{auxId}}/{{auxId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/detalle_venta/{{auxId}}/{{auxId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsubsection{pago}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Preparar detalle para abonos&\texttt{POST}&201&\path{/detalle_venta}\\
-
-Crear&\texttt{POST}&201&\path{/pago}\\
-
-Listar&\texttt{GET}&200&\path{/pago?limit=5&offset=0}\\
-
-Buscar por clave&\texttt{GET}&200&\path{/pago/{{runId}}}\\
-
-Actualizar&\texttt{PUT}&200&\path{/pago/{{runId}}}\\
-
-Eliminar&\texttt{DELETE}&204&\path{/pago/{{runId}}}\\
-
-Confirmar eliminacion&\texttt{GET}&404&\path{/pago/{{runId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsection{02 Limpieza auxiliares}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Eliminar detalle auxiliar&\texttt{DELETE}&204&\path{/detalle_venta/{{auxId}}/{{auxId}}}\\
-
-Eliminar venta auxiliar&\texttt{DELETE}&204&\path{/venta/{{auxId}}}\\
-
-Eliminar catalogo auxiliar&\texttt{DELETE}&204&\path{/catalogo_producto/1/{{auxId}}}\\
-
-Eliminar producto auxiliar&\texttt{DELETE}&204&\path{/producto/{{auxId}}}\\
-
-Eliminar persona auxiliar&\texttt{DELETE}&204&\path{/persona/{{auxId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{36\baselineskip}\subsection{03 Triggers}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Producto demostracion&\texttt{POST}&201&\path{/producto}\\
-
-Inventario inicial 10&\texttt{POST}&201&\path{/catalogo_producto}\\
-
-Venta registrada&\texttt{POST}&201&\path{/venta}\\
-
-Stock insuficiente: pedir 11\newline{\scriptsize error='Stock insuficiente'}&\texttt{POST}&400&\path{/detalle_venta}\\
-
-Inventario sigue en 10\newline{\scriptsize existencia\_actual=10}&\texttt{GET}&200&\path{/catalogo_producto/1/{{runId}}}\\
-
-Venta valida: pedir 2&\texttt{POST}&201&\path{/detalle_venta}\\
-
-Inventario reducido a 8\newline{\scriptsize existencia\_actual=8}&\texttt{GET}&200&\path{/catalogo_producto/1/{{runId}}}\\
-
-Primer abono 20&\texttt{POST}&201&\path{/pago}\\
-
-Estado aun REGISTRADA\newline{\scriptsize estado='REGISTRADA'}&\texttt{GET}&200&\path{/venta/{{runId}}}\\
-
-Segundo abono 30&\texttt{POST}&201&\path{/pago}\\
-
-Estado automatico PAGADA\newline{\scriptsize estado='PAGADA'; saldo\_pendiente=0}&\texttt{GET}&200&\path{/venta/{{runId}}}\\
-
-Otra venta para anular&\texttt{POST}&201&\path{/venta}\\
-
-Detalle para anular&\texttt{POST}&201&\path{/detalle_venta}\\
-
-Anular sin pagos&\texttt{PUT}&200&\path{/venta/{{auxId}}}\\
-
-Inventario devuelto una vez\newline{\scriptsize existencia\_actual=8}&\texttt{GET}&200&\path{/catalogo_producto/1/{{runId}}}\\
-
-Repetir anulacion rechazada&\texttt{PUT}&409&\path{/venta/{{auxId}}}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\needspace{15\baselineskip}\subsection{04 Vistas}
-
-\par\smallskip\noindent\begin{minipage}{\textwidth}\begin{tabular}{>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{7.9cm}}\toprule
-
-\textbf{Petición / validación}&\textbf{Método}&\textbf{HTTP}&\textbf{Ruta relativa a baseUrl}\\\midrule
-
-Vista ventas-ubicacion\newline{\scriptsize data es un arreglo}&\texttt{GET}&200&\path{/reportes/ventas-ubicacion}\\
-
-Vista top-productos\newline{\scriptsize data es un arreglo}&\texttt{GET}&200&\path{/reportes/top-productos}\\
-
-Vista saldos-pendientes\newline{\scriptsize data es un arreglo}&\texttt{GET}&200&\path{/reportes/saldos-pendientes}\\
-
-\bottomrule\end{tabular}\end{minipage}\par\smallskip
-
-\clearpage\section{Implementación SQL de las vistas y triggers}
-
-Los listados siguientes se incluyen directamente desde init.sql para mantener correspondencia con el código entregado. El esquema completo de tablas, logins y permisos se consulta en ese archivo. Estos fragmentos explican el comportamiento; no se ejecutan manualmente sobre los datos durante la calificación.
-
+Los fragmentos de este anexo corresponden a las vistas y triggers que ejecuta la instalación descrita. Sus reglas se aplican en el motor cuando la API escribe o consulta los registros; no requieren ejecución manual de sentencias durante la operación del cliente.
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Vista\_Ventas\_Ubicacion}
+
+La agregación previa por venta permite contar encabezados sin multiplicarlos por sus detalles. El filtro de estado se aplica antes de agrupar la facturación por establecimiento.
 
 \lstinputlisting[language=SQL,firstline=281,lastline=297]{../init.sql}
 
@@ -1991,11 +524,15 @@ Los listados siguientes se incluyen directamente desde init.sql para mantener co
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Vista\_Top\_Productos}
 
+La agrupación utiliza el identificador del producto junto con sus dimensiones descriptivas; dos productos con el mismo nombre no se fusionan. Las ventas anuladas quedan excluidas.
+
 \lstinputlisting[language=SQL,firstline=299,lastline=310]{../init.sql}
 
 \end{minipage}\par\medskip
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Vista\_Consulta\_Ventas}
+
+Los detalles y pagos se reducen a una fila por venta antes de unirlos. Los LEFT JOIN conservan ventas que todavía no tienen movimientos y COALESCE presenta sus importes como cero.
 
 \lstinputlisting[language=SQL,firstline=312,lastline=324]{../init.sql}
 
@@ -2003,11 +540,15 @@ Los listados siguientes se incluyen directamente desde init.sql para mantener co
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Vista\_Saldos\_Pendientes}
 
+La selección reutiliza los importes consolidados y limita el resultado a REGISTRADA. No vuelve a calcular pagos ni modifica el estado al consultar.
+
 \lstinputlisting[language=SQL,firstline=326,lastline=328]{../init.sql}
 
 \end{minipage}\par\medskip
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Insert\_Detalle}
+
+El conjunto de ventas se bloquea antes del ajuste. El delta agrupa inserted y deleted, por lo que INSERT, UPDATE y DELETE utilizan la misma regla. La comparación con @@ROWCOUNT detecta catálogos ausentes o disponibilidad insuficiente y provoca el rechazo de toda la sentencia.
 
 \lstinputlisting[language=SQL,firstline=332,lastline=368]{../init.sql}
 
@@ -2015,11 +556,15 @@ Los listados siguientes se incluyen directamente desde init.sql para mantener co
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Insert\_Pago}
 
+La comprobación de venta anulada y de detalle previo precede al recálculo. La condición de cobertura utiliza la suma vigente después de insertar, modificar o eliminar pagos. La actualización del encabezado se origina dentro del motor.
+
 \lstinputlisting[language=SQL,firstline=370,lastline=398]{../init.sql}
 
 \end{minipage}\par\medskip
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Validar\_Venta}
+
+La validación distingue una transición automática desde Insert\_Pago de una edición directa. Impide trasladar movimientos a otros datos de encabezado y devuelve inventario solamente cuando se pasa de REGISTRADA a ANULADA sin pagos.
 
 \lstinputlisting[language=SQL,firstline=400,lastline=437]{../init.sql}
 
@@ -2027,25 +572,22 @@ Los listados siguientes se incluyen directamente desde init.sql para mantener co
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Proteger\_Catalogo}
 
+La validación busca claves presentes en deleted que ya no están en inserted y comprueba si dan contexto a detalles. Así protege la desaparición de la asociación sin impedir el ajuste legítimo de existencias.
+
 \lstinputlisting[language=SQL,firstline=440,lastline=450]{../init.sql}
 
 \end{minipage}\par\medskip
 
 \par\medskip\noindent\begin{minipage}{\textwidth}\subsection{Proteger\_Estados}
 
+El control conserva los IDs y nombres que utilizan las operaciones y el histórico. Las pruebas de escritura sobre este catálogo deben terminar en conflicto y no en la creación de un cuarto estado.
+
 \lstinputlisting[language=SQL,firstline=453,lastline=461]{../init.sql}
 
 \end{minipage}\par\medskip
 
-\clearpage\section{Fuentes y trazabilidad}
-\begin{enumerate}
-\item Enunciado oficial: ProyectoFase2\_SBD1\_2S2026.pdf, sección 4 de entregables y rúbrica de documentación. Se incluye en docs.
-\item Hoja de calificación: Hoja\_Calificacion\_Proyecto\_Fase\_2\_BD1.pdf. Se incluye en docs; documentación vale 15 puntos.
-\item Modelo y dataset de la fase 1: documentos previos del repositorio y origen registrado en data/manifest.json.
-\item Código fuente de la fase 2: init.sql; docker-compose.yml; src/config; src/entities; src/controllers; src/routes; src/services; scripts y tests.
-\item Colección entregada: postman/ComercialLaEstrella.postman\_collection.json y local.postman\_environment.json. De aquí se obtienen los ejemplos y códigos de la matriz.
-\item Evidencia original: docs/evidencias/postman-oficial.json, integracion.json, persistencia.json y validacion.json. Las imágenes de inventario y pagos representan respuestas de ese registro.
-\item Repositorio del proyecto: \url{https://github.com/ricardious/SBD1_2S2026}. La implementación se integró a develop y main mediante los PR 1 y 2; el presente manual amplía la documentación de esa implementación.
-\end{enumerate}
-\end{document}
+\section{Referencias de la implementación}
 
+\begin{itemize}\item Enunciado ProyectoFase2\_SBD1\_2S2026 y hoja de calificación de la fase 2.\item Modelo y dataset de Comercial La Estrella de la fase 1.\item Código y colecciones del repositorio: \url{https://github.com/ricardious/SBD1_2S2026}.\item Registro de operaciones y capturas directas de la API, con identificador de escenario, fecha UTC y hash de las imágenes.\end{itemize}
+
+\end{document}
