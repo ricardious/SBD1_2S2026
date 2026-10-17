@@ -1,0 +1,2807 @@
+{
+  "fecha": "2026-10-17T00:25:36.100Z",
+  "fixtureId": 1892196566,
+  "escenarios": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "response": {
+        "estado": "ok",
+        "database": "SQL Server 2022"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/admin/importacion",
+      "status": 200,
+      "response": {
+        "importado": true,
+        "detalle": {
+          "fecha": "2026-10-17T00:16:57.233Z",
+          "filas": 9068,
+          "sha256": "80e4d18ae9300bcedbdc1354eddb17b29d2415e053085a9e05d0fae6462882ab"
+        },
+        "habilitada": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/admin/importacion",
+      "status": 404,
+      "response": {
+        "error": "Ruta no disponible"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/admin/importacion",
+      "status": 404,
+      "response": {
+        "error": "Ruta no disponible"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/admin/importacion",
+      "status": 404,
+      "response": {
+        "error": "Ruta no disponible"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pais?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_pais": 1,
+            "nombre": "Guatemala"
+          }
+        ],
+        "total": 4,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/departamento?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_departamento": 1,
+            "nombre": "Guatemala",
+            "id_pais": 1
+          }
+        ],
+        "total": 33,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/municipio?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_municipio": 1,
+            "nombre": "Guatemala",
+            "id_departamento": 1
+          }
+        ],
+        "total": 81,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tipo_tienda?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tipo_tienda": 1,
+            "nombre": "Tienda de conveniencia"
+          }
+        ],
+        "total": 5,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tipo_identificacion?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tipo_identificacion": 1,
+            "nombre": "DPI"
+          }
+        ],
+        "total": 4,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cargo?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_cargo": 1,
+            "nombre": "Gerente de tienda"
+          }
+        ],
+        "total": 5,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/categoria?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_categoria": 1,
+            "nombre": "Bebidas"
+          }
+        ],
+        "total": 11,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/marca?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_marca": 1,
+            "nombre": "Norteña"
+          }
+        ],
+        "total": 16,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/estado_venta?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_estado_venta": 1,
+            "nombre": "REGISTRADA"
+          }
+        ],
+        "total": 3,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/metodo_pago?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_metodo_pago": 1,
+            "nombre": "Efectivo"
+          }
+        ],
+        "total": 5,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/persona?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_persona": 1,
+            "nombres": "Cristina",
+            "apellidos": "Garcia",
+            "telefono": "59398441",
+            "correo": "cristina.garcia@correo.com",
+            "direccion": "13 Calle 3-74 zona 4",
+            "id_municipio": 41
+          }
+        ],
+        "total": 389,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tienda?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tienda": 1,
+            "nombre": "Comercial La Estrella Zona 1",
+            "direccion": "18 Avenida 7-38 zona 15",
+            "telefono": "24335942",
+            "id_municipio": 41,
+            "id_tipo_tienda": 1
+          }
+        ],
+        "total": 21,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/empleado?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_empleado": 1,
+            "fecha_contratacion": "2021-09-15T00:00:00.000Z",
+            "id_tienda": 1,
+            "id_cargo": 1,
+            "id_persona": 1
+          }
+        ],
+        "total": 89,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cliente?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_cliente": 1,
+            "id_tipo_identificacion": 1,
+            "numero_identificacion": "3358880404",
+            "id_persona": 89
+          }
+        ],
+        "total": 301,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/producto?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_producto": 1,
+            "nombre": "Agua pura Original",
+            "descripcion": "Agua pura presentacion original, categoria Bebidas",
+            "id_categoria": 1,
+            "id_marca": 4
+          }
+        ],
+        "total": 117,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "precio_vigente": 191.61,
+            "existencia_actual": 161,
+            "id_tienda": 1,
+            "id_producto": 1
+          }
+        ],
+        "total": 1427,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 1,
+            "fecha_venta": "2026-08-23T00:00:00.000Z",
+            "id_tienda": 3,
+            "id_empleado": 11,
+            "id_cliente": 10,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 114.88,
+            "total_pagado": 114.88,
+            "saldo_pendiente": 0
+          }
+        ],
+        "total": 1506,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 1,
+            "precio_unitario": 77.74,
+            "subtotal": 77.74,
+            "id_venta": 1,
+            "id_producto": 35
+          }
+        ],
+        "total": 3693,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pago?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_pago": 1,
+            "monto": 114.88,
+            "id_metodo_pago": 1,
+            "id_venta": 1
+          }
+        ],
+        "total": 1393,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pais",
+      "status": 201,
+      "response": {
+        "id_pais": 1892196566,
+        "nombre": "QA pais 1892196566"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pais/1892196566",
+      "status": 200,
+      "response": {
+        "id_pais": 1892196566,
+        "nombre": "QA pais 1892196566"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/pais/1892196566",
+      "status": 200,
+      "response": {
+        "id_pais": 1892196566,
+        "nombre": "QA pais 1892196566 editado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pais?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_pais": 1,
+            "nombre": "Guatemala"
+          }
+        ],
+        "total": 5,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pais",
+      "status": 201,
+      "response": {
+        "id_pais": 1892196616,
+        "nombre": "QA pais 1892196566 temporal"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/pais/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/departamento",
+      "status": 201,
+      "response": {
+        "id_departamento": 1892196566,
+        "nombre": "QA departamento 1892196566",
+        "id_pais": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/departamento/1892196566",
+      "status": 200,
+      "response": {
+        "id_departamento": 1892196566,
+        "nombre": "QA departamento 1892196566",
+        "id_pais": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/departamento/1892196566",
+      "status": 200,
+      "response": {
+        "id_departamento": 1892196566,
+        "nombre": "QA departamento 1892196566 editado",
+        "id_pais": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/departamento?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_departamento": 1,
+            "nombre": "Guatemala",
+            "id_pais": 1
+          }
+        ],
+        "total": 34,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/departamento",
+      "status": 201,
+      "response": {
+        "id_departamento": 1892196616,
+        "nombre": "QA departamento 1892196566 temporal",
+        "id_pais": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/departamento/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/municipio",
+      "status": 201,
+      "response": {
+        "id_municipio": 1892196566,
+        "nombre": "QA municipio 1892196566",
+        "id_departamento": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/municipio/1892196566",
+      "status": 200,
+      "response": {
+        "id_municipio": 1892196566,
+        "nombre": "QA municipio 1892196566",
+        "id_departamento": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/municipio/1892196566",
+      "status": 200,
+      "response": {
+        "id_municipio": 1892196566,
+        "nombre": "QA municipio 1892196566 editado",
+        "id_departamento": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/municipio?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_municipio": 1,
+            "nombre": "Guatemala",
+            "id_departamento": 1
+          }
+        ],
+        "total": 82,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/municipio",
+      "status": 201,
+      "response": {
+        "id_municipio": 1892196616,
+        "nombre": "QA municipio 1892196566 temporal",
+        "id_departamento": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/municipio/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/tipo_tienda",
+      "status": 201,
+      "response": {
+        "id_tipo_tienda": 1892196566,
+        "nombre": "QA tipo 1892196566"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tipo_tienda/1892196566",
+      "status": 200,
+      "response": {
+        "id_tipo_tienda": 1892196566,
+        "nombre": "QA tipo 1892196566"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/tipo_tienda/1892196566",
+      "status": 200,
+      "response": {
+        "id_tipo_tienda": 1892196566,
+        "nombre": "QA tipo 1892196566 editado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tipo_tienda?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tipo_tienda": 1,
+            "nombre": "Tienda de conveniencia"
+          }
+        ],
+        "total": 6,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/tipo_tienda",
+      "status": 201,
+      "response": {
+        "id_tipo_tienda": 1892196616,
+        "nombre": "QA tipo 1892196566 temporal"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/tipo_tienda/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/tipo_identificacion",
+      "status": 201,
+      "response": {
+        "id_tipo_identificacion": 1892196566,
+        "nombre": "QA identificacion 1892196566"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tipo_identificacion/1892196566",
+      "status": 200,
+      "response": {
+        "id_tipo_identificacion": 1892196566,
+        "nombre": "QA identificacion 1892196566"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/tipo_identificacion/1892196566",
+      "status": 200,
+      "response": {
+        "id_tipo_identificacion": 1892196566,
+        "nombre": "QA identificacion 1892196566 editado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tipo_identificacion?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tipo_identificacion": 1,
+            "nombre": "DPI"
+          }
+        ],
+        "total": 5,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/tipo_identificacion",
+      "status": 201,
+      "response": {
+        "id_tipo_identificacion": 1892196616,
+        "nombre": "QA identificacion 1892196566 temporal"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/tipo_identificacion/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/cargo",
+      "status": 201,
+      "response": {
+        "id_cargo": 1892196566,
+        "nombre": "QA cargo 1892196566"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cargo/1892196566",
+      "status": 200,
+      "response": {
+        "id_cargo": 1892196566,
+        "nombre": "QA cargo 1892196566"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cargo/1892196566",
+      "status": 200,
+      "response": {
+        "id_cargo": 1892196566,
+        "nombre": "QA cargo 1892196566 editado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cargo?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_cargo": 1,
+            "nombre": "Gerente de tienda"
+          }
+        ],
+        "total": 6,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cargo",
+      "status": 201,
+      "response": {
+        "id_cargo": 1892196616,
+        "nombre": "QA cargo 1892196566 temporal"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/cargo/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/categoria",
+      "status": 201,
+      "response": {
+        "id_categoria": 1892196566,
+        "nombre": "QA categoria 1892196566"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/categoria/1892196566",
+      "status": 200,
+      "response": {
+        "id_categoria": 1892196566,
+        "nombre": "QA categoria 1892196566"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/categoria/1892196566",
+      "status": 200,
+      "response": {
+        "id_categoria": 1892196566,
+        "nombre": "QA categoria 1892196566 editado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/categoria?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_categoria": 1,
+            "nombre": "Bebidas"
+          }
+        ],
+        "total": 12,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/categoria",
+      "status": 201,
+      "response": {
+        "id_categoria": 1892196616,
+        "nombre": "QA categoria 1892196566 temporal"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/categoria/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/marca",
+      "status": 201,
+      "response": {
+        "id_marca": 1892196566,
+        "nombre": "QA marca 1892196566"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/marca/1892196566",
+      "status": 200,
+      "response": {
+        "id_marca": 1892196566,
+        "nombre": "QA marca 1892196566"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/marca/1892196566",
+      "status": 200,
+      "response": {
+        "id_marca": 1892196566,
+        "nombre": "QA marca 1892196566 editado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/marca?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_marca": 1,
+            "nombre": "Norteña"
+          }
+        ],
+        "total": 17,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/marca",
+      "status": 201,
+      "response": {
+        "id_marca": 1892196616,
+        "nombre": "QA marca 1892196566 temporal"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/marca/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/metodo_pago",
+      "status": 201,
+      "response": {
+        "id_metodo_pago": 1892196566,
+        "nombre": "QA metodo 1892196566"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/metodo_pago/1892196566",
+      "status": 200,
+      "response": {
+        "id_metodo_pago": 1892196566,
+        "nombre": "QA metodo 1892196566"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/metodo_pago/1892196566",
+      "status": 200,
+      "response": {
+        "id_metodo_pago": 1892196566,
+        "nombre": "QA metodo 1892196566 editado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/metodo_pago?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_metodo_pago": 1,
+            "nombre": "Efectivo"
+          }
+        ],
+        "total": 6,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/metodo_pago",
+      "status": 201,
+      "response": {
+        "id_metodo_pago": 1892196616,
+        "nombre": "QA metodo 1892196566 temporal"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/metodo_pago/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/persona",
+      "status": 201,
+      "response": {
+        "id_persona": 1892196566,
+        "nombres": "QA",
+        "apellidos": "Empleado",
+        "telefono": "12345678",
+        "correo": null,
+        "direccion": "Centro",
+        "id_municipio": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/persona/1892196566",
+      "status": 200,
+      "response": {
+        "id_persona": 1892196566,
+        "nombres": "QA",
+        "apellidos": "Empleado",
+        "telefono": "12345678",
+        "correo": null,
+        "direccion": "Centro",
+        "id_municipio": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/persona/1892196566",
+      "status": 200,
+      "response": {
+        "id_persona": 1892196566,
+        "nombres": "QA editado",
+        "apellidos": "Empleado",
+        "telefono": "12345678",
+        "correo": null,
+        "direccion": "Centro",
+        "id_municipio": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/persona?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_persona": 1,
+            "nombres": "Cristina",
+            "apellidos": "Garcia",
+            "telefono": "59398441",
+            "correo": "cristina.garcia@correo.com",
+            "direccion": "13 Calle 3-74 zona 4",
+            "id_municipio": 41
+          }
+        ],
+        "total": 390,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/persona",
+      "status": 201,
+      "response": {
+        "id_persona": 1892196616,
+        "nombres": "QA",
+        "apellidos": "Empleado",
+        "telefono": "12345678",
+        "correo": null,
+        "direccion": "Centro",
+        "id_municipio": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/persona/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/tienda",
+      "status": 201,
+      "response": {
+        "id_tienda": 1892196566,
+        "nombre": "QA tienda 1892196566",
+        "direccion": "Centro",
+        "telefono": "12345678",
+        "id_municipio": 1892196566,
+        "id_tipo_tienda": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tienda/1892196566",
+      "status": 200,
+      "response": {
+        "id_tienda": 1892196566,
+        "nombre": "QA tienda 1892196566",
+        "direccion": "Centro",
+        "telefono": "12345678",
+        "id_municipio": 1892196566,
+        "id_tipo_tienda": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/tienda/1892196566",
+      "status": 200,
+      "response": {
+        "id_tienda": 1892196566,
+        "nombre": "QA tienda 1892196566 editado",
+        "direccion": "Centro",
+        "telefono": "12345678",
+        "id_municipio": 1892196566,
+        "id_tipo_tienda": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/tienda?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tienda": 1,
+            "nombre": "Comercial La Estrella Zona 1",
+            "direccion": "18 Avenida 7-38 zona 15",
+            "telefono": "24335942",
+            "id_municipio": 41,
+            "id_tipo_tienda": 1
+          }
+        ],
+        "total": 22,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/tienda",
+      "status": 201,
+      "response": {
+        "id_tienda": 1892196616,
+        "nombre": "QA tienda 1892196566 temporal",
+        "direccion": "Centro",
+        "telefono": "12345678",
+        "id_municipio": 1892196566,
+        "id_tipo_tienda": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/tienda/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/empleado",
+      "status": 201,
+      "response": {
+        "id_empleado": 1892196566,
+        "fecha_contratacion": "2026-01-01T00:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_cargo": 1892196566,
+        "id_persona": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/empleado/1892196566",
+      "status": 200,
+      "response": {
+        "id_empleado": 1892196566,
+        "fecha_contratacion": "2026-01-01T00:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_cargo": 1892196566,
+        "id_persona": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/empleado/1892196566",
+      "status": 200,
+      "response": {
+        "id_empleado": 1892196566,
+        "fecha_contratacion": "2026-01-02T00:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_cargo": 1892196566,
+        "id_persona": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/empleado?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_empleado": 1,
+            "fecha_contratacion": "2021-09-15T00:00:00.000Z",
+            "id_tienda": 1,
+            "id_cargo": 1,
+            "id_persona": 1
+          }
+        ],
+        "total": 90,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/persona",
+      "status": 201,
+      "response": {
+        "id_persona": 1892196616,
+        "nombres": "Temporal",
+        "apellidos": "empleado",
+        "telefono": "123",
+        "correo": null,
+        "direccion": "Centro",
+        "id_municipio": 1892196566
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/empleado",
+      "status": 201,
+      "response": {
+        "id_empleado": 1892196616,
+        "fecha_contratacion": "2026-01-01T00:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_cargo": 1892196566,
+        "id_persona": 1892196616
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/empleado/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/persona/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/cliente",
+      "status": 201,
+      "response": {
+        "id_cliente": 1892196566,
+        "id_tipo_identificacion": 1892196566,
+        "numero_identificacion": "QA1892196566",
+        "id_persona": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cliente/1892196566",
+      "status": 200,
+      "response": {
+        "id_cliente": 1892196566,
+        "id_tipo_identificacion": 1892196566,
+        "numero_identificacion": "QA1892196566",
+        "id_persona": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cliente/1892196566",
+      "status": 200,
+      "response": {
+        "id_cliente": 1892196566,
+        "id_tipo_identificacion": 1892196566,
+        "numero_identificacion": "QA1892196566 editado",
+        "id_persona": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cliente?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_cliente": 1,
+            "id_tipo_identificacion": 1,
+            "numero_identificacion": "3358880404",
+            "id_persona": 89
+          }
+        ],
+        "total": 302,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/persona",
+      "status": 201,
+      "response": {
+        "id_persona": 1892196616,
+        "nombres": "Temporal",
+        "apellidos": "cliente",
+        "telefono": "123",
+        "correo": null,
+        "direccion": "Centro",
+        "id_municipio": 1892196566
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cliente",
+      "status": 201,
+      "response": {
+        "id_cliente": 1892196616,
+        "id_tipo_identificacion": 1892196566,
+        "numero_identificacion": "QA1892196566T",
+        "id_persona": 1892196616
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/cliente/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/persona/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/producto",
+      "status": 201,
+      "response": {
+        "id_producto": 1892196566,
+        "nombre": "QA producto 1892196566",
+        "descripcion": "Prueba de inventario",
+        "id_categoria": 1892196566,
+        "id_marca": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/producto/1892196566",
+      "status": 200,
+      "response": {
+        "id_producto": 1892196566,
+        "nombre": "QA producto 1892196566",
+        "descripcion": "Prueba de inventario",
+        "id_categoria": 1892196566,
+        "id_marca": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/producto/1892196566",
+      "status": 200,
+      "response": {
+        "id_producto": 1892196566,
+        "nombre": "QA producto 1892196566 editado",
+        "descripcion": "Prueba de inventario",
+        "id_categoria": 1892196566,
+        "id_marca": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/producto?limit=1",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_producto": 1,
+            "nombre": "Agua pura Original",
+            "descripcion": "Agua pura presentacion original, categoria Bebidas",
+            "id_categoria": 1,
+            "id_marca": 4
+          }
+        ],
+        "total": 119,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/producto",
+      "status": 201,
+      "response": {
+        "id_producto": 1892196616,
+        "nombre": "QA producto 1892196566 temporal",
+        "descripcion": "Prueba de inventario",
+        "id_categoria": 1892196566,
+        "id_marca": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/producto/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/estado_venta",
+      "status": 409,
+      "response": {
+        "error": "Registro duplicado"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/estado_venta/1",
+      "status": 200,
+      "response": {
+        "id_estado_venta": 1,
+        "nombre": "REGISTRADA"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/estado_venta/1",
+      "status": 409,
+      "response": {
+        "error": "Los estados del sistema no se modifican ni eliminan"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/estado_venta/1",
+      "status": 409,
+      "response": {
+        "error": "Conflicto de integridad o registros asociados"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pais",
+      "status": 409,
+      "response": {
+        "error": "Registro duplicado"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/pais/1892196566",
+      "status": 409,
+      "response": {
+        "error": "Conflicto de integridad o registros asociados"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pais/2147483647",
+      "status": 404,
+      "response": {
+        "error": "Registro no encontrado"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pais",
+      "status": 400,
+      "response": {
+        "error": "Datos invalidos",
+        "detalles": [
+          {
+            "campo": "",
+            "mensaje": "Unrecognized key: \"extra\""
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pais?limit=501",
+      "status": 400,
+      "response": {
+        "error": "Datos invalidos",
+        "detalles": [
+          {
+            "campo": "limit",
+            "mensaje": "Too big: expected number to be <=500"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/catalogo_producto",
+      "status": 201,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 26,
+        "existencia_actual": 10,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/catalogo_producto",
+      "status": 201,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/producto",
+      "status": 201,
+      "response": {
+        "id_producto": 1892196567,
+        "nombre": "QA segundo 1892196566",
+        "descripcion": "Otro producto",
+        "id_categoria": 1892196566,
+        "id_marca": 1892196566
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/catalogo_producto",
+      "status": 201,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196567
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/venta",
+      "status": 201,
+      "response": {
+        "id_venta": 1892196616,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 0,
+        "total_pagado": 0,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/venta/1892196616",
+      "status": 200,
+      "response": {
+        "id_venta": 1892196616,
+        "fecha_venta": "2026-10-16T13:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 0,
+        "total_pagado": 0,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/venta/1892196616",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "POST",
+      "path": "/venta",
+      "status": 201,
+      "response": {
+        "id_venta": 1892196566,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 0,
+        "total_pagado": 0,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/detalle_venta",
+      "status": 400,
+      "response": {
+        "error": "Stock insuficiente"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta/1892196566/1892196566",
+      "status": 404,
+      "response": {
+        "error": "Registro no encontrado"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/detalle_venta",
+      "status": 201,
+      "response": {
+        "cantidad": 2,
+        "precio_unitario": 25,
+        "subtotal": 50,
+        "id_venta": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 8,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/detalle_venta/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "cantidad": 3,
+        "precio_unitario": 25,
+        "subtotal": 75,
+        "id_venta": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 7,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/detalle_venta/1892196566/1892196566",
+      "status": 400,
+      "response": {
+        "error": "Stock insuficiente"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 7,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/detalle_venta/1892196566/1892196566",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/detalle_venta",
+      "status": 201,
+      "response": {
+        "cantidad": 2,
+        "precio_unitario": 25,
+        "subtotal": 50,
+        "id_venta": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pago",
+      "status": 201,
+      "response": {
+        "id_pago": 1892196566,
+        "monto": 20,
+        "id_metodo_pago": 1892196566,
+        "id_venta": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta/1892196566",
+      "status": 200,
+      "response": {
+        "id_venta": 1892196566,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 50,
+        "total_pagado": 20,
+        "saldo_pendiente": 30
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/detalle_venta/1892196566/1892196566",
+      "status": 409,
+      "response": {
+        "error": "Solo se permiten detalles en ventas REGISTRADA sin pagos"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pago",
+      "status": 201,
+      "response": {
+        "id_pago": 1892196567,
+        "monto": 35,
+        "id_metodo_pago": 1892196566,
+        "id_venta": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta/1892196566",
+      "status": 200,
+      "response": {
+        "id_venta": 1892196566,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 2,
+        "estado": "PAGADA",
+        "total_venta": 50,
+        "total_pagado": 55,
+        "saldo_pendiente": -5
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/pago/1892196567",
+      "status": 200,
+      "response": {
+        "id_pago": 1892196567,
+        "monto": 5,
+        "id_metodo_pago": 1892196566,
+        "id_venta": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta/1892196566",
+      "status": 200,
+      "response": {
+        "id_venta": 1892196566,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 50,
+        "total_pagado": 25,
+        "saldo_pendiente": 25
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/pago/1892196567",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/pago/1892196566",
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "PUT",
+      "path": "/venta/1892196566",
+      "status": 409,
+      "response": {
+        "error": "Cambio de venta no permitido: estado automatico, venta anulada o registros asociados"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/venta",
+      "status": 201,
+      "response": {
+        "id_venta": 1892196567,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 0,
+        "total_pagado": 0,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pago",
+      "status": 409,
+      "response": {
+        "error": "La venta debe tener detalles antes de recibir pagos"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/detalle_venta/lote",
+      "status": 400,
+      "response": {
+        "error": "Stock insuficiente"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 8,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196567",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196567
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta/1892196567/1892196566",
+      "status": 404,
+      "response": {
+        "error": "Registro no encontrado"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/detalle_venta/lote",
+      "status": 201,
+      "response": {
+        "insertados": 2
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 6,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196567",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 9,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196567
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pago/lote",
+      "status": 201,
+      "response": {
+        "insertados": 2
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta/1892196567",
+      "status": 200,
+      "response": {
+        "id_venta": 1892196567,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 2,
+        "estado": "PAGADA",
+        "total_venta": 75,
+        "total_pagado": 75,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/venta",
+      "status": 201,
+      "response": {
+        "id_venta": 1892196568,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 0,
+        "total_pagado": 0,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/venta",
+      "status": 201,
+      "response": {
+        "id_venta": 1892196569,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 0,
+        "total_pagado": 0,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "scenario": "concurrencia",
+      "status": 201,
+      "response": {
+        "cantidad": 6,
+        "precio_unitario": 25,
+        "subtotal": 150,
+        "id_venta": 1892196568,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "scenario": "concurrencia",
+      "status": 400,
+      "response": {
+        "error": "Stock insuficiente"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 0,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/venta/1892196566",
+      "status": 200,
+      "response": {
+        "id_venta": 1892196566,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1892196566,
+        "id_empleado": 1892196566,
+        "id_cliente": 1892196566,
+        "id_estado_venta": 3,
+        "estado": "ANULADA",
+        "total_venta": 50,
+        "total_pagado": 0,
+        "saldo_pendiente": 50
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 2,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 409,
+      "response": {
+        "error": "El catalogo tiene detalles de venta asociados"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/venta/1892196566",
+      "status": 409,
+      "response": {
+        "error": "Cambio de venta no permitido: estado automatico, venta anulada o registros asociados"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/catalogo_producto/1892196566/1892196566",
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 2,
+        "id_tienda": 1892196566,
+        "id_producto": 1892196566
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pago",
+      "status": 409,
+      "response": {
+        "error": "No se permiten pagos en ventas anuladas"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/detalle_venta/1892196566/1892196566",
+      "status": 409,
+      "response": {
+        "error": "Solo se permiten detalles en ventas REGISTRADA sin pagos"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/ventas-ubicacion",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tienda": 1,
+            "tienda": "Comercial La Estrella Zona 1",
+            "municipio": "Fray Bartolome de las Casas",
+            "departamento": "Alta Verapaz",
+            "pais": "Guatemala",
+            "cantidad_ventas": "73",
+            "total_facturado": 76697.89
+          },
+          {
+            "id_tienda": 2,
+            "tienda": "Comercial La Estrella Mixco",
+            "municipio": "Chimaltenango",
+            "departamento": "Chimaltenango",
+            "pais": "Guatemala",
+            "cantidad_ventas": "63",
+            "total_facturado": 64755.5
+          },
+          {
+            "id_tienda": 3,
+            "tienda": "Comercial La Estrella Villa Nueva",
+            "municipio": "Mixco",
+            "departamento": "Guatemala",
+            "pais": "Guatemala",
+            "cantidad_ventas": "66",
+            "total_facturado": 72728.23
+          }
+        ],
+        "filas_en_respuesta": 22,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/top-productos",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "codigo_producto": 90,
+            "nombre": "Helado de vainilla Light",
+            "categoria": "Congelados",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "174",
+            "monto_total": 10461.93
+          },
+          {
+            "codigo_producto": 19,
+            "nombre": "Tortillas de maiz frito Especial",
+            "categoria": "Snacks",
+            "marca": "La Espiga",
+            "unidades_vendidas": "162",
+            "monto_total": 9623.54
+          },
+          {
+            "codigo_producto": 41,
+            "nombre": "Pan de molde Light",
+            "categoria": "Panaderia",
+            "marca": "AguaViva",
+            "unidades_vendidas": "162",
+            "monto_total": 2123.15
+          }
+        ],
+        "filas_en_respuesta": 119,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/saldos-pendientes",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 12,
+            "total_venta": 1246.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 1246.2
+          },
+          {
+            "id_venta": 16,
+            "total_venta": 1422.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 1422.6
+          },
+          {
+            "id_venta": 18,
+            "total_venta": 1285.5,
+            "total_pagado": 632.32,
+            "saldo_pendiente": 653.18
+          }
+        ],
+        "filas_en_respuesta": 347,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=0",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 1,
+            "precio_unitario": 77.74,
+            "subtotal": 77.74,
+            "id_venta": 1,
+            "id_producto": 35
+          },
+          {
+            "cantidad": 6,
+            "precio_unitario": 6.19,
+            "subtotal": 37.14,
+            "id_venta": 1,
+            "id_producto": 94
+          },
+          {
+            "cantidad": 3,
+            "precio_unitario": 3.95,
+            "subtotal": 11.85,
+            "id_venta": 2,
+            "id_producto": 43
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 0,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pago?limit=500&offset=0",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_pago": 1,
+            "monto": 114.88,
+            "id_metodo_pago": 1,
+            "id_venta": 1
+          },
+          {
+            "id_pago": 2,
+            "monto": 11.85,
+            "id_metodo_pago": 2,
+            "id_venta": 2
+          },
+          {
+            "id_pago": 3,
+            "monto": 2843.39,
+            "id_metodo_pago": 3,
+            "id_venta": 3
+          }
+        ],
+        "total": 1395,
+        "limit": 500,
+        "offset": 0,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta?limit=500&offset=0",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 1,
+            "fecha_venta": "2026-08-23T00:00:00.000Z",
+            "id_tienda": 3,
+            "id_empleado": 11,
+            "id_cliente": 10,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 114.88,
+            "total_pagado": 114.88,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 2,
+            "fecha_venta": "2025-09-07T00:00:00.000Z",
+            "id_tienda": 10,
+            "id_empleado": 42,
+            "id_cliente": 220,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 11.85,
+            "total_pagado": 11.85,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 3,
+            "fecha_venta": "2025-02-08T00:00:00.000Z",
+            "id_tienda": 5,
+            "id_empleado": 19,
+            "id_cliente": 105,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 2843.39,
+            "total_pagado": 2843.39,
+            "saldo_pendiente": 0
+          }
+        ],
+        "total": 1511,
+        "limit": 500,
+        "offset": 0,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=500",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 1,
+            "precio_unitario": 107.3,
+            "subtotal": 107.3,
+            "id_venta": 208,
+            "id_producto": 17
+          },
+          {
+            "cantidad": 1,
+            "precio_unitario": 249.63,
+            "subtotal": 249.63,
+            "id_venta": 208,
+            "id_producto": 80
+          },
+          {
+            "cantidad": 2,
+            "precio_unitario": 95.38,
+            "subtotal": 190.76,
+            "id_venta": 209,
+            "id_producto": 57
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 500,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pago?limit=500&offset=500",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_pago": 501,
+            "monto": 1345.67,
+            "id_metodo_pago": 4,
+            "id_venta": 535
+          },
+          {
+            "id_pago": 502,
+            "monto": 276.18,
+            "id_metodo_pago": 2,
+            "id_venta": 536
+          },
+          {
+            "id_pago": 503,
+            "monto": 1113.05,
+            "id_metodo_pago": 2,
+            "id_venta": 537
+          }
+        ],
+        "total": 1395,
+        "limit": 500,
+        "offset": 500,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=1000",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 1,
+            "precio_unitario": 251.94,
+            "subtotal": 251.94,
+            "id_venta": 408,
+            "id_producto": 71
+          },
+          {
+            "cantidad": 3,
+            "precio_unitario": 180.25,
+            "subtotal": 540.75,
+            "id_venta": 408,
+            "id_producto": 111
+          },
+          {
+            "cantidad": 2,
+            "precio_unitario": 41.81,
+            "subtotal": 83.62,
+            "id_venta": 409,
+            "id_producto": 15
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 1000,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta?limit=500&offset=500",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 501,
+            "fecha_venta": "2025-05-28T00:00:00.000Z",
+            "id_tienda": 1,
+            "id_empleado": 1,
+            "id_cliente": 254,
+            "id_estado_venta": 3,
+            "estado": "ANULADA",
+            "total_venta": 1766.69,
+            "total_pagado": 0,
+            "saldo_pendiente": 1766.69
+          },
+          {
+            "id_venta": 502,
+            "fecha_venta": "2025-01-17T00:00:00.000Z",
+            "id_tienda": 4,
+            "id_empleado": 15,
+            "id_cliente": 13,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 460.66,
+            "total_pagado": 460.66,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 503,
+            "fecha_venta": "2026-01-02T00:00:00.000Z",
+            "id_tienda": 15,
+            "id_empleado": 61,
+            "id_cliente": 217,
+            "id_estado_venta": 1,
+            "estado": "REGISTRADA",
+            "total_venta": 377,
+            "total_pagado": 163.11,
+            "saldo_pendiente": 213.89
+          }
+        ],
+        "total": 1511,
+        "limit": 500,
+        "offset": 500,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pago?limit=500&offset=1000",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_pago": 1001,
+            "monto": 635.46,
+            "id_metodo_pago": 1,
+            "id_venta": 1072
+          },
+          {
+            "id_pago": 1002,
+            "monto": 297.34,
+            "id_metodo_pago": 4,
+            "id_venta": 1072
+          },
+          {
+            "id_pago": 1003,
+            "monto": 163.13,
+            "id_metodo_pago": 3,
+            "id_venta": 1073
+          }
+        ],
+        "total": 1395,
+        "limit": 500,
+        "offset": 1000,
+        "filas_en_respuesta": 395,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=1500",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 2,
+            "precio_unitario": 56.76,
+            "subtotal": 113.52,
+            "id_venta": 610,
+            "id_producto": 19
+          },
+          {
+            "cantidad": 1,
+            "precio_unitario": 159.39,
+            "subtotal": 159.39,
+            "id_venta": 611,
+            "id_producto": 24
+          },
+          {
+            "cantidad": 4,
+            "precio_unitario": 13.01,
+            "subtotal": 52.04,
+            "id_venta": 611,
+            "id_producto": 36
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 1500,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta?limit=500&offset=1000",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 1001,
+            "fecha_venta": "2026-01-19T00:00:00.000Z",
+            "id_tienda": 14,
+            "id_empleado": 60,
+            "id_cliente": 206,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 269.08,
+            "total_pagado": 269.08,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1002,
+            "fecha_venta": "2026-05-05T00:00:00.000Z",
+            "id_tienda": 20,
+            "id_empleado": 88,
+            "id_cliente": 224,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 1328.4,
+            "total_pagado": 1328.4,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1003,
+            "fecha_venta": "2025-11-11T00:00:00.000Z",
+            "id_tienda": 1,
+            "id_empleado": 3,
+            "id_cliente": 256,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 2235.57,
+            "total_pagado": 2235.57,
+            "saldo_pendiente": 0
+          }
+        ],
+        "total": 1511,
+        "limit": 500,
+        "offset": 1000,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=2000",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 3,
+            "precio_unitario": 114.8,
+            "subtotal": 344.4,
+            "id_venta": 815,
+            "id_producto": 31
+          },
+          {
+            "cantidad": 4,
+            "precio_unitario": 140.4,
+            "subtotal": 561.6,
+            "id_venta": 816,
+            "id_producto": 63
+          },
+          {
+            "cantidad": 4,
+            "precio_unitario": 116.01,
+            "subtotal": 464.04,
+            "id_venta": 817,
+            "id_producto": 31
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 2000,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=2500",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 5,
+            "precio_unitario": 140.91,
+            "subtotal": 704.55,
+            "id_venta": 1017,
+            "id_producto": 38
+          },
+          {
+            "cantidad": 2,
+            "precio_unitario": 211.3,
+            "subtotal": 422.6,
+            "id_venta": 1017,
+            "id_producto": 73
+          },
+          {
+            "cantidad": 3,
+            "precio_unitario": 256.47,
+            "subtotal": 769.41,
+            "id_venta": 1018,
+            "id_producto": 12
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 2500,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/venta?limit=500&offset=1500",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 1504473366,
+            "fecha_venta": "2026-10-16T12:00:00.000Z",
+            "id_tienda": 1,
+            "id_empleado": 1,
+            "id_cliente": 1,
+            "id_estado_venta": 1,
+            "estado": "REGISTRADA",
+            "total_venta": 0,
+            "total_pagado": 0,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1564141624,
+            "fecha_venta": "2026-10-16T12:00:00.000Z",
+            "id_tienda": 1,
+            "id_empleado": 1,
+            "id_cliente": 1,
+            "id_estado_venta": 2,
+            "estado": "PAGADA",
+            "total_venta": 50,
+            "total_pagado": 50,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1564141625,
+            "fecha_venta": "2026-10-16T12:00:00.000Z",
+            "id_tienda": 1,
+            "id_empleado": 1,
+            "id_cliente": 1,
+            "id_estado_venta": 3,
+            "estado": "ANULADA",
+            "total_venta": 25,
+            "total_pagado": 0,
+            "saldo_pendiente": 25
+          }
+        ],
+        "total": 1511,
+        "limit": 500,
+        "offset": 1500,
+        "filas_en_respuesta": 11,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=3000",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 5,
+            "precio_unitario": 20.07,
+            "subtotal": 100.35,
+            "id_venta": 1226,
+            "id_producto": 86
+          },
+          {
+            "cantidad": 3,
+            "precio_unitario": 223.77,
+            "subtotal": 671.31,
+            "id_venta": 1226,
+            "id_producto": 112
+          },
+          {
+            "cantidad": 4,
+            "precio_unitario": 42.33,
+            "subtotal": 169.32,
+            "id_venta": 1227,
+            "id_producto": 44
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 3000,
+        "filas_en_respuesta": 500,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/detalle_venta?limit=500&offset=3500",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "cantidad": 4,
+            "precio_unitario": 156.32,
+            "subtotal": 625.28,
+            "id_venta": 1425,
+            "id_producto": 49
+          },
+          {
+            "cantidad": 1,
+            "precio_unitario": 222.05,
+            "subtotal": 222.05,
+            "id_venta": 1425,
+            "id_producto": 62
+          },
+          {
+            "cantidad": 6,
+            "precio_unitario": 155.62,
+            "subtotal": 933.72,
+            "id_venta": 1426,
+            "id_producto": 49
+          }
+        ],
+        "total": 3697,
+        "limit": 500,
+        "offset": 3500,
+        "filas_en_respuesta": 197,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/ventas-ubicacion",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tienda": 1,
+            "tienda": "Comercial La Estrella Zona 1",
+            "municipio": "Fray Bartolome de las Casas",
+            "departamento": "Alta Verapaz",
+            "pais": "Guatemala",
+            "cantidad_ventas": "73",
+            "total_facturado": 76697.89
+          },
+          {
+            "id_tienda": 2,
+            "tienda": "Comercial La Estrella Mixco",
+            "municipio": "Chimaltenango",
+            "departamento": "Chimaltenango",
+            "pais": "Guatemala",
+            "cantidad_ventas": "63",
+            "total_facturado": 64755.5
+          },
+          {
+            "id_tienda": 3,
+            "tienda": "Comercial La Estrella Villa Nueva",
+            "municipio": "Mixco",
+            "departamento": "Guatemala",
+            "pais": "Guatemala",
+            "cantidad_ventas": "66",
+            "total_facturado": 72728.23
+          }
+        ],
+        "filas_en_respuesta": 22,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/top-productos",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "codigo_producto": 90,
+            "nombre": "Helado de vainilla Light",
+            "categoria": "Congelados",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "174",
+            "monto_total": 10461.93
+          },
+          {
+            "codigo_producto": 19,
+            "nombre": "Tortillas de maiz frito Especial",
+            "categoria": "Snacks",
+            "marca": "La Espiga",
+            "unidades_vendidas": "162",
+            "monto_total": 9623.54
+          },
+          {
+            "codigo_producto": 41,
+            "nombre": "Pan de molde Light",
+            "categoria": "Panaderia",
+            "marca": "AguaViva",
+            "unidades_vendidas": "162",
+            "monto_total": 2123.15
+          }
+        ],
+        "filas_en_respuesta": 119,
+        "muestra": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/saldos-pendientes",
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 12,
+            "total_venta": 1246.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 1246.2
+          },
+          {
+            "id_venta": 16,
+            "total_venta": 1422.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 1422.6
+          },
+          {
+            "id_venta": 18,
+            "total_venta": 1285.5,
+            "total_pagado": 632.32,
+            "saldo_pendiente": 653.18
+          }
+        ],
+        "filas_en_respuesta": 347,
+        "muestra": true
+      }
+    }
+  ]
+}
