@@ -1,0 +1,70 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Cambio automático del estado de venta</title><style>body{margin:0;background:#eef1f4;color:#182330;font:16px Arial,sans-serif}
+main{max-width:1120px;margin:32px auto;padding:28px;background:white;border:1px solid #d7dfe6}
+h1{font-size:30px;margin:8px 0 12px}h2{font-size:20px;margin:0 0 12px}p{line-height:1.5}
+.meta{color:#46576a;font-size:14px}.ok{background:#e8f4ec;padding:12px;border-left:4px solid #267a47}
+article{border-top:1px solid #c6d0d9;padding-top:20px;margin-top:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+pre{margin:8px 0;background:#f4f6f8;padding:14px;font:14px/1.5 monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.status{font-weight:bold;color:#245f40}footer{margin-top:24px;color:#46576a;font-size:14px}</style>
+      <main><p class="meta">USAC · Bases de Datos 1 · Proyecto Fase 2 · Carné 202300476</p><h1>Cambio automático del estado de venta</h1>
+      <p>Registro real de peticiones ejecutadas por el CLI oficial de Postman contra SQL Server 2022 en Docker.</p>
+      <p class="ok">Colección completa: 144 peticiones y 155 aserciones correctas. Sin fallos.</p>
+      <p class="meta">Inicio de la ejecución: 2026-10-17T00:26:32+00:00</p><article><h2>Primer abono 20</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>POST http://127.0.0.1:3000/api/pago
+{
+  &quot;id_pago&quot;: 1546939428,
+  &quot;id_venta&quot;: 1546939428,
+  &quot;id_metodo_pago&quot;: 1,
+  &quot;monto&quot;: 20
+}</pre></div>
+          <div><strong class="status">HTTP 201 · Created</strong><pre>{
+  &quot;id_pago&quot;: 1546939428,
+  &quot;monto&quot;: 20,
+  &quot;id_metodo_pago&quot;: 1,
+  &quot;id_venta&quot;: 1546939428
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 201: passed</p></article><article><h2>Estado aun REGISTRADA</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>GET http://127.0.0.1:3000/api/venta/1546939428
+</pre></div>
+          <div><strong class="status">HTTP 200 · OK</strong><pre>{
+  &quot;id_venta&quot;: 1546939428,
+  &quot;fecha_venta&quot;: &quot;2026-10-16T12:00:00.000Z&quot;,
+  &quot;id_tienda&quot;: 1,
+  &quot;id_empleado&quot;: 1,
+  &quot;id_cliente&quot;: 1,
+  &quot;id_estado_venta&quot;: 1,
+  &quot;estado&quot;: &quot;REGISTRADA&quot;,
+  &quot;total_venta&quot;: 50,
+  &quot;total_pagado&quot;: 20,
+  &quot;saldo_pendiente&quot;: 30
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 200: passed; Abono parcial: passed</p></article><article><h2>Segundo abono 30</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>POST http://127.0.0.1:3000/api/pago
+{
+  &quot;id_pago&quot;: 1546939430,
+  &quot;id_venta&quot;: 1546939428,
+  &quot;id_metodo_pago&quot;: 1,
+  &quot;monto&quot;: 30
+}</pre></div>
+          <div><strong class="status">HTTP 201 · Created</strong><pre>{
+  &quot;id_pago&quot;: 1546939430,
+  &quot;monto&quot;: 30,
+  &quot;id_metodo_pago&quot;: 1,
+  &quot;id_venta&quot;: 1546939428
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 201: passed</p></article><article><h2>Estado automatico PAGADA</h2><div class="grid"><div>
+          <strong>Petición HTTP</strong><pre>GET http://127.0.0.1:3000/api/venta/1546939428
+</pre></div>
+          <div><strong class="status">HTTP 200 · OK</strong><pre>{
+  &quot;id_venta&quot;: 1546939428,
+  &quot;fecha_venta&quot;: &quot;2026-10-16T12:00:00.000Z&quot;,
+  &quot;id_tienda&quot;: 1,
+  &quot;id_empleado&quot;: 1,
+  &quot;id_cliente&quot;: 1,
+  &quot;id_estado_venta&quot;: 2,
+  &quot;estado&quot;: &quot;PAGADA&quot;,
+  &quot;total_venta&quot;: 50,
+  &quot;total_pagado&quot;: 50,
+  &quot;saldo_pendiente&quot;: 0
+}</pre></div></div>
+          <p class="meta">Aserciones: HTTP 200: passed; Pagada por el motor: passed; Saldo cero: passed</p></article>
+      <footer>Fuente verificable: postman-oficial.json. Esta página representa el registro HTTP; no es una captura de la aplicación Postman.</footer></main></html>
