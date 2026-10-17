@@ -1,0 +1,21 @@
+import pais from './pais';
+import departamento from './departamento';
+import municipio from './municipio';
+import tipo_tienda from './tipo_tienda';
+import tipo_identificacion from './tipo_identificacion';
+import cargo from './cargo';
+import categoria from './categoria';
+import marca from './marca';
+import estado_venta from './estado_venta';
+import metodo_pago from './metodo_pago';
+import persona from './persona';
+import tienda from './tienda';
+import empleado from './empleado';
+import cliente from './cliente';
+import producto from './producto';
+import catalogo_producto from './catalogo_producto';
+import venta from './venta';
+import detalle_venta from './detalle_venta';
+import pago from './pago';
+
+export const entityRoutes = { pais, departamento, municipio, tipo_tienda, tipo_identificacion, cargo, categoria, marca, estado_venta, metodo_pago, persona, tienda, empleado, cliente, producto, catalogo_producto, venta, detalle_venta, pago };
