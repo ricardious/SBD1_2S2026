@@ -1,0 +1,56 @@
+{
+  "fecha_utc": "2026-10-17T00:26:32+00:00",
+  "historico": {
+    "filas": 9068,
+    "sha256": "80e4d18ae9300bcedbdc1354eddb17b29d2415e053085a9e05d0fae6462882ab",
+    "conciliacion": "Todos los campos de las 19 tablas, antes de confirmar la transaccion"
+  },
+  "postman_cli": {
+    "iterations": {
+      "executed": 1,
+      "errors": 0
+    },
+    "executedRequests": {
+      "executed": 144,
+      "errors": 0
+    },
+    "prerequestScripts": {
+      "executed": 1,
+      "errors": 0
+    },
+    "postresponseScripts": {
+      "executed": 144,
+      "errors": 0
+    },
+    "tests": {
+      "executed": 155,
+      "failed": 0,
+      "passed": 155,
+      "skipped": 0
+    },
+    "timeStats": {
+      "responseAverage": 135.64583333333334,
+      "responseMin": 7,
+      "responseMax": 15178,
+      "responseStandardDeviation": 1258.291508514345
+    }
+  },
+  "pruebas_unitarias": {
+    "correctas": 4,
+    "fallos": 0
+  },
+  "integracion_http": {
+    "escenarios": 8,
+    "fallos": 0,
+    "incluye": [
+      "CRUD",
+      "triggers multi-fila",
+      "concurrencia",
+      "comparacion completa de vistas"
+    ]
+  },
+  "persistencia": "Estado de importacion y venta pagada conservados tras reiniciar SQL Server",
+  "dependencias": {
+    "npm_audit": "0 vulnerabilidades"
+  }
+}

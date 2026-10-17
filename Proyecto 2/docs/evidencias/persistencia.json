@@ -1,0 +1,45 @@
+{
+  "antes": {
+    "importado": true,
+    "detalle": {
+      "fecha": "2026-10-17T00:16:57.233Z",
+      "filas": 9068,
+      "sha256": "80e4d18ae9300bcedbdc1354eddb17b29d2415e053085a9e05d0fae6462882ab"
+    },
+    "habilitada": false
+  },
+  "despues": {
+    "importado": true,
+    "detalle": {
+      "fecha": "2026-10-17T00:16:57.233Z",
+      "filas": 9068,
+      "sha256": "80e4d18ae9300bcedbdc1354eddb17b29d2415e053085a9e05d0fae6462882ab"
+    },
+    "habilitada": false
+  },
+  "venta_antes": {
+    "id_venta": 1546939428,
+    "fecha_venta": "2026-10-16T12:00:00.000Z",
+    "id_tienda": 1,
+    "id_empleado": 1,
+    "id_cliente": 1,
+    "id_estado_venta": 2,
+    "estado": "PAGADA",
+    "total_venta": 50,
+    "total_pagado": 50,
+    "saldo_pendiente": 0
+  },
+  "venta_despues": {
+    "id_venta": 1546939428,
+    "fecha_venta": "2026-10-16T12:00:00.000Z",
+    "id_tienda": 1,
+    "id_empleado": 1,
+    "id_cliente": 1,
+    "id_estado_venta": 2,
+    "estado": "PAGADA",
+    "total_venta": 50,
+    "total_pagado": 50,
+    "saldo_pendiente": 0
+  },
+  "resultado": "Estado de importacion y venta pagada identicos despues de reiniciar SQL Server"
+}

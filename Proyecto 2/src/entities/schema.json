@@ -1,0 +1,382 @@
+[
+  {
+    "table": "pais",
+    "keys": [
+      "id_pais"
+    ],
+    "fields": {
+      "id_pais": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      }
+    }
+  },
+  {
+    "table": "departamento",
+    "keys": [
+      "id_departamento"
+    ],
+    "fields": {
+      "id_departamento": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      },
+      "id_pais": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "municipio",
+    "keys": [
+      "id_municipio"
+    ],
+    "fields": {
+      "id_municipio": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      },
+      "id_departamento": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "tipo_tienda",
+    "keys": [
+      "id_tipo_tienda"
+    ],
+    "fields": {
+      "id_tipo_tienda": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      }
+    }
+  },
+  {
+    "table": "tipo_identificacion",
+    "keys": [
+      "id_tipo_identificacion"
+    ],
+    "fields": {
+      "id_tipo_identificacion": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 50
+      }
+    }
+  },
+  {
+    "table": "cargo",
+    "keys": [
+      "id_cargo"
+    ],
+    "fields": {
+      "id_cargo": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      }
+    }
+  },
+  {
+    "table": "categoria",
+    "keys": [
+      "id_categoria"
+    ],
+    "fields": {
+      "id_categoria": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      }
+    }
+  },
+  {
+    "table": "marca",
+    "keys": [
+      "id_marca"
+    ],
+    "fields": {
+      "id_marca": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      }
+    }
+  },
+  {
+    "table": "estado_venta",
+    "keys": [
+      "id_estado_venta"
+    ],
+    "fields": {
+      "id_estado_venta": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 30
+      }
+    }
+  },
+  {
+    "table": "metodo_pago",
+    "keys": [
+      "id_metodo_pago"
+    ],
+    "fields": {
+      "id_metodo_pago": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 80
+      }
+    }
+  },
+  {
+    "table": "persona",
+    "keys": [
+      "id_persona"
+    ],
+    "fields": {
+      "id_persona": {
+        "type": "integer"
+      },
+      "nombres": {
+        "type": "string",
+        "length": 100
+      },
+      "apellidos": {
+        "type": "string",
+        "length": 100
+      },
+      "telefono": {
+        "type": "string",
+        "length": 25
+      },
+      "correo": {
+        "type": "string",
+        "length": 150,
+        "nullable": true
+      },
+      "direccion": {
+        "type": "string",
+        "length": 200
+      },
+      "id_municipio": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "tienda",
+    "keys": [
+      "id_tienda"
+    ],
+    "fields": {
+      "id_tienda": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 120
+      },
+      "direccion": {
+        "type": "string",
+        "length": 200
+      },
+      "telefono": {
+        "type": "string",
+        "length": 25
+      },
+      "id_municipio": {
+        "type": "integer"
+      },
+      "id_tipo_tienda": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "empleado",
+    "keys": [
+      "id_empleado"
+    ],
+    "fields": {
+      "id_empleado": {
+        "type": "integer"
+      },
+      "fecha_contratacion": {
+        "type": "date"
+      },
+      "id_tienda": {
+        "type": "integer"
+      },
+      "id_cargo": {
+        "type": "integer"
+      },
+      "id_persona": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "cliente",
+    "keys": [
+      "id_cliente"
+    ],
+    "fields": {
+      "id_cliente": {
+        "type": "integer"
+      },
+      "id_tipo_identificacion": {
+        "type": "integer"
+      },
+      "numero_identificacion": {
+        "type": "string",
+        "length": 30
+      },
+      "id_persona": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "producto",
+    "keys": [
+      "id_producto"
+    ],
+    "fields": {
+      "id_producto": {
+        "type": "integer"
+      },
+      "nombre": {
+        "type": "string",
+        "length": 120
+      },
+      "descripcion": {
+        "type": "string",
+        "length": 300
+      },
+      "id_categoria": {
+        "type": "integer"
+      },
+      "id_marca": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "catalogo_producto",
+    "keys": [
+      "id_tienda",
+      "id_producto"
+    ],
+    "fields": {
+      "precio_vigente": {
+        "type": "decimal"
+      },
+      "existencia_actual": {
+        "type": "integer"
+      },
+      "id_tienda": {
+        "type": "integer"
+      },
+      "id_producto": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "venta",
+    "keys": [
+      "id_venta"
+    ],
+    "fields": {
+      "id_venta": {
+        "type": "integer"
+      },
+      "fecha_venta": {
+        "type": "date"
+      },
+      "id_tienda": {
+        "type": "integer"
+      },
+      "id_empleado": {
+        "type": "integer"
+      },
+      "id_cliente": {
+        "type": "integer"
+      },
+      "id_estado_venta": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "detalle_venta",
+    "keys": [
+      "id_venta",
+      "id_producto"
+    ],
+    "fields": {
+      "cantidad": {
+        "type": "integer"
+      },
+      "precio_unitario": {
+        "type": "decimal"
+      },
+      "subtotal": {
+        "type": "decimal"
+      },
+      "id_venta": {
+        "type": "integer"
+      },
+      "id_producto": {
+        "type": "integer"
+      }
+    }
+  },
+  {
+    "table": "pago",
+    "keys": [
+      "id_pago"
+    ],
+    "fields": {
+      "id_pago": {
+        "type": "integer"
+      },
+      "monto": {
+        "type": "decimal"
+      },
+      "id_metodo_pago": {
+        "type": "integer"
+      },
+      "id_venta": {
+        "type": "integer"
+      }
+    }
+  }
+]
