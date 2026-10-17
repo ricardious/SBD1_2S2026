@@ -1,0 +1,3655 @@
+{
+  "fixtureId": 1731155899,
+  "capturas": [
+    {
+      "archivo": "01_conexion.png",
+      "url": "http://127.0.0.1:3000/api/health",
+      "fecha_utc": "2026-10-17T04:04:46.840839+00:00",
+      "sha256": "3250825bcf14afa71d05a6108181fff482d83cb87e2c8add23033ebf1f8b2251"
+    },
+    {
+      "archivo": "02_carga.png",
+      "url": "http://127.0.0.1:3000/api/admin/importacion",
+      "fecha_utc": "2026-10-17T04:04:54.485670+00:00",
+      "sha256": "4fc469b7adb87a8122b045ba9e1f20acefad7be17c9a7d1ea41fa2860dfaf9e8"
+    },
+    {
+      "archivo": "03_crud_actualizado.png",
+      "url": "http://127.0.0.1:3000/api/pais/1731155899",
+      "fecha_utc": "2026-10-17T04:05:02.717885+00:00",
+      "sha256": "9dc417634d9d8f0ec3d0afb0189c11edf37b17a32fb860a3b4335f85f35d51e6"
+    },
+    {
+      "archivo": "04_crud_eliminado.png",
+      "url": "http://127.0.0.1:3000/api/pais/1731155899",
+      "fecha_utc": "2026-10-17T04:05:10.185155+00:00",
+      "sha256": "027152d8331587970c9b249844730c2a4c210db4e947ef590f39fa4a0ed9a6ab"
+    },
+    {
+      "archivo": "05_stock_inicial.png",
+      "url": "http://127.0.0.1:3000/api/catalogo_producto/1/1731155899",
+      "fecha_utc": "2026-10-17T04:05:16.858537+00:00",
+      "sha256": "8bf6d41d1fef19374b75d4d293df1a686d35557dff3b4c4384d14d9de0ed3ca8"
+    },
+    {
+      "archivo": "06_stock_tras_rechazo.png",
+      "url": "http://127.0.0.1:3000/api/catalogo_producto/1/1731155899",
+      "fecha_utc": "2026-10-17T04:05:24.103248+00:00",
+      "sha256": "8bf6d41d1fef19374b75d4d293df1a686d35557dff3b4c4384d14d9de0ed3ca8"
+    },
+    {
+      "archivo": "07_stock_descontado.png",
+      "url": "http://127.0.0.1:3000/api/catalogo_producto/1/1731155899",
+      "fecha_utc": "2026-10-17T04:05:31.685721+00:00",
+      "sha256": "291db124e5854ea6404f09a9e67e116fb240961c64edd24adb289b1daf6c0d8e"
+    },
+    {
+      "archivo": "08_abono_parcial.png",
+      "url": "http://127.0.0.1:3000/api/venta/1731155899",
+      "fecha_utc": "2026-10-17T04:05:40.188830+00:00",
+      "sha256": "7af6d7f70a0873dca3cc9490244054bbe280296b419d8be97d3b4785f4a4ece1"
+    },
+    {
+      "archivo": "09_venta_pagada.png",
+      "url": "http://127.0.0.1:3000/api/venta/1731155899",
+      "fecha_utc": "2026-10-17T04:05:47.070148+00:00",
+      "sha256": "fb3835e7788c7521d391dda09d4145607150eff07174e9a1b630ea7cc99937d0"
+    },
+    {
+      "archivo": "10_ventas_ubicacion.png",
+      "url": "http://127.0.0.1:3000/api/reportes/ventas-ubicacion",
+      "fecha_utc": "2026-10-17T04:05:54.009501+00:00",
+      "sha256": "be2bbe20c2c8a72e1cffd1dbb220088dd50f40dc50024c4a31249b1083bbdc25"
+    },
+    {
+      "archivo": "11_top_productos.png",
+      "url": "http://127.0.0.1:3000/api/reportes/top-productos",
+      "fecha_utc": "2026-10-17T04:06:00.989181+00:00",
+      "sha256": "8351ab0ab840181fffcf666a11542604b6c34f6aad9a73f3a1c397c6e75d886c"
+    },
+    {
+      "archivo": "12_saldos.png",
+      "url": "http://127.0.0.1:3000/api/reportes/saldos-pendientes",
+      "fecha_utc": "2026-10-17T04:06:07.934874+00:00",
+      "sha256": "a8cc48ccfdd0775a20c34ada69f6764f59b5cb77e020c86444340281fe915030"
+    }
+  ],
+  "peticiones": [
+    {
+      "fecha_utc": "2026-10-17T04:04:38.484797+00:00",
+      "method": "GET",
+      "path": "/health",
+      "request": null,
+      "status": 200,
+      "response": {
+        "estado": "ok",
+        "database": "SQL Server 2022"
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:04:46.875690+00:00",
+      "method": "GET",
+      "path": "/admin/importacion",
+      "request": null,
+      "status": 200,
+      "response": {
+        "importado": true,
+        "detalle": {
+          "fecha": "2026-10-17T00:16:57.233Z",
+          "filas": 9068,
+          "sha256": "80e4d18ae9300bcedbdc1354eddb17b29d2415e053085a9e05d0fae6462882ab"
+        },
+        "habilitada": false
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:04:54.562637+00:00",
+      "method": "POST",
+      "path": "/pais",
+      "request": {
+        "id_pais": 1731155899,
+        "nombre": "Manual pais 1731155899"
+      },
+      "status": 201,
+      "response": {
+        "id_pais": 1731155899,
+        "nombre": "Manual pais 1731155899"
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:04:54.598842+00:00",
+      "method": "PUT",
+      "path": "/pais/1731155899",
+      "request": {
+        "nombre": "Manual pais actualizado 1731155899"
+      },
+      "status": 200,
+      "response": {
+        "id_pais": 1731155899,
+        "nombre": "Manual pais actualizado 1731155899"
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:02.740405+00:00",
+      "method": "DELETE",
+      "path": "/pais/1731155899",
+      "request": null,
+      "status": 204,
+      "response": null
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:02.754834+00:00",
+      "method": "GET",
+      "path": "/pais/1731155899",
+      "request": null,
+      "status": 404,
+      "response": {
+        "error": "Registro no encontrado"
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:10.210946+00:00",
+      "method": "POST",
+      "path": "/producto",
+      "request": {
+        "id_producto": 1731155899,
+        "nombre": "Manual producto 1731155899",
+        "descripcion": "Evidencia tecnica: inventario y pagos",
+        "id_categoria": 1,
+        "id_marca": 1
+      },
+      "status": 201,
+      "response": {
+        "id_producto": 1731155899,
+        "nombre": "Manual producto 1731155899",
+        "descripcion": "Evidencia tecnica: inventario y pagos",
+        "id_categoria": 1,
+        "id_marca": 1
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:10.229690+00:00",
+      "method": "POST",
+      "path": "/catalogo_producto",
+      "request": {
+        "id_tienda": 1,
+        "id_producto": 1731155899,
+        "precio_vigente": 25,
+        "existencia_actual": 10
+      },
+      "status": 201,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1,
+        "id_producto": 1731155899
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:16.892900+00:00",
+      "method": "POST",
+      "path": "/venta",
+      "request": {
+        "id_venta": 1731155899,
+        "fecha_venta": "2026-10-16T12:00:00",
+        "id_tienda": 1,
+        "id_empleado": 1,
+        "id_cliente": 1,
+        "id_estado_venta": 1
+      },
+      "status": 201,
+      "response": {
+        "id_venta": 1731155899,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1,
+        "id_empleado": 1,
+        "id_cliente": 1,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 0,
+        "total_pagado": 0,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:16.920484+00:00",
+      "method": "POST",
+      "path": "/detalle_venta",
+      "request": {
+        "id_venta": 1731155899,
+        "id_producto": 1731155899,
+        "cantidad": 11,
+        "precio_unitario": 25,
+        "subtotal": 275
+      },
+      "status": 400,
+      "response": {
+        "error": "Stock insuficiente"
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:16.930668+00:00",
+      "method": "GET",
+      "path": "/catalogo_producto/1/1731155899",
+      "request": null,
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 10,
+        "id_tienda": 1,
+        "id_producto": 1731155899
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:16.942424+00:00",
+      "method": "GET",
+      "path": "/detalle_venta/1731155899/1731155899",
+      "request": null,
+      "status": 404,
+      "response": {
+        "error": "Registro no encontrado"
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:24.143090+00:00",
+      "method": "POST",
+      "path": "/detalle_venta",
+      "request": {
+        "id_venta": 1731155899,
+        "id_producto": 1731155899,
+        "cantidad": 2,
+        "precio_unitario": 25,
+        "subtotal": 50
+      },
+      "status": 201,
+      "response": {
+        "cantidad": 2,
+        "precio_unitario": 25,
+        "subtotal": 50,
+        "id_venta": 1731155899,
+        "id_producto": 1731155899
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:24.150975+00:00",
+      "method": "GET",
+      "path": "/catalogo_producto/1/1731155899",
+      "request": null,
+      "status": 200,
+      "response": {
+        "precio_vigente": 25,
+        "existencia_actual": 8,
+        "id_tienda": 1,
+        "id_producto": 1731155899
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:31.782657+00:00",
+      "method": "POST",
+      "path": "/pago",
+      "request": {
+        "id_pago": 1731155899,
+        "id_venta": 1731155899,
+        "id_metodo_pago": 1,
+        "monto": 20
+      },
+      "status": 201,
+      "response": {
+        "id_pago": 1731155899,
+        "monto": 20,
+        "id_metodo_pago": 1,
+        "id_venta": 1731155899
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:31.792816+00:00",
+      "method": "GET",
+      "path": "/venta/1731155899",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id_venta": 1731155899,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1,
+        "id_empleado": 1,
+        "id_cliente": 1,
+        "id_estado_venta": 1,
+        "estado": "REGISTRADA",
+        "total_venta": 50,
+        "total_pagado": 20,
+        "saldo_pendiente": 30
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:40.212893+00:00",
+      "method": "POST",
+      "path": "/pago",
+      "request": {
+        "id_pago": 1731155900,
+        "id_venta": 1731155899,
+        "id_metodo_pago": 1,
+        "monto": 30
+      },
+      "status": 201,
+      "response": {
+        "id_pago": 1731155900,
+        "monto": 30,
+        "id_metodo_pago": 1,
+        "id_venta": 1731155899
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:40.222220+00:00",
+      "method": "GET",
+      "path": "/venta/1731155899",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id_venta": 1731155899,
+        "fecha_venta": "2026-10-16T12:00:00.000Z",
+        "id_tienda": 1,
+        "id_empleado": 1,
+        "id_cliente": 1,
+        "id_estado_venta": 2,
+        "estado": "PAGADA",
+        "total_venta": 50,
+        "total_pagado": 50,
+        "saldo_pendiente": 0
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:47.121515+00:00",
+      "method": "GET",
+      "path": "/reportes/ventas-ubicacion",
+      "request": null,
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_tienda": 1,
+            "tienda": "Comercial La Estrella Zona 1",
+            "municipio": "Fray Bartolome de las Casas",
+            "departamento": "Alta Verapaz",
+            "pais": "Guatemala",
+            "cantidad_ventas": "77",
+            "total_facturado": 76797.89
+          },
+          {
+            "id_tienda": 2,
+            "tienda": "Comercial La Estrella Mixco",
+            "municipio": "Chimaltenango",
+            "departamento": "Chimaltenango",
+            "pais": "Guatemala",
+            "cantidad_ventas": "63",
+            "total_facturado": 64755.5
+          },
+          {
+            "id_tienda": 3,
+            "tienda": "Comercial La Estrella Villa Nueva",
+            "municipio": "Mixco",
+            "departamento": "Guatemala",
+            "pais": "Guatemala",
+            "cantidad_ventas": "66",
+            "total_facturado": 72728.23
+          },
+          {
+            "id_tienda": 4,
+            "tienda": "Comercial La Estrella Antigua",
+            "municipio": "Zacapa",
+            "departamento": "Zacapa",
+            "pais": "Guatemala",
+            "cantidad_ventas": "79",
+            "total_facturado": 76497.83
+          },
+          {
+            "id_tienda": 5,
+            "tienda": "Comercial La Estrella Chimaltenango",
+            "municipio": "Panajachel",
+            "departamento": "Solola",
+            "pais": "Guatemala",
+            "cantidad_ventas": "91",
+            "total_facturado": 111797.36
+          },
+          {
+            "id_tienda": 6,
+            "tienda": "Comercial La Estrella Escuintla",
+            "municipio": "Chiquimulilla",
+            "departamento": "Santa Rosa",
+            "pais": "Guatemala",
+            "cantidad_ventas": "72",
+            "total_facturado": 74297.89
+          },
+          {
+            "id_tienda": 7,
+            "tienda": "Comercial La Estrella Xela",
+            "municipio": "Barberena",
+            "departamento": "Santa Rosa",
+            "pais": "Guatemala",
+            "cantidad_ventas": "69",
+            "total_facturado": 65684.31
+          },
+          {
+            "id_tienda": 8,
+            "tienda": "Comercial La Estrella Coatepeque",
+            "municipio": "Tecpan Guatemala",
+            "departamento": "Chimaltenango",
+            "pais": "Guatemala",
+            "cantidad_ventas": "62",
+            "total_facturado": 79302.53
+          },
+          {
+            "id_tienda": 9,
+            "tienda": "Comercial La Estrella Mazatenango",
+            "municipio": "Jutiapa",
+            "departamento": "Jutiapa",
+            "pais": "Guatemala",
+            "cantidad_ventas": "55",
+            "total_facturado": 64207.49
+          },
+          {
+            "id_tienda": 10,
+            "tienda": "Comercial La Estrella Huehuetenango",
+            "municipio": "Jocotenango",
+            "departamento": "Sacatepequez",
+            "pais": "Guatemala",
+            "cantidad_ventas": "53",
+            "total_facturado": 60976.58
+          },
+          {
+            "id_tienda": 11,
+            "tienda": "Comercial La Estrella Coban",
+            "municipio": "Santa Elena",
+            "departamento": "Peten",
+            "pais": "Guatemala",
+            "cantidad_ventas": "57",
+            "total_facturado": 60564.28
+          },
+          {
+            "id_tienda": 12,
+            "tienda": "Comercial La Estrella Peten",
+            "municipio": "Santa Cruz del Quiche",
+            "departamento": "Quiche",
+            "pais": "Guatemala",
+            "cantidad_ventas": "61",
+            "total_facturado": 54813.68
+          },
+          {
+            "id_tienda": 13,
+            "tienda": "Comercial La Estrella Puerto Barrios",
+            "municipio": "Ciudad Vieja",
+            "departamento": "Sacatepequez",
+            "pais": "Guatemala",
+            "cantidad_ventas": "77",
+            "total_facturado": 79183.41
+          },
+          {
+            "id_tienda": 14,
+            "tienda": "Comercial La Estrella Zacapa",
+            "municipio": "Rabinal",
+            "departamento": "Baja Verapaz",
+            "pais": "Guatemala",
+            "cantidad_ventas": "74",
+            "total_facturado": 85689.82
+          },
+          {
+            "id_tienda": 15,
+            "tienda": "Comercial La Estrella Jutiapa",
+            "municipio": "Champerico",
+            "departamento": "Retalhuleu",
+            "pais": "Guatemala",
+            "cantidad_ventas": "74",
+            "total_facturado": 87126.46
+          },
+          {
+            "id_tienda": 16,
+            "tienda": "Comercial La Estrella Ciudad de Mexico",
+            "municipio": "Coyoacan",
+            "departamento": "Ciudad de Mexico",
+            "pais": "Mexico",
+            "cantidad_ventas": "66",
+            "total_facturado": 81647.85
+          },
+          {
+            "id_tienda": 17,
+            "tienda": "Comercial La Estrella Guadalajara",
+            "municipio": "Cholula",
+            "departamento": "Puebla",
+            "pais": "Mexico",
+            "cantidad_ventas": "70",
+            "total_facturado": 60949.98
+          },
+          {
+            "id_tienda": 18,
+            "tienda": "Comercial La Estrella Monterrey",
+            "municipio": "Iztapalapa",
+            "departamento": "Ciudad de Mexico",
+            "pais": "Mexico",
+            "cantidad_ventas": "81",
+            "total_facturado": 94703.64
+          },
+          {
+            "id_tienda": 19,
+            "tienda": "Comercial La Estrella San Salvador",
+            "municipio": "Santa Tecla",
+            "departamento": "La Libertad",
+            "pais": "El Salvador",
+            "cantidad_ventas": "68",
+            "total_facturado": 75411.06
+          },
+          {
+            "id_tienda": 20,
+            "tienda": "Comercial La Estrella Santa Ana",
+            "municipio": "Izalco",
+            "departamento": "Sonsonate",
+            "pais": "El Salvador",
+            "cantidad_ventas": "54",
+            "total_facturado": 63486.93
+          },
+          {
+            "id_tienda": 1892196319,
+            "tienda": "QA tienda 1892196319 editado",
+            "municipio": "QA municipio 1892196319 editado",
+            "departamento": "QA departamento 1892196319 editado",
+            "pais": "QA pais 1892196319 editado",
+            "cantidad_ventas": "3",
+            "total_facturado": 225
+          },
+          {
+            "id_tienda": 1892196566,
+            "tienda": "QA tienda 1892196566 editado",
+            "municipio": "QA municipio 1892196566 editado",
+            "departamento": "QA departamento 1892196566 editado",
+            "pais": "QA pais 1892196566 editado",
+            "cantidad_ventas": "3",
+            "total_facturado": 225
+          }
+        ]
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:05:54.058370+00:00",
+      "method": "GET",
+      "path": "/reportes/top-productos",
+      "request": null,
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "codigo_producto": 90,
+            "nombre": "Helado de vainilla Light",
+            "categoria": "Congelados",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "174",
+            "monto_total": 10461.93
+          },
+          {
+            "codigo_producto": 19,
+            "nombre": "Tortillas de maiz frito Especial",
+            "categoria": "Snacks",
+            "marca": "La Espiga",
+            "unidades_vendidas": "162",
+            "monto_total": 9623.54
+          },
+          {
+            "codigo_producto": 41,
+            "nombre": "Pan de molde Light",
+            "categoria": "Panaderia",
+            "marca": "AguaViva",
+            "unidades_vendidas": "162",
+            "monto_total": 2123.15
+          },
+          {
+            "codigo_producto": 20,
+            "nombre": "Tortillas de maiz frito Especial 20",
+            "categoria": "Snacks",
+            "marca": "VitalCare",
+            "unidades_vendidas": "161",
+            "monto_total": 3893.51
+          },
+          {
+            "codigo_producto": 27,
+            "nombre": "Frituras de platano Premium",
+            "categoria": "Snacks",
+            "marca": "Bienestar Total",
+            "unidades_vendidas": "161",
+            "monto_total": 24077.18
+          },
+          {
+            "codigo_producto": 91,
+            "nombre": "Nuggets de pollo Premium",
+            "categoria": "Congelados",
+            "marca": "VitalCare",
+            "unidades_vendidas": "157",
+            "monto_total": 13141.57
+          },
+          {
+            "codigo_producto": 44,
+            "nombre": "Pan dulce Especial",
+            "categoria": "Panaderia",
+            "marca": "FrescoYa",
+            "unidades_vendidas": "145",
+            "monto_total": 6215.57
+          },
+          {
+            "codigo_producto": 88,
+            "nombre": "Vegetales mixtos congelados Familiar",
+            "categoria": "Congelados",
+            "marca": "La Espiga",
+            "unidades_vendidas": "143",
+            "monto_total": 35598.62
+          },
+          {
+            "codigo_producto": 24,
+            "nombre": "Galletas saladas Original 24",
+            "categoria": "Snacks",
+            "marca": "BrilloHogar",
+            "unidades_vendidas": "139",
+            "monto_total": 22059.43
+          },
+          {
+            "codigo_producto": 50,
+            "nombre": "Pan integral Familiar 50",
+            "categoria": "Panaderia",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "139",
+            "monto_total": 18335.2
+          },
+          {
+            "codigo_producto": 92,
+            "nombre": "Nuggets de pollo Tradicional",
+            "categoria": "Congelados",
+            "marca": "CasaLimpia",
+            "unidades_vendidas": "137",
+            "monto_total": 33598.96
+          },
+          {
+            "codigo_producto": 61,
+            "nombre": "Jabon de baño Light",
+            "categoria": "Cuidado personal",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "134",
+            "monto_total": 7066.79
+          },
+          {
+            "codigo_producto": 12,
+            "nombre": "Bebida energetica Clasico",
+            "categoria": "Bebidas",
+            "marca": "Bienestar Total",
+            "unidades_vendidas": "133",
+            "monto_total": 32919.43
+          },
+          {
+            "codigo_producto": 18,
+            "nombre": "Papas fritas Extra",
+            "categoria": "Snacks",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "132",
+            "monto_total": 2676.89
+          },
+          {
+            "codigo_producto": 51,
+            "nombre": "Detergente en polvo Clasico",
+            "categoria": "Limpieza del hogar",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "132",
+            "monto_total": 24867.37
+          },
+          {
+            "codigo_producto": 65,
+            "nombre": "Pasta dental Original",
+            "categoria": "Cuidado personal",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "131",
+            "monto_total": 13541.39
+          },
+          {
+            "codigo_producto": 76,
+            "nombre": "Azucar Clasico",
+            "categoria": "Abarrotes",
+            "marca": "VitalCare",
+            "unidades_vendidas": "131",
+            "monto_total": 32171.21
+          },
+          {
+            "codigo_producto": 108,
+            "nombre": "Toalla de cocina Extra",
+            "categoria": "Articulos de hogar",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "131",
+            "monto_total": 29912.01
+          },
+          {
+            "codigo_producto": 81,
+            "nombre": "Harina de trigo Tradicional",
+            "categoria": "Abarrotes",
+            "marca": "VitalCare",
+            "unidades_vendidas": "130",
+            "monto_total": 15315.58
+          },
+          {
+            "codigo_producto": 11,
+            "nombre": "Bebida energetica Especial",
+            "categoria": "Bebidas",
+            "marca": "SnackTime",
+            "unidades_vendidas": "128",
+            "monto_total": 5704.1
+          },
+          {
+            "codigo_producto": 95,
+            "nombre": "Audifonos Premium",
+            "categoria": "Electronica",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "128",
+            "monto_total": 27056.63
+          },
+          {
+            "codigo_producto": 68,
+            "nombre": "Desodorante Premium",
+            "categoria": "Cuidado personal",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "126",
+            "monto_total": 9858.59
+          },
+          {
+            "codigo_producto": 36,
+            "nombre": "Crema Premium",
+            "categoria": "Lacteos",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "122",
+            "monto_total": 1542.88
+          },
+          {
+            "codigo_producto": 70,
+            "nombre": "Papel higienico Familiar",
+            "categoria": "Cuidado personal",
+            "marca": "La Espiga",
+            "unidades_vendidas": "122",
+            "monto_total": 25076.88
+          },
+          {
+            "codigo_producto": 23,
+            "nombre": "Galletas saladas Original",
+            "categoria": "Snacks",
+            "marca": "Delisabor",
+            "unidades_vendidas": "121",
+            "monto_total": 30124.9
+          },
+          {
+            "codigo_producto": 71,
+            "nombre": "Arroz Clasico",
+            "categoria": "Abarrotes",
+            "marca": "Delisabor",
+            "unidades_vendidas": "121",
+            "monto_total": 29935.81
+          },
+          {
+            "codigo_producto": 21,
+            "nombre": "Mani salado Clasico",
+            "categoria": "Snacks",
+            "marca": "VitalCare",
+            "unidades_vendidas": "120",
+            "monto_total": 1636.64
+          },
+          {
+            "codigo_producto": 73,
+            "nombre": "Frijol negro Familiar",
+            "categoria": "Abarrotes",
+            "marca": "BrilloHogar",
+            "unidades_vendidas": "120",
+            "monto_total": 24579.41
+          },
+          {
+            "codigo_producto": 87,
+            "nombre": "Vegetales mixtos congelados Premium",
+            "categoria": "Congelados",
+            "marca": "Bienestar Total",
+            "unidades_vendidas": "120",
+            "monto_total": 19680.44
+          },
+          {
+            "codigo_producto": 56,
+            "nombre": "Cloro Clasico",
+            "categoria": "Limpieza del hogar",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "119",
+            "monto_total": 27518.61
+          },
+          {
+            "codigo_producto": 7,
+            "nombre": "Cafe molido Familiar",
+            "categoria": "Bebidas",
+            "marca": "BrilloHogar",
+            "unidades_vendidas": "118",
+            "monto_total": 10431.4
+          },
+          {
+            "codigo_producto": 30,
+            "nombre": "Leche entera Tradicional",
+            "categoria": "Lacteos",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "118",
+            "monto_total": 19343.34
+          },
+          {
+            "codigo_producto": 85,
+            "nombre": "Pizza congelada Especial",
+            "categoria": "Congelados",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "118",
+            "monto_total": 3901.49
+          },
+          {
+            "codigo_producto": 103,
+            "nombre": "Cable HDMI Extra",
+            "categoria": "Electronica",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "117",
+            "monto_total": 11100.29
+          },
+          {
+            "codigo_producto": 63,
+            "nombre": "Shampoo Familiar",
+            "categoria": "Cuidado personal",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "115",
+            "monto_total": 16891.63
+          },
+          {
+            "codigo_producto": 15,
+            "nombre": "Nectar de durazno Extra",
+            "categoria": "Bebidas",
+            "marca": "CasaLimpia",
+            "unidades_vendidas": "114",
+            "monto_total": 4633.25
+          },
+          {
+            "codigo_producto": 82,
+            "nombre": "Harina de trigo Tradicional 82",
+            "categoria": "Abarrotes",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "114",
+            "monto_total": 13294.3
+          },
+          {
+            "codigo_producto": 29,
+            "nombre": "Leche entera Light",
+            "categoria": "Lacteos",
+            "marca": "La Espiga",
+            "unidades_vendidas": "113",
+            "monto_total": 23698.93
+          },
+          {
+            "codigo_producto": 101,
+            "nombre": "Bocina portatil Original",
+            "categoria": "Electronica",
+            "marca": "La Espiga",
+            "unidades_vendidas": "113",
+            "monto_total": 27036.34
+          },
+          {
+            "codigo_producto": 37,
+            "nombre": "Mantequilla Original",
+            "categoria": "Lacteos",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "112",
+            "monto_total": 17272.54
+          },
+          {
+            "codigo_producto": 74,
+            "nombre": "Frijol negro Premium",
+            "categoria": "Abarrotes",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "112",
+            "monto_total": 16571.27
+          },
+          {
+            "codigo_producto": 31,
+            "nombre": "Yogurt natural Extra",
+            "categoria": "Lacteos",
+            "marca": "Bienestar Total",
+            "unidades_vendidas": "111",
+            "monto_total": 12782.62
+          },
+          {
+            "codigo_producto": 45,
+            "nombre": "Tortillas de harina Light",
+            "categoria": "Panaderia",
+            "marca": "FrescoYa",
+            "unidades_vendidas": "111",
+            "monto_total": 27651.01
+          },
+          {
+            "codigo_producto": 17,
+            "nombre": "Papas fritas Light",
+            "categoria": "Snacks",
+            "marca": "AguaViva",
+            "unidades_vendidas": "110",
+            "monto_total": 12418.8
+          },
+          {
+            "codigo_producto": 46,
+            "nombre": "Tortillas de harina Familiar",
+            "categoria": "Panaderia",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "109",
+            "monto_total": 21231.05
+          },
+          {
+            "codigo_producto": 49,
+            "nombre": "Pan integral Familiar",
+            "categoria": "Panaderia",
+            "marca": "Norteña",
+            "unidades_vendidas": "109",
+            "monto_total": 16241.49
+          },
+          {
+            "codigo_producto": 112,
+            "nombre": "Bolsas de basura Tradicional",
+            "categoria": "Articulos de hogar",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "109",
+            "monto_total": 24406.58
+          },
+          {
+            "codigo_producto": 32,
+            "nombre": "Yogurt natural Especial",
+            "categoria": "Lacteos",
+            "marca": "FrescoYa",
+            "unidades_vendidas": "108",
+            "monto_total": 5903.65
+          },
+          {
+            "codigo_producto": 80,
+            "nombre": "Aceite vegetal Clasico",
+            "categoria": "Abarrotes",
+            "marca": "VitalCare",
+            "unidades_vendidas": "108",
+            "monto_total": 26324.79
+          },
+          {
+            "codigo_producto": 2,
+            "nombre": "Agua pura Especial",
+            "categoria": "Bebidas",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "107",
+            "monto_total": 12522.47
+          },
+          {
+            "codigo_producto": 40,
+            "nombre": "Leche deslactosada Premium",
+            "categoria": "Lacteos",
+            "marca": "Bienestar Total",
+            "unidades_vendidas": "107",
+            "monto_total": 4922.5
+          },
+          {
+            "codigo_producto": 55,
+            "nombre": "Cloro Tradicional",
+            "categoria": "Limpieza del hogar",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "107",
+            "monto_total": 23058.63
+          },
+          {
+            "codigo_producto": 94,
+            "nombre": "Papas congeladas Clasico",
+            "categoria": "Congelados",
+            "marca": "Norteña",
+            "unidades_vendidas": "107",
+            "monto_total": 697.12
+          },
+          {
+            "codigo_producto": 105,
+            "nombre": "Escoba Tradicional",
+            "categoria": "Articulos de hogar",
+            "marca": "AguaViva",
+            "unidades_vendidas": "106",
+            "monto_total": 7423.84
+          },
+          {
+            "codigo_producto": 53,
+            "nombre": "Jabon liquido para trastos Familiar",
+            "categoria": "Limpieza del hogar",
+            "marca": "Norteña",
+            "unidades_vendidas": "105",
+            "monto_total": 2754.83
+          },
+          {
+            "codigo_producto": 48,
+            "nombre": "Croissant Light",
+            "categoria": "Panaderia",
+            "marca": "Norteña",
+            "unidades_vendidas": "104",
+            "monto_total": 10838.78
+          },
+          {
+            "codigo_producto": 52,
+            "nombre": "Detergente en polvo Familiar",
+            "categoria": "Limpieza del hogar",
+            "marca": "VitalCare",
+            "unidades_vendidas": "104",
+            "monto_total": 2212.08
+          },
+          {
+            "codigo_producto": 83,
+            "nombre": "Pasta para sopa Clasico",
+            "categoria": "Abarrotes",
+            "marca": "Bienestar Total",
+            "unidades_vendidas": "104",
+            "monto_total": 15679.56
+          },
+          {
+            "codigo_producto": 114,
+            "nombre": "Foco LED Premium",
+            "categoria": "Articulos de hogar",
+            "marca": "BrilloHogar",
+            "unidades_vendidas": "104",
+            "monto_total": 5640.67
+          },
+          {
+            "codigo_producto": 100,
+            "nombre": "Power bank Familiar",
+            "categoria": "Electronica",
+            "marca": "Delisabor",
+            "unidades_vendidas": "102",
+            "monto_total": 2347.69
+          },
+          {
+            "codigo_producto": 10,
+            "nombre": "Te helado Familiar 10",
+            "categoria": "Bebidas",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "101",
+            "monto_total": 18337.4
+          },
+          {
+            "codigo_producto": 57,
+            "nombre": "Desinfectante multiusos Original",
+            "categoria": "Limpieza del hogar",
+            "marca": "VitalCare",
+            "unidades_vendidas": "101",
+            "monto_total": 9272.75
+          },
+          {
+            "codigo_producto": 64,
+            "nombre": "Shampoo Familiar 64",
+            "categoria": "Cuidado personal",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "100",
+            "monto_total": 6902.88
+          },
+          {
+            "codigo_producto": 98,
+            "nombre": "Cargador USB Extra",
+            "categoria": "Electronica",
+            "marca": "SnackTime",
+            "unidades_vendidas": "100",
+            "monto_total": 17151.27
+          },
+          {
+            "codigo_producto": 86,
+            "nombre": "Pizza congelada Tradicional",
+            "categoria": "Congelados",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "99",
+            "monto_total": 2020.77
+          },
+          {
+            "codigo_producto": 109,
+            "nombre": "Vela aromatica Especial",
+            "categoria": "Articulos de hogar",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "97",
+            "monto_total": 12444.56
+          },
+          {
+            "codigo_producto": 8,
+            "nombre": "Cafe molido Familiar 8",
+            "categoria": "Bebidas",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "96",
+            "monto_total": 13401.93
+          },
+          {
+            "codigo_producto": 72,
+            "nombre": "Arroz Tradicional",
+            "categoria": "Abarrotes",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "96",
+            "monto_total": 21732.77
+          },
+          {
+            "codigo_producto": 4,
+            "nombre": "Gaseosa Extra",
+            "categoria": "Bebidas",
+            "marca": "La Espiga",
+            "unidades_vendidas": "95",
+            "monto_total": 4276.54
+          },
+          {
+            "codigo_producto": 58,
+            "nombre": "Desinfectante multiusos Light",
+            "categoria": "Limpieza del hogar",
+            "marca": "Delisabor",
+            "unidades_vendidas": "95",
+            "monto_total": 23322.28
+          },
+          {
+            "codigo_producto": 110,
+            "nombre": "Vela aromatica Original",
+            "categoria": "Articulos de hogar",
+            "marca": "CasaLimpia",
+            "unidades_vendidas": "95",
+            "monto_total": 5022.42
+          },
+          {
+            "codigo_producto": 97,
+            "nombre": "Cargador USB Light",
+            "categoria": "Electronica",
+            "marca": "La Espiga",
+            "unidades_vendidas": "94",
+            "monto_total": 2498.12
+          },
+          {
+            "codigo_producto": 6,
+            "nombre": "Jugo de naranja Light",
+            "categoria": "Bebidas",
+            "marca": "AguaViva",
+            "unidades_vendidas": "92",
+            "monto_total": 9618.07
+          },
+          {
+            "codigo_producto": 54,
+            "nombre": "Jabon liquido para trastos Familiar 54",
+            "categoria": "Limpieza del hogar",
+            "marca": "CasaLimpia",
+            "unidades_vendidas": "91",
+            "monto_total": 6882.47
+          },
+          {
+            "codigo_producto": 69,
+            "nombre": "Papel higienico Tradicional",
+            "categoria": "Cuidado personal",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "91",
+            "monto_total": 22235.85
+          },
+          {
+            "codigo_producto": 9,
+            "nombre": "Te helado Familiar",
+            "categoria": "Bebidas",
+            "marca": "FrescoYa",
+            "unidades_vendidas": "89",
+            "monto_total": 15526.11
+          },
+          {
+            "codigo_producto": 107,
+            "nombre": "Toalla de cocina Especial",
+            "categoria": "Articulos de hogar",
+            "marca": "La Espiga",
+            "unidades_vendidas": "89",
+            "monto_total": 15431.18
+          },
+          {
+            "codigo_producto": 13,
+            "nombre": "Agua mineral Especial",
+            "categoria": "Bebidas",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "88",
+            "monto_total": 472.91
+          },
+          {
+            "codigo_producto": 62,
+            "nombre": "Jabon de baño Tradicional",
+            "categoria": "Cuidado personal",
+            "marca": "BrilloHogar",
+            "unidades_vendidas": "88",
+            "monto_total": 21072.61
+          },
+          {
+            "codigo_producto": 14,
+            "nombre": "Agua mineral Premium",
+            "categoria": "Bebidas",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "87",
+            "monto_total": 2300.29
+          },
+          {
+            "codigo_producto": 106,
+            "nombre": "Escoba Light",
+            "categoria": "Articulos de hogar",
+            "marca": "GranjaFeliz",
+            "unidades_vendidas": "84",
+            "monto_total": 20271.5
+          },
+          {
+            "codigo_producto": 1,
+            "nombre": "Agua pura Original",
+            "categoria": "Bebidas",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "83",
+            "monto_total": 15966.74
+          },
+          {
+            "codigo_producto": 77,
+            "nombre": "Sal Premium",
+            "categoria": "Abarrotes",
+            "marca": "VitalCare",
+            "unidades_vendidas": "83",
+            "monto_total": 11873.69
+          },
+          {
+            "codigo_producto": 28,
+            "nombre": "Frituras de platano Original",
+            "categoria": "Snacks",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "81",
+            "monto_total": 19579.53
+          },
+          {
+            "codigo_producto": 34,
+            "nombre": "Queso fresco Familiar",
+            "categoria": "Lacteos",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "81",
+            "monto_total": 16646.92
+          },
+          {
+            "codigo_producto": 38,
+            "nombre": "Mantequilla Familiar",
+            "categoria": "Lacteos",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "81",
+            "monto_total": 10743.37
+          },
+          {
+            "codigo_producto": 59,
+            "nombre": "Suavizante de telas Especial",
+            "categoria": "Limpieza del hogar",
+            "marca": "FrescoYa",
+            "unidades_vendidas": "81",
+            "monto_total": 5969.28
+          },
+          {
+            "codigo_producto": 96,
+            "nombre": "Audifonos Clasico",
+            "categoria": "Electronica",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "81",
+            "monto_total": 5315.94
+          },
+          {
+            "codigo_producto": 5,
+            "nombre": "Jugo de naranja Clasico",
+            "categoria": "Bebidas",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "80",
+            "monto_total": 4601.38
+          },
+          {
+            "codigo_producto": 22,
+            "nombre": "Mani salado Extra",
+            "categoria": "Snacks",
+            "marca": "Norteña",
+            "unidades_vendidas": "80",
+            "monto_total": 8098.5
+          },
+          {
+            "codigo_producto": 47,
+            "nombre": "Croissant Tradicional",
+            "categoria": "Panaderia",
+            "marca": "AguaViva",
+            "unidades_vendidas": "80",
+            "monto_total": 7419.82
+          },
+          {
+            "codigo_producto": 78,
+            "nombre": "Sal Especial",
+            "categoria": "Abarrotes",
+            "marca": "Delisabor",
+            "unidades_vendidas": "79",
+            "monto_total": 14815.61
+          },
+          {
+            "codigo_producto": 25,
+            "nombre": "Palomitas Familiar",
+            "categoria": "Snacks",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "78",
+            "monto_total": 10719.08
+          },
+          {
+            "codigo_producto": 26,
+            "nombre": "Palomitas Tradicional",
+            "categoria": "Snacks",
+            "marca": "La Espiga",
+            "unidades_vendidas": "75",
+            "monto_total": 13627.06
+          },
+          {
+            "codigo_producto": 89,
+            "nombre": "Helado de vainilla Especial",
+            "categoria": "Congelados",
+            "marca": "CasaLimpia",
+            "unidades_vendidas": "74",
+            "monto_total": 12909.52
+          },
+          {
+            "codigo_producto": 39,
+            "nombre": "Leche deslactosada Familiar",
+            "categoria": "Lacteos",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "72",
+            "monto_total": 4391.52
+          },
+          {
+            "codigo_producto": 84,
+            "nombre": "Pasta para sopa Tradicional",
+            "categoria": "Abarrotes",
+            "marca": "SnackTime",
+            "unidades_vendidas": "71",
+            "monto_total": 753.31
+          },
+          {
+            "codigo_producto": 104,
+            "nombre": "Cable HDMI Original",
+            "categoria": "Electronica",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "71",
+            "monto_total": 16395.23
+          },
+          {
+            "codigo_producto": 111,
+            "nombre": "Bolsas de basura Extra",
+            "categoria": "Articulos de hogar",
+            "marca": "HogarPlus",
+            "unidades_vendidas": "71",
+            "monto_total": 12985.72
+          },
+          {
+            "codigo_producto": 67,
+            "nombre": "Desodorante Especial",
+            "categoria": "Cuidado personal",
+            "marca": "VitalCare",
+            "unidades_vendidas": "68",
+            "monto_total": 1506.23
+          },
+          {
+            "codigo_producto": 93,
+            "nombre": "Papas congeladas Light",
+            "categoria": "Congelados",
+            "marca": "CasaLimpia",
+            "unidades_vendidas": "68",
+            "monto_total": 8972.92
+          },
+          {
+            "codigo_producto": 102,
+            "nombre": "Bocina portatil Tradicional",
+            "categoria": "Electronica",
+            "marca": "CasaLimpia",
+            "unidades_vendidas": "67",
+            "monto_total": 8340.68
+          },
+          {
+            "codigo_producto": 42,
+            "nombre": "Pan de molde Extra",
+            "categoria": "Panaderia",
+            "marca": "La Espiga",
+            "unidades_vendidas": "66",
+            "monto_total": 4253.34
+          },
+          {
+            "codigo_producto": 79,
+            "nombre": "Aceite vegetal Familiar",
+            "categoria": "Abarrotes",
+            "marca": "AguaViva",
+            "unidades_vendidas": "66",
+            "monto_total": 12930.13
+          },
+          {
+            "codigo_producto": 75,
+            "nombre": "Azucar Especial",
+            "categoria": "Abarrotes",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "62",
+            "monto_total": 11023.88
+          },
+          {
+            "codigo_producto": 3,
+            "nombre": "Gaseosa Premium",
+            "categoria": "Bebidas",
+            "marca": "TecnoMax",
+            "unidades_vendidas": "60",
+            "monto_total": 10413.15
+          },
+          {
+            "codigo_producto": 113,
+            "nombre": "Foco LED Familiar",
+            "categoria": "Articulos de hogar",
+            "marca": "SnackTime",
+            "unidades_vendidas": "60",
+            "monto_total": 3325.76
+          },
+          {
+            "codigo_producto": 35,
+            "nombre": "Crema Familiar",
+            "categoria": "Lacteos",
+            "marca": "FrescoYa",
+            "unidades_vendidas": "58",
+            "monto_total": 4481.83
+          },
+          {
+            "codigo_producto": 99,
+            "nombre": "Power bank Extra",
+            "categoria": "Electronica",
+            "marca": "La Espiga",
+            "unidades_vendidas": "55",
+            "monto_total": 11527.2
+          },
+          {
+            "codigo_producto": 60,
+            "nombre": "Suavizante de telas Especial 60",
+            "categoria": "Limpieza del hogar",
+            "marca": "BrilloHogar",
+            "unidades_vendidas": "54",
+            "monto_total": 8147.75
+          },
+          {
+            "codigo_producto": 16,
+            "nombre": "Nectar de durazno Clasico",
+            "categoria": "Bebidas",
+            "marca": "PuroSabor",
+            "unidades_vendidas": "53",
+            "monto_total": 12675.33
+          },
+          {
+            "codigo_producto": 33,
+            "nombre": "Queso fresco Clasico",
+            "categoria": "Lacteos",
+            "marca": "VitalCare",
+            "unidades_vendidas": "53",
+            "monto_total": 8814.03
+          },
+          {
+            "codigo_producto": 43,
+            "nombre": "Pan dulce Premium",
+            "categoria": "Panaderia",
+            "marca": "SnackTime",
+            "unidades_vendidas": "52",
+            "monto_total": 219.04
+          },
+          {
+            "codigo_producto": 66,
+            "nombre": "Pasta dental Extra",
+            "categoria": "Cuidado personal",
+            "marca": "Lacteos del Valle",
+            "unidades_vendidas": "43",
+            "monto_total": 1287.39
+          },
+          {
+            "codigo_producto": 1892196319,
+            "nombre": "QA producto 1892196319 editado",
+            "categoria": "QA categoria 1892196319 editado",
+            "marca": "QA marca 1892196319 editado",
+            "unidades_vendidas": "8",
+            "monto_total": 200
+          },
+          {
+            "codigo_producto": 1892196566,
+            "nombre": "QA producto 1892196566 editado",
+            "categoria": "QA categoria 1892196566 editado",
+            "marca": "QA marca 1892196566 editado",
+            "unidades_vendidas": "8",
+            "monto_total": 200
+          },
+          {
+            "codigo_producto": 1546939428,
+            "nombre": "Demo producto 1546939428",
+            "categoria": "Bebidas",
+            "marca": "Norteña",
+            "unidades_vendidas": "2",
+            "monto_total": 50
+          },
+          {
+            "codigo_producto": 1564141624,
+            "nombre": "Demo producto 1564141624",
+            "categoria": "Bebidas",
+            "marca": "Norteña",
+            "unidades_vendidas": "2",
+            "monto_total": 50
+          },
+          {
+            "codigo_producto": 1731155899,
+            "nombre": "Manual producto 1731155899",
+            "categoria": "Bebidas",
+            "marca": "Norteña",
+            "unidades_vendidas": "2",
+            "monto_total": 50
+          },
+          {
+            "codigo_producto": 1892196320,
+            "nombre": "QA segundo 1892196319",
+            "categoria": "QA categoria 1892196319 editado",
+            "marca": "QA marca 1892196319 editado",
+            "unidades_vendidas": "1",
+            "monto_total": 25
+          },
+          {
+            "codigo_producto": 1892196567,
+            "nombre": "QA segundo 1892196566",
+            "categoria": "QA categoria 1892196566 editado",
+            "marca": "QA marca 1892196566 editado",
+            "unidades_vendidas": "1",
+            "monto_total": 25
+          }
+        ]
+      }
+    },
+    {
+      "fecha_utc": "2026-10-17T04:06:01.015944+00:00",
+      "method": "GET",
+      "path": "/reportes/saldos-pendientes",
+      "request": null,
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id_venta": 12,
+            "total_venta": 1246.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 1246.2
+          },
+          {
+            "id_venta": 16,
+            "total_venta": 1422.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 1422.6
+          },
+          {
+            "id_venta": 18,
+            "total_venta": 1285.5,
+            "total_pagado": 632.32,
+            "saldo_pendiente": 653.18
+          },
+          {
+            "id_venta": 21,
+            "total_venta": 383.22,
+            "total_pagado": 0,
+            "saldo_pendiente": 383.22
+          },
+          {
+            "id_venta": 23,
+            "total_venta": 523.48,
+            "total_pagado": 0,
+            "saldo_pendiente": 523.48
+          },
+          {
+            "id_venta": 26,
+            "total_venta": 887.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 887.2
+          },
+          {
+            "id_venta": 34,
+            "total_venta": 2002.26,
+            "total_pagado": 740.91,
+            "saldo_pendiente": 1261.35
+          },
+          {
+            "id_venta": 38,
+            "total_venta": 2239.96,
+            "total_pagado": 0,
+            "saldo_pendiente": 2239.96
+          },
+          {
+            "id_venta": 39,
+            "total_venta": 217.59,
+            "total_pagado": 0,
+            "saldo_pendiente": 217.59
+          },
+          {
+            "id_venta": 46,
+            "total_venta": 277.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 277.6
+          },
+          {
+            "id_venta": 47,
+            "total_venta": 131.25,
+            "total_pagado": 0,
+            "saldo_pendiente": 131.25
+          },
+          {
+            "id_venta": 52,
+            "total_venta": 386.75,
+            "total_pagado": 0,
+            "saldo_pendiente": 386.75
+          },
+          {
+            "id_venta": 61,
+            "total_venta": 1140.97,
+            "total_pagado": 0,
+            "saldo_pendiente": 1140.97
+          },
+          {
+            "id_venta": 67,
+            "total_venta": 2100.05,
+            "total_pagado": 658.87,
+            "saldo_pendiente": 1441.18
+          },
+          {
+            "id_venta": 79,
+            "total_venta": 383.01,
+            "total_pagado": 172.71,
+            "saldo_pendiente": 210.3
+          },
+          {
+            "id_venta": 82,
+            "total_venta": 1245.45,
+            "total_pagado": 411.85,
+            "saldo_pendiente": 833.6
+          },
+          {
+            "id_venta": 87,
+            "total_venta": 867.56,
+            "total_pagado": 0,
+            "saldo_pendiente": 867.56
+          },
+          {
+            "id_venta": 88,
+            "total_venta": 917.94,
+            "total_pagado": 0,
+            "saldo_pendiente": 917.94
+          },
+          {
+            "id_venta": 96,
+            "total_venta": 994.13,
+            "total_pagado": 0,
+            "saldo_pendiente": 994.13
+          },
+          {
+            "id_venta": 100,
+            "total_venta": 2819.16,
+            "total_pagado": 711.42,
+            "saldo_pendiente": 2107.74
+          },
+          {
+            "id_venta": 103,
+            "total_venta": 600,
+            "total_pagado": 0,
+            "saldo_pendiente": 600
+          },
+          {
+            "id_venta": 112,
+            "total_venta": 1220.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 1220.6
+          },
+          {
+            "id_venta": 122,
+            "total_venta": 2258.83,
+            "total_pagado": 0,
+            "saldo_pendiente": 2258.83
+          },
+          {
+            "id_venta": 125,
+            "total_venta": 753.63,
+            "total_pagado": 0,
+            "saldo_pendiente": 753.63
+          },
+          {
+            "id_venta": 127,
+            "total_venta": 651.29,
+            "total_pagado": 0,
+            "saldo_pendiente": 651.29
+          },
+          {
+            "id_venta": 131,
+            "total_venta": 1952.05,
+            "total_pagado": 1087.17,
+            "saldo_pendiente": 864.88
+          },
+          {
+            "id_venta": 132,
+            "total_venta": 47.14,
+            "total_pagado": 9.89,
+            "saldo_pendiente": 37.25
+          },
+          {
+            "id_venta": 134,
+            "total_venta": 625.56,
+            "total_pagado": 0,
+            "saldo_pendiente": 625.56
+          },
+          {
+            "id_venta": 136,
+            "total_venta": 2082.96,
+            "total_pagado": 0,
+            "saldo_pendiente": 2082.96
+          },
+          {
+            "id_venta": 137,
+            "total_venta": 1822.59,
+            "total_pagado": 617.1,
+            "saldo_pendiente": 1205.49
+          },
+          {
+            "id_venta": 138,
+            "total_venta": 847.49,
+            "total_pagado": 175.37,
+            "saldo_pendiente": 672.12
+          },
+          {
+            "id_venta": 140,
+            "total_venta": 1224.62,
+            "total_pagado": 0,
+            "saldo_pendiente": 1224.62
+          },
+          {
+            "id_venta": 143,
+            "total_venta": 2795.81,
+            "total_pagado": 0,
+            "saldo_pendiente": 2795.81
+          },
+          {
+            "id_venta": 151,
+            "total_venta": 1482.18,
+            "total_pagado": 588.9,
+            "saldo_pendiente": 893.28
+          },
+          {
+            "id_venta": 153,
+            "total_venta": 895.44,
+            "total_pagado": 326.52,
+            "saldo_pendiente": 568.92
+          },
+          {
+            "id_venta": 166,
+            "total_venta": 1861.33,
+            "total_pagado": 933.11,
+            "saldo_pendiente": 928.22
+          },
+          {
+            "id_venta": 169,
+            "total_venta": 1971.93,
+            "total_pagado": 635.25,
+            "saldo_pendiente": 1336.68
+          },
+          {
+            "id_venta": 174,
+            "total_venta": 1516.24,
+            "total_pagado": 0,
+            "saldo_pendiente": 1516.24
+          },
+          {
+            "id_venta": 178,
+            "total_venta": 32.51,
+            "total_pagado": 22.6,
+            "saldo_pendiente": 9.91
+          },
+          {
+            "id_venta": 185,
+            "total_venta": 1212.04,
+            "total_pagado": 0,
+            "saldo_pendiente": 1212.04
+          },
+          {
+            "id_venta": 190,
+            "total_venta": 1047.85,
+            "total_pagado": 0,
+            "saldo_pendiente": 1047.85
+          },
+          {
+            "id_venta": 192,
+            "total_venta": 773.28,
+            "total_pagado": 0,
+            "saldo_pendiente": 773.28
+          },
+          {
+            "id_venta": 196,
+            "total_venta": 2204.87,
+            "total_pagado": 0,
+            "saldo_pendiente": 2204.87
+          },
+          {
+            "id_venta": 197,
+            "total_venta": 1304.44,
+            "total_pagado": 0,
+            "saldo_pendiente": 1304.44
+          },
+          {
+            "id_venta": 202,
+            "total_venta": 3377.16,
+            "total_pagado": 0,
+            "saldo_pendiente": 3377.16
+          },
+          {
+            "id_venta": 207,
+            "total_venta": 203.96,
+            "total_pagado": 0,
+            "saldo_pendiente": 203.96
+          },
+          {
+            "id_venta": 209,
+            "total_venta": 426.21,
+            "total_pagado": 0,
+            "saldo_pendiente": 426.21
+          },
+          {
+            "id_venta": 216,
+            "total_venta": 373.68,
+            "total_pagado": 0,
+            "saldo_pendiente": 373.68
+          },
+          {
+            "id_venta": 220,
+            "total_venta": 2599.25,
+            "total_pagado": 0,
+            "saldo_pendiente": 2599.25
+          },
+          {
+            "id_venta": 230,
+            "total_venta": 91.12,
+            "total_pagado": 0,
+            "saldo_pendiente": 91.12
+          },
+          {
+            "id_venta": 234,
+            "total_venta": 1483.94,
+            "total_pagado": 0,
+            "saldo_pendiente": 1483.94
+          },
+          {
+            "id_venta": 236,
+            "total_venta": 105.95,
+            "total_pagado": 0,
+            "saldo_pendiente": 105.95
+          },
+          {
+            "id_venta": 242,
+            "total_venta": 2155.61,
+            "total_pagado": 0,
+            "saldo_pendiente": 2155.61
+          },
+          {
+            "id_venta": 246,
+            "total_venta": 1001.84,
+            "total_pagado": 0,
+            "saldo_pendiente": 1001.84
+          },
+          {
+            "id_venta": 249,
+            "total_venta": 62.26,
+            "total_pagado": 26.51,
+            "saldo_pendiente": 35.75
+          },
+          {
+            "id_venta": 258,
+            "total_venta": 725.04,
+            "total_pagado": 0,
+            "saldo_pendiente": 725.04
+          },
+          {
+            "id_venta": 262,
+            "total_venta": 1681.26,
+            "total_pagado": 0,
+            "saldo_pendiente": 1681.26
+          },
+          {
+            "id_venta": 263,
+            "total_venta": 1384.1,
+            "total_pagado": 0,
+            "saldo_pendiente": 1384.1
+          },
+          {
+            "id_venta": 288,
+            "total_venta": 621.22,
+            "total_pagado": 0,
+            "saldo_pendiente": 621.22
+          },
+          {
+            "id_venta": 292,
+            "total_venta": 1262.67,
+            "total_pagado": 950.98,
+            "saldo_pendiente": 311.69
+          },
+          {
+            "id_venta": 295,
+            "total_venta": 2603.22,
+            "total_pagado": 0,
+            "saldo_pendiente": 2603.22
+          },
+          {
+            "id_venta": 300,
+            "total_venta": 144.64,
+            "total_pagado": 110.09,
+            "saldo_pendiente": 34.55
+          },
+          {
+            "id_venta": 302,
+            "total_venta": 724.94,
+            "total_pagado": 0,
+            "saldo_pendiente": 724.94
+          },
+          {
+            "id_venta": 306,
+            "total_venta": 2287.97,
+            "total_pagado": 467.14,
+            "saldo_pendiente": 1820.83
+          },
+          {
+            "id_venta": 314,
+            "total_venta": 2445.32,
+            "total_pagado": 515.58,
+            "saldo_pendiente": 1929.74
+          },
+          {
+            "id_venta": 317,
+            "total_venta": 2164.22,
+            "total_pagado": 1244.25,
+            "saldo_pendiente": 919.97
+          },
+          {
+            "id_venta": 320,
+            "total_venta": 681.9,
+            "total_pagado": 284.97,
+            "saldo_pendiente": 396.93
+          },
+          {
+            "id_venta": 324,
+            "total_venta": 831.12,
+            "total_pagado": 633.55,
+            "saldo_pendiente": 197.57
+          },
+          {
+            "id_venta": 325,
+            "total_venta": 722.94,
+            "total_pagado": 0,
+            "saldo_pendiente": 722.94
+          },
+          {
+            "id_venta": 327,
+            "total_venta": 2632.13,
+            "total_pagado": 0,
+            "saldo_pendiente": 2632.13
+          },
+          {
+            "id_venta": 333,
+            "total_venta": 932.03,
+            "total_pagado": 313.86,
+            "saldo_pendiente": 618.17
+          },
+          {
+            "id_venta": 337,
+            "total_venta": 2227.45,
+            "total_pagado": 0,
+            "saldo_pendiente": 2227.45
+          },
+          {
+            "id_venta": 342,
+            "total_venta": 1620.77,
+            "total_pagado": 0,
+            "saldo_pendiente": 1620.77
+          },
+          {
+            "id_venta": 346,
+            "total_venta": 422.76,
+            "total_pagado": 278.95,
+            "saldo_pendiente": 143.81
+          },
+          {
+            "id_venta": 348,
+            "total_venta": 2082.44,
+            "total_pagado": 1590.97,
+            "saldo_pendiente": 491.47
+          },
+          {
+            "id_venta": 349,
+            "total_venta": 762.18,
+            "total_pagado": 455.2,
+            "saldo_pendiente": 306.98
+          },
+          {
+            "id_venta": 353,
+            "total_venta": 864.84,
+            "total_pagado": 456.59,
+            "saldo_pendiente": 408.25
+          },
+          {
+            "id_venta": 358,
+            "total_venta": 1748.31,
+            "total_pagado": 953.06,
+            "saldo_pendiente": 795.25
+          },
+          {
+            "id_venta": 364,
+            "total_venta": 2097.42,
+            "total_pagado": 0,
+            "saldo_pendiente": 2097.42
+          },
+          {
+            "id_venta": 366,
+            "total_venta": 1391.42,
+            "total_pagado": 408.32,
+            "saldo_pendiente": 983.1
+          },
+          {
+            "id_venta": 374,
+            "total_venta": 1269.42,
+            "total_pagado": 404.61,
+            "saldo_pendiente": 864.81
+          },
+          {
+            "id_venta": 377,
+            "total_venta": 1724.18,
+            "total_pagado": 579.8,
+            "saldo_pendiente": 1144.38
+          },
+          {
+            "id_venta": 382,
+            "total_venta": 712.86,
+            "total_pagado": 494.34,
+            "saldo_pendiente": 218.52
+          },
+          {
+            "id_venta": 392,
+            "total_venta": 1154.09,
+            "total_pagado": 0,
+            "saldo_pendiente": 1154.09
+          },
+          {
+            "id_venta": 395,
+            "total_venta": 663.85,
+            "total_pagado": 0,
+            "saldo_pendiente": 663.85
+          },
+          {
+            "id_venta": 402,
+            "total_venta": 620.79,
+            "total_pagado": 385.69,
+            "saldo_pendiente": 235.1
+          },
+          {
+            "id_venta": 404,
+            "total_venta": 141,
+            "total_pagado": 104.05,
+            "saldo_pendiente": 36.95
+          },
+          {
+            "id_venta": 406,
+            "total_venta": 1532.4,
+            "total_pagado": 0,
+            "saldo_pendiente": 1532.4
+          },
+          {
+            "id_venta": 412,
+            "total_venta": 1102.84,
+            "total_pagado": 0,
+            "saldo_pendiente": 1102.84
+          },
+          {
+            "id_venta": 416,
+            "total_venta": 2367.62,
+            "total_pagado": 0,
+            "saldo_pendiente": 2367.62
+          },
+          {
+            "id_venta": 420,
+            "total_venta": 819.58,
+            "total_pagado": 0,
+            "saldo_pendiente": 819.58
+          },
+          {
+            "id_venta": 423,
+            "total_venta": 1392.99,
+            "total_pagado": 966.92,
+            "saldo_pendiente": 426.07
+          },
+          {
+            "id_venta": 428,
+            "total_venta": 1267.13,
+            "total_pagado": 369.53,
+            "saldo_pendiente": 897.6
+          },
+          {
+            "id_venta": 433,
+            "total_venta": 120.15,
+            "total_pagado": 70.81,
+            "saldo_pendiente": 49.34
+          },
+          {
+            "id_venta": 435,
+            "total_venta": 1120.02,
+            "total_pagado": 874.09,
+            "saldo_pendiente": 245.93
+          },
+          {
+            "id_venta": 436,
+            "total_venta": 1988.54,
+            "total_pagado": 0,
+            "saldo_pendiente": 1988.54
+          },
+          {
+            "id_venta": 438,
+            "total_venta": 995.73,
+            "total_pagado": 0,
+            "saldo_pendiente": 995.73
+          },
+          {
+            "id_venta": 441,
+            "total_venta": 1164.65,
+            "total_pagado": 0,
+            "saldo_pendiente": 1164.65
+          },
+          {
+            "id_venta": 442,
+            "total_venta": 180.21,
+            "total_pagado": 0,
+            "saldo_pendiente": 180.21
+          },
+          {
+            "id_venta": 458,
+            "total_venta": 793.23,
+            "total_pagado": 562.53,
+            "saldo_pendiente": 230.7
+          },
+          {
+            "id_venta": 468,
+            "total_venta": 1987.67,
+            "total_pagado": 0,
+            "saldo_pendiente": 1987.67
+          },
+          {
+            "id_venta": 470,
+            "total_venta": 1361.4,
+            "total_pagado": 673.3,
+            "saldo_pendiente": 688.1
+          },
+          {
+            "id_venta": 471,
+            "total_venta": 1137.6,
+            "total_pagado": 229.6,
+            "saldo_pendiente": 908
+          },
+          {
+            "id_venta": 472,
+            "total_venta": 2069.05,
+            "total_pagado": 1560.53,
+            "saldo_pendiente": 508.52
+          },
+          {
+            "id_venta": 473,
+            "total_venta": 644.21,
+            "total_pagado": 184.52,
+            "saldo_pendiente": 459.69
+          },
+          {
+            "id_venta": 481,
+            "total_venta": 606.65,
+            "total_pagado": 376.79,
+            "saldo_pendiente": 229.86
+          },
+          {
+            "id_venta": 487,
+            "total_venta": 607.17,
+            "total_pagado": 0,
+            "saldo_pendiente": 607.17
+          },
+          {
+            "id_venta": 489,
+            "total_venta": 599.05,
+            "total_pagado": 0,
+            "saldo_pendiente": 599.05
+          },
+          {
+            "id_venta": 494,
+            "total_venta": 136.35,
+            "total_pagado": 57.32,
+            "saldo_pendiente": 79.03
+          },
+          {
+            "id_venta": 495,
+            "total_venta": 1504.83,
+            "total_pagado": 0,
+            "saldo_pendiente": 1504.83
+          },
+          {
+            "id_venta": 503,
+            "total_venta": 377,
+            "total_pagado": 163.11,
+            "saldo_pendiente": 213.89
+          },
+          {
+            "id_venta": 509,
+            "total_venta": 142.92,
+            "total_pagado": 102.81,
+            "saldo_pendiente": 40.11
+          },
+          {
+            "id_venta": 512,
+            "total_venta": 520.97,
+            "total_pagado": 131.19,
+            "saldo_pendiente": 389.78
+          },
+          {
+            "id_venta": 515,
+            "total_venta": 721.28,
+            "total_pagado": 0,
+            "saldo_pendiente": 721.28
+          },
+          {
+            "id_venta": 521,
+            "total_venta": 1199.08,
+            "total_pagado": 0,
+            "saldo_pendiente": 1199.08
+          },
+          {
+            "id_venta": 524,
+            "total_venta": 1729.5,
+            "total_pagado": 0,
+            "saldo_pendiente": 1729.5
+          },
+          {
+            "id_venta": 525,
+            "total_venta": 264.81,
+            "total_pagado": 0,
+            "saldo_pendiente": 264.81
+          },
+          {
+            "id_venta": 526,
+            "total_venta": 833.94,
+            "total_pagado": 0,
+            "saldo_pendiente": 833.94
+          },
+          {
+            "id_venta": 529,
+            "total_venta": 377.19,
+            "total_pagado": 0,
+            "saldo_pendiente": 377.19
+          },
+          {
+            "id_venta": 540,
+            "total_venta": 52.77,
+            "total_pagado": 0,
+            "saldo_pendiente": 52.77
+          },
+          {
+            "id_venta": 543,
+            "total_venta": 318.32,
+            "total_pagado": 0,
+            "saldo_pendiente": 318.32
+          },
+          {
+            "id_venta": 547,
+            "total_venta": 1038.83,
+            "total_pagado": 581.62,
+            "saldo_pendiente": 457.21
+          },
+          {
+            "id_venta": 555,
+            "total_venta": 1720.4,
+            "total_pagado": 0,
+            "saldo_pendiente": 1720.4
+          },
+          {
+            "id_venta": 566,
+            "total_venta": 1086.56,
+            "total_pagado": 818.76,
+            "saldo_pendiente": 267.8
+          },
+          {
+            "id_venta": 570,
+            "total_venta": 228.74,
+            "total_pagado": 0,
+            "saldo_pendiente": 228.74
+          },
+          {
+            "id_venta": 573,
+            "total_venta": 1539.25,
+            "total_pagado": 0,
+            "saldo_pendiente": 1539.25
+          },
+          {
+            "id_venta": 574,
+            "total_venta": 902.37,
+            "total_pagado": 0,
+            "saldo_pendiente": 902.37
+          },
+          {
+            "id_venta": 588,
+            "total_venta": 1031.2,
+            "total_pagado": 727.83,
+            "saldo_pendiente": 303.37
+          },
+          {
+            "id_venta": 593,
+            "total_venta": 1172.98,
+            "total_pagado": 429.2,
+            "saldo_pendiente": 743.78
+          },
+          {
+            "id_venta": 604,
+            "total_venta": 496.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 496.2
+          },
+          {
+            "id_venta": 608,
+            "total_venta": 1222.65,
+            "total_pagado": 0,
+            "saldo_pendiente": 1222.65
+          },
+          {
+            "id_venta": 609,
+            "total_venta": 535.12,
+            "total_pagado": 0,
+            "saldo_pendiente": 535.12
+          },
+          {
+            "id_venta": 614,
+            "total_venta": 231.9,
+            "total_pagado": 128.12,
+            "saldo_pendiente": 103.78
+          },
+          {
+            "id_venta": 623,
+            "total_venta": 2044.58,
+            "total_pagado": 0,
+            "saldo_pendiente": 2044.58
+          },
+          {
+            "id_venta": 624,
+            "total_venta": 1334.37,
+            "total_pagado": 0,
+            "saldo_pendiente": 1334.37
+          },
+          {
+            "id_venta": 625,
+            "total_venta": 71.45,
+            "total_pagado": 0,
+            "saldo_pendiente": 71.45
+          },
+          {
+            "id_venta": 628,
+            "total_venta": 186.32,
+            "total_pagado": 55.7,
+            "saldo_pendiente": 130.62
+          },
+          {
+            "id_venta": 634,
+            "total_venta": 1717.26,
+            "total_pagado": 0,
+            "saldo_pendiente": 1717.26
+          },
+          {
+            "id_venta": 635,
+            "total_venta": 1398.06,
+            "total_pagado": 0,
+            "saldo_pendiente": 1398.06
+          },
+          {
+            "id_venta": 645,
+            "total_venta": 349.44,
+            "total_pagado": 0,
+            "saldo_pendiente": 349.44
+          },
+          {
+            "id_venta": 648,
+            "total_venta": 1912.62,
+            "total_pagado": 0,
+            "saldo_pendiente": 1912.62
+          },
+          {
+            "id_venta": 658,
+            "total_venta": 4172.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 4172.6
+          },
+          {
+            "id_venta": 662,
+            "total_venta": 1709.29,
+            "total_pagado": 0,
+            "saldo_pendiente": 1709.29
+          },
+          {
+            "id_venta": 666,
+            "total_venta": 663.6,
+            "total_pagado": 218.69,
+            "saldo_pendiente": 444.91
+          },
+          {
+            "id_venta": 667,
+            "total_venta": 858.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 858.2
+          },
+          {
+            "id_venta": 669,
+            "total_venta": 17.08,
+            "total_pagado": 0,
+            "saldo_pendiente": 17.08
+          },
+          {
+            "id_venta": 674,
+            "total_venta": 2205.07,
+            "total_pagado": 0,
+            "saldo_pendiente": 2205.07
+          },
+          {
+            "id_venta": 677,
+            "total_venta": 163.25,
+            "total_pagado": 0,
+            "saldo_pendiente": 163.25
+          },
+          {
+            "id_venta": 680,
+            "total_venta": 1297.34,
+            "total_pagado": 0,
+            "saldo_pendiente": 1297.34
+          },
+          {
+            "id_venta": 681,
+            "total_venta": 954.87,
+            "total_pagado": 0,
+            "saldo_pendiente": 954.87
+          },
+          {
+            "id_venta": 683,
+            "total_venta": 3323.4,
+            "total_pagado": 0,
+            "saldo_pendiente": 3323.4
+          },
+          {
+            "id_venta": 685,
+            "total_venta": 683.75,
+            "total_pagado": 416.35,
+            "saldo_pendiente": 267.4
+          },
+          {
+            "id_venta": 691,
+            "total_venta": 159.31,
+            "total_pagado": 0,
+            "saldo_pendiente": 159.31
+          },
+          {
+            "id_venta": 700,
+            "total_venta": 1017.01,
+            "total_pagado": 303.73,
+            "saldo_pendiente": 713.28
+          },
+          {
+            "id_venta": 701,
+            "total_venta": 2339.57,
+            "total_pagado": 1442.95,
+            "saldo_pendiente": 896.62
+          },
+          {
+            "id_venta": 702,
+            "total_venta": 1419.48,
+            "total_pagado": 0,
+            "saldo_pendiente": 1419.48
+          },
+          {
+            "id_venta": 716,
+            "total_venta": 2012.11,
+            "total_pagado": 0,
+            "saldo_pendiente": 2012.11
+          },
+          {
+            "id_venta": 722,
+            "total_venta": 1764.62,
+            "total_pagado": 836.96,
+            "saldo_pendiente": 927.66
+          },
+          {
+            "id_venta": 723,
+            "total_venta": 152.84,
+            "total_pagado": 118.16,
+            "saldo_pendiente": 34.68
+          },
+          {
+            "id_venta": 724,
+            "total_venta": 63.42,
+            "total_pagado": 33.64,
+            "saldo_pendiente": 29.78
+          },
+          {
+            "id_venta": 725,
+            "total_venta": 790.26,
+            "total_pagado": 0,
+            "saldo_pendiente": 790.26
+          },
+          {
+            "id_venta": 730,
+            "total_venta": 509.67,
+            "total_pagado": 0,
+            "saldo_pendiente": 509.67
+          },
+          {
+            "id_venta": 732,
+            "total_venta": 470.9,
+            "total_pagado": 0,
+            "saldo_pendiente": 470.9
+          },
+          {
+            "id_venta": 747,
+            "total_venta": 2074.94,
+            "total_pagado": 0,
+            "saldo_pendiente": 2074.94
+          },
+          {
+            "id_venta": 748,
+            "total_venta": 422.07,
+            "total_pagado": 0,
+            "saldo_pendiente": 422.07
+          },
+          {
+            "id_venta": 756,
+            "total_venta": 278.6,
+            "total_pagado": 95.93,
+            "saldo_pendiente": 182.67
+          },
+          {
+            "id_venta": 760,
+            "total_venta": 619.8,
+            "total_pagado": 0,
+            "saldo_pendiente": 619.8
+          },
+          {
+            "id_venta": 764,
+            "total_venta": 517.74,
+            "total_pagado": 0,
+            "saldo_pendiente": 517.74
+          },
+          {
+            "id_venta": 765,
+            "total_venta": 2658.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 2658.2
+          },
+          {
+            "id_venta": 772,
+            "total_venta": 828.38,
+            "total_pagado": 420.01,
+            "saldo_pendiente": 408.37
+          },
+          {
+            "id_venta": 779,
+            "total_venta": 887.24,
+            "total_pagado": 0,
+            "saldo_pendiente": 887.24
+          },
+          {
+            "id_venta": 780,
+            "total_venta": 633,
+            "total_pagado": 0,
+            "saldo_pendiente": 633
+          },
+          {
+            "id_venta": 783,
+            "total_venta": 287.34,
+            "total_pagado": 0,
+            "saldo_pendiente": 287.34
+          },
+          {
+            "id_venta": 787,
+            "total_venta": 673.79,
+            "total_pagado": 0,
+            "saldo_pendiente": 673.79
+          },
+          {
+            "id_venta": 800,
+            "total_venta": 340.48,
+            "total_pagado": 0,
+            "saldo_pendiente": 340.48
+          },
+          {
+            "id_venta": 801,
+            "total_venta": 1769.64,
+            "total_pagado": 0,
+            "saldo_pendiente": 1769.64
+          },
+          {
+            "id_venta": 804,
+            "total_venta": 1327.68,
+            "total_pagado": 0,
+            "saldo_pendiente": 1327.68
+          },
+          {
+            "id_venta": 815,
+            "total_venta": 987.08,
+            "total_pagado": 0,
+            "saldo_pendiente": 987.08
+          },
+          {
+            "id_venta": 829,
+            "total_venta": 73.86,
+            "total_pagado": 0,
+            "saldo_pendiente": 73.86
+          },
+          {
+            "id_venta": 836,
+            "total_venta": 997.64,
+            "total_pagado": 0,
+            "saldo_pendiente": 997.64
+          },
+          {
+            "id_venta": 840,
+            "total_venta": 1719.24,
+            "total_pagado": 0,
+            "saldo_pendiente": 1719.24
+          },
+          {
+            "id_venta": 849,
+            "total_venta": 147.8,
+            "total_pagado": 0,
+            "saldo_pendiente": 147.8
+          },
+          {
+            "id_venta": 854,
+            "total_venta": 374.34,
+            "total_pagado": 0,
+            "saldo_pendiente": 374.34
+          },
+          {
+            "id_venta": 855,
+            "total_venta": 669.99,
+            "total_pagado": 0,
+            "saldo_pendiente": 669.99
+          },
+          {
+            "id_venta": 857,
+            "total_venta": 2170.06,
+            "total_pagado": 1191.94,
+            "saldo_pendiente": 978.12
+          },
+          {
+            "id_venta": 861,
+            "total_venta": 2220.64,
+            "total_pagado": 1197.72,
+            "saldo_pendiente": 1022.92
+          },
+          {
+            "id_venta": 864,
+            "total_venta": 1145.77,
+            "total_pagado": 525.76,
+            "saldo_pendiente": 620.01
+          },
+          {
+            "id_venta": 867,
+            "total_venta": 947.82,
+            "total_pagado": 0,
+            "saldo_pendiente": 947.82
+          },
+          {
+            "id_venta": 868,
+            "total_venta": 776.89,
+            "total_pagado": 611.76,
+            "saldo_pendiente": 165.13
+          },
+          {
+            "id_venta": 871,
+            "total_venta": 978.12,
+            "total_pagado": 0,
+            "saldo_pendiente": 978.12
+          },
+          {
+            "id_venta": 872,
+            "total_venta": 24,
+            "total_pagado": 0,
+            "saldo_pendiente": 24
+          },
+          {
+            "id_venta": 873,
+            "total_venta": 778.32,
+            "total_pagado": 0,
+            "saldo_pendiente": 778.32
+          },
+          {
+            "id_venta": 880,
+            "total_venta": 1270.15,
+            "total_pagado": 899.15,
+            "saldo_pendiente": 371
+          },
+          {
+            "id_venta": 882,
+            "total_venta": 970.1,
+            "total_pagado": 0,
+            "saldo_pendiente": 970.1
+          },
+          {
+            "id_venta": 887,
+            "total_venta": 739,
+            "total_pagado": 0,
+            "saldo_pendiente": 739
+          },
+          {
+            "id_venta": 892,
+            "total_venta": 218.09,
+            "total_pagado": 0,
+            "saldo_pendiente": 218.09
+          },
+          {
+            "id_venta": 900,
+            "total_venta": 498.4,
+            "total_pagado": 297.81,
+            "saldo_pendiente": 200.59
+          },
+          {
+            "id_venta": 908,
+            "total_venta": 299.23,
+            "total_pagado": 0,
+            "saldo_pendiente": 299.23
+          },
+          {
+            "id_venta": 913,
+            "total_venta": 92.92,
+            "total_pagado": 55.44,
+            "saldo_pendiente": 37.48
+          },
+          {
+            "id_venta": 914,
+            "total_venta": 1381.74,
+            "total_pagado": 336.64,
+            "saldo_pendiente": 1045.1
+          },
+          {
+            "id_venta": 923,
+            "total_venta": 2322.01,
+            "total_pagado": 533.98,
+            "saldo_pendiente": 1788.03
+          },
+          {
+            "id_venta": 925,
+            "total_venta": 941.8,
+            "total_pagado": 366.21,
+            "saldo_pendiente": 575.59
+          },
+          {
+            "id_venta": 926,
+            "total_venta": 2339.08,
+            "total_pagado": 1706.68,
+            "saldo_pendiente": 632.4
+          },
+          {
+            "id_venta": 938,
+            "total_venta": 2269.72,
+            "total_pagado": 732.72,
+            "saldo_pendiente": 1537
+          },
+          {
+            "id_venta": 941,
+            "total_venta": 1042.37,
+            "total_pagado": 829.86,
+            "saldo_pendiente": 212.51
+          },
+          {
+            "id_venta": 945,
+            "total_venta": 637.56,
+            "total_pagado": 0,
+            "saldo_pendiente": 637.56
+          },
+          {
+            "id_venta": 947,
+            "total_venta": 979.32,
+            "total_pagado": 0,
+            "saldo_pendiente": 979.32
+          },
+          {
+            "id_venta": 950,
+            "total_venta": 527.05,
+            "total_pagado": 0,
+            "saldo_pendiente": 527.05
+          },
+          {
+            "id_venta": 952,
+            "total_venta": 463.48,
+            "total_pagado": 252.15,
+            "saldo_pendiente": 211.33
+          },
+          {
+            "id_venta": 954,
+            "total_venta": 795.92,
+            "total_pagado": 0,
+            "saldo_pendiente": 795.92
+          },
+          {
+            "id_venta": 959,
+            "total_venta": 1147.4,
+            "total_pagado": 0,
+            "saldo_pendiente": 1147.4
+          },
+          {
+            "id_venta": 962,
+            "total_venta": 264.85,
+            "total_pagado": 199.81,
+            "saldo_pendiente": 65.04
+          },
+          {
+            "id_venta": 965,
+            "total_venta": 41.43,
+            "total_pagado": 0,
+            "saldo_pendiente": 41.43
+          },
+          {
+            "id_venta": 968,
+            "total_venta": 284.12,
+            "total_pagado": 215.03,
+            "saldo_pendiente": 69.09
+          },
+          {
+            "id_venta": 969,
+            "total_venta": 3016.46,
+            "total_pagado": 2178.28,
+            "saldo_pendiente": 838.18
+          },
+          {
+            "id_venta": 971,
+            "total_venta": 297.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 297.2
+          },
+          {
+            "id_venta": 972,
+            "total_venta": 735.4,
+            "total_pagado": 0,
+            "saldo_pendiente": 735.4
+          },
+          {
+            "id_venta": 974,
+            "total_venta": 777.06,
+            "total_pagado": 0,
+            "saldo_pendiente": 777.06
+          },
+          {
+            "id_venta": 976,
+            "total_venta": 871.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 871.6
+          },
+          {
+            "id_venta": 977,
+            "total_venta": 764.92,
+            "total_pagado": 0,
+            "saldo_pendiente": 764.92
+          },
+          {
+            "id_venta": 979,
+            "total_venta": 678.71,
+            "total_pagado": 320.98,
+            "saldo_pendiente": 357.73
+          },
+          {
+            "id_venta": 981,
+            "total_venta": 2030.04,
+            "total_pagado": 0,
+            "saldo_pendiente": 2030.04
+          },
+          {
+            "id_venta": 982,
+            "total_venta": 574.24,
+            "total_pagado": 0,
+            "saldo_pendiente": 574.24
+          },
+          {
+            "id_venta": 983,
+            "total_venta": 223.41,
+            "total_pagado": 0,
+            "saldo_pendiente": 223.41
+          },
+          {
+            "id_venta": 985,
+            "total_venta": 1369.45,
+            "total_pagado": 0,
+            "saldo_pendiente": 1369.45
+          },
+          {
+            "id_venta": 993,
+            "total_venta": 881.44,
+            "total_pagado": 418.87,
+            "saldo_pendiente": 462.57
+          },
+          {
+            "id_venta": 996,
+            "total_venta": 244.34,
+            "total_pagado": 148.51,
+            "saldo_pendiente": 95.83
+          },
+          {
+            "id_venta": 1014,
+            "total_venta": 2089.44,
+            "total_pagado": 0,
+            "saldo_pendiente": 2089.44
+          },
+          {
+            "id_venta": 1015,
+            "total_venta": 3303.49,
+            "total_pagado": 0,
+            "saldo_pendiente": 3303.49
+          },
+          {
+            "id_venta": 1026,
+            "total_venta": 1889.06,
+            "total_pagado": 0,
+            "saldo_pendiente": 1889.06
+          },
+          {
+            "id_venta": 1027,
+            "total_venta": 26.32,
+            "total_pagado": 0,
+            "saldo_pendiente": 26.32
+          },
+          {
+            "id_venta": 1031,
+            "total_venta": 678.87,
+            "total_pagado": 0,
+            "saldo_pendiente": 678.87
+          },
+          {
+            "id_venta": 1032,
+            "total_venta": 1600.88,
+            "total_pagado": 0,
+            "saldo_pendiente": 1600.88
+          },
+          {
+            "id_venta": 1036,
+            "total_venta": 5.19,
+            "total_pagado": 3.12,
+            "saldo_pendiente": 2.07
+          },
+          {
+            "id_venta": 1039,
+            "total_venta": 26.02,
+            "total_pagado": 13.58,
+            "saldo_pendiente": 12.44
+          },
+          {
+            "id_venta": 1040,
+            "total_venta": 2156.13,
+            "total_pagado": 0,
+            "saldo_pendiente": 2156.13
+          },
+          {
+            "id_venta": 1043,
+            "total_venta": 1096.16,
+            "total_pagado": 384.36,
+            "saldo_pendiente": 711.8
+          },
+          {
+            "id_venta": 1045,
+            "total_venta": 726.22,
+            "total_pagado": 169.91,
+            "saldo_pendiente": 556.31
+          },
+          {
+            "id_venta": 1056,
+            "total_venta": 991.77,
+            "total_pagado": 0,
+            "saldo_pendiente": 991.77
+          },
+          {
+            "id_venta": 1059,
+            "total_venta": 879.83,
+            "total_pagado": 0,
+            "saldo_pendiente": 879.83
+          },
+          {
+            "id_venta": 1061,
+            "total_venta": 2547.62,
+            "total_pagado": 0,
+            "saldo_pendiente": 2547.62
+          },
+          {
+            "id_venta": 1067,
+            "total_venta": 275.73,
+            "total_pagado": 0,
+            "saldo_pendiente": 275.73
+          },
+          {
+            "id_venta": 1069,
+            "total_venta": 231.51,
+            "total_pagado": 0,
+            "saldo_pendiente": 231.51
+          },
+          {
+            "id_venta": 1073,
+            "total_venta": 773.47,
+            "total_pagado": 163.13,
+            "saldo_pendiente": 610.34
+          },
+          {
+            "id_venta": 1075,
+            "total_venta": 2056.88,
+            "total_pagado": 483.65,
+            "saldo_pendiente": 1573.23
+          },
+          {
+            "id_venta": 1076,
+            "total_venta": 207.8,
+            "total_pagado": 0,
+            "saldo_pendiente": 207.8
+          },
+          {
+            "id_venta": 1082,
+            "total_venta": 170.88,
+            "total_pagado": 0,
+            "saldo_pendiente": 170.88
+          },
+          {
+            "id_venta": 1084,
+            "total_venta": 2253.28,
+            "total_pagado": 1566.32,
+            "saldo_pendiente": 686.96
+          },
+          {
+            "id_venta": 1086,
+            "total_venta": 715.1,
+            "total_pagado": 0,
+            "saldo_pendiente": 715.1
+          },
+          {
+            "id_venta": 1095,
+            "total_venta": 1117.42,
+            "total_pagado": 0,
+            "saldo_pendiente": 1117.42
+          },
+          {
+            "id_venta": 1099,
+            "total_venta": 2092.96,
+            "total_pagado": 0,
+            "saldo_pendiente": 2092.96
+          },
+          {
+            "id_venta": 1111,
+            "total_venta": 2102.24,
+            "total_pagado": 0,
+            "saldo_pendiente": 2102.24
+          },
+          {
+            "id_venta": 1120,
+            "total_venta": 102.56,
+            "total_pagado": 0,
+            "saldo_pendiente": 102.56
+          },
+          {
+            "id_venta": 1121,
+            "total_venta": 747.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 747.6
+          },
+          {
+            "id_venta": 1130,
+            "total_venta": 2203.14,
+            "total_pagado": 0,
+            "saldo_pendiente": 2203.14
+          },
+          {
+            "id_venta": 1132,
+            "total_venta": 213.09,
+            "total_pagado": 0,
+            "saldo_pendiente": 213.09
+          },
+          {
+            "id_venta": 1135,
+            "total_venta": 530.64,
+            "total_pagado": 0,
+            "saldo_pendiente": 530.64
+          },
+          {
+            "id_venta": 1137,
+            "total_venta": 2361.32,
+            "total_pagado": 0,
+            "saldo_pendiente": 2361.32
+          },
+          {
+            "id_venta": 1139,
+            "total_venta": 71.33,
+            "total_pagado": 0,
+            "saldo_pendiente": 71.33
+          },
+          {
+            "id_venta": 1143,
+            "total_venta": 739.2,
+            "total_pagado": 0,
+            "saldo_pendiente": 739.2
+          },
+          {
+            "id_venta": 1152,
+            "total_venta": 1030.28,
+            "total_pagado": 0,
+            "saldo_pendiente": 1030.28
+          },
+          {
+            "id_venta": 1154,
+            "total_venta": 501.22,
+            "total_pagado": 0,
+            "saldo_pendiente": 501.22
+          },
+          {
+            "id_venta": 1167,
+            "total_venta": 258.96,
+            "total_pagado": 0,
+            "saldo_pendiente": 258.96
+          },
+          {
+            "id_venta": 1168,
+            "total_venta": 1943.56,
+            "total_pagado": 1261.99,
+            "saldo_pendiente": 681.57
+          },
+          {
+            "id_venta": 1176,
+            "total_venta": 1738.15,
+            "total_pagado": 824.27,
+            "saldo_pendiente": 913.88
+          },
+          {
+            "id_venta": 1177,
+            "total_venta": 1972.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 1972.6
+          },
+          {
+            "id_venta": 1178,
+            "total_venta": 760.95,
+            "total_pagado": 0,
+            "saldo_pendiente": 760.95
+          },
+          {
+            "id_venta": 1185,
+            "total_venta": 1564.75,
+            "total_pagado": 0,
+            "saldo_pendiente": 1564.75
+          },
+          {
+            "id_venta": 1188,
+            "total_venta": 21.75,
+            "total_pagado": 0,
+            "saldo_pendiente": 21.75
+          },
+          {
+            "id_venta": 1191,
+            "total_venta": 16.92,
+            "total_pagado": 0,
+            "saldo_pendiente": 16.92
+          },
+          {
+            "id_venta": 1195,
+            "total_venta": 849,
+            "total_pagado": 0,
+            "saldo_pendiente": 849
+          },
+          {
+            "id_venta": 1196,
+            "total_venta": 464.91,
+            "total_pagado": 218.16,
+            "saldo_pendiente": 246.75
+          },
+          {
+            "id_venta": 1207,
+            "total_venta": 1230.55,
+            "total_pagado": 0,
+            "saldo_pendiente": 1230.55
+          },
+          {
+            "id_venta": 1208,
+            "total_venta": 2870.22,
+            "total_pagado": 914.31,
+            "saldo_pendiente": 1955.91
+          },
+          {
+            "id_venta": 1210,
+            "total_venta": 1241.62,
+            "total_pagado": 0,
+            "saldo_pendiente": 1241.62
+          },
+          {
+            "id_venta": 1213,
+            "total_venta": 3387.41,
+            "total_pagado": 2539.94,
+            "saldo_pendiente": 847.47
+          },
+          {
+            "id_venta": 1219,
+            "total_venta": 878.88,
+            "total_pagado": 0,
+            "saldo_pendiente": 878.88
+          },
+          {
+            "id_venta": 1223,
+            "total_venta": 459.26,
+            "total_pagado": 0,
+            "saldo_pendiente": 459.26
+          },
+          {
+            "id_venta": 1226,
+            "total_venta": 1772.1,
+            "total_pagado": 0,
+            "saldo_pendiente": 1772.1
+          },
+          {
+            "id_venta": 1230,
+            "total_venta": 757.66,
+            "total_pagado": 0,
+            "saldo_pendiente": 757.66
+          },
+          {
+            "id_venta": 1233,
+            "total_venta": 1013.61,
+            "total_pagado": 0,
+            "saldo_pendiente": 1013.61
+          },
+          {
+            "id_venta": 1238,
+            "total_venta": 1251.32,
+            "total_pagado": 0,
+            "saldo_pendiente": 1251.32
+          },
+          {
+            "id_venta": 1243,
+            "total_venta": 3457.41,
+            "total_pagado": 0,
+            "saldo_pendiente": 3457.41
+          },
+          {
+            "id_venta": 1244,
+            "total_venta": 160.47,
+            "total_pagado": 68.1,
+            "saldo_pendiente": 92.37
+          },
+          {
+            "id_venta": 1246,
+            "total_venta": 335.76,
+            "total_pagado": 0,
+            "saldo_pendiente": 335.76
+          },
+          {
+            "id_venta": 1247,
+            "total_venta": 108.29,
+            "total_pagado": 0,
+            "saldo_pendiente": 108.29
+          },
+          {
+            "id_venta": 1249,
+            "total_venta": 2091.24,
+            "total_pagado": 0,
+            "saldo_pendiente": 2091.24
+          },
+          {
+            "id_venta": 1254,
+            "total_venta": 219.55,
+            "total_pagado": 90.45,
+            "saldo_pendiente": 129.1
+          },
+          {
+            "id_venta": 1267,
+            "total_venta": 305.62,
+            "total_pagado": 0,
+            "saldo_pendiente": 305.62
+          },
+          {
+            "id_venta": 1270,
+            "total_venta": 160.46,
+            "total_pagado": 66.9,
+            "saldo_pendiente": 93.56
+          },
+          {
+            "id_venta": 1279,
+            "total_venta": 107.55,
+            "total_pagado": 0,
+            "saldo_pendiente": 107.55
+          },
+          {
+            "id_venta": 1288,
+            "total_venta": 1302.83,
+            "total_pagado": 883.82,
+            "saldo_pendiente": 419.01
+          },
+          {
+            "id_venta": 1289,
+            "total_venta": 1546.14,
+            "total_pagado": 0,
+            "saldo_pendiente": 1546.14
+          },
+          {
+            "id_venta": 1290,
+            "total_venta": 314.3,
+            "total_pagado": 102.41,
+            "saldo_pendiente": 211.89
+          },
+          {
+            "id_venta": 1296,
+            "total_venta": 1389.63,
+            "total_pagado": 0,
+            "saldo_pendiente": 1389.63
+          },
+          {
+            "id_venta": 1302,
+            "total_venta": 1379.14,
+            "total_pagado": 794.76,
+            "saldo_pendiente": 584.38
+          },
+          {
+            "id_venta": 1305,
+            "total_venta": 979.85,
+            "total_pagado": 0,
+            "saldo_pendiente": 979.85
+          },
+          {
+            "id_venta": 1307,
+            "total_venta": 480.6,
+            "total_pagado": 0,
+            "saldo_pendiente": 480.6
+          },
+          {
+            "id_venta": 1310,
+            "total_venta": 3200.4,
+            "total_pagado": 0,
+            "saldo_pendiente": 3200.4
+          },
+          {
+            "id_venta": 1325,
+            "total_venta": 2086.38,
+            "total_pagado": 1338.55,
+            "saldo_pendiente": 747.83
+          },
+          {
+            "id_venta": 1334,
+            "total_venta": 591.33,
+            "total_pagado": 0,
+            "saldo_pendiente": 591.33
+          },
+          {
+            "id_venta": 1335,
+            "total_venta": 2088.58,
+            "total_pagado": 0,
+            "saldo_pendiente": 2088.58
+          },
+          {
+            "id_venta": 1337,
+            "total_venta": 745.44,
+            "total_pagado": 498.7,
+            "saldo_pendiente": 246.74
+          },
+          {
+            "id_venta": 1351,
+            "total_venta": 1107.34,
+            "total_pagado": 755.75,
+            "saldo_pendiente": 351.59
+          },
+          {
+            "id_venta": 1354,
+            "total_venta": 1104.45,
+            "total_pagado": 0,
+            "saldo_pendiente": 1104.45
+          },
+          {
+            "id_venta": 1357,
+            "total_venta": 1600.9,
+            "total_pagado": 0,
+            "saldo_pendiente": 1600.9
+          },
+          {
+            "id_venta": 1361,
+            "total_venta": 173.74,
+            "total_pagado": 118.81,
+            "saldo_pendiente": 54.93
+          },
+          {
+            "id_venta": 1362,
+            "total_venta": 564.12,
+            "total_pagado": 0,
+            "saldo_pendiente": 564.12
+          },
+          {
+            "id_venta": 1372,
+            "total_venta": 1236.5,
+            "total_pagado": 463.92,
+            "saldo_pendiente": 772.58
+          },
+          {
+            "id_venta": 1378,
+            "total_venta": 731.49,
+            "total_pagado": 167.31,
+            "saldo_pendiente": 564.18
+          },
+          {
+            "id_venta": 1384,
+            "total_venta": 579.15,
+            "total_pagado": 0,
+            "saldo_pendiente": 579.15
+          },
+          {
+            "id_venta": 1385,
+            "total_venta": 1464.52,
+            "total_pagado": 0,
+            "saldo_pendiente": 1464.52
+          },
+          {
+            "id_venta": 1396,
+            "total_venta": 2028.57,
+            "total_pagado": 0,
+            "saldo_pendiente": 2028.57
+          },
+          {
+            "id_venta": 1400,
+            "total_venta": 380.01,
+            "total_pagado": 0,
+            "saldo_pendiente": 380.01
+          },
+          {
+            "id_venta": 1402,
+            "total_venta": 1629.03,
+            "total_pagado": 848.31,
+            "saldo_pendiente": 780.72
+          },
+          {
+            "id_venta": 1404,
+            "total_venta": 905.37,
+            "total_pagado": 0,
+            "saldo_pendiente": 905.37
+          },
+          {
+            "id_venta": 1412,
+            "total_venta": 164.48,
+            "total_pagado": 0,
+            "saldo_pendiente": 164.48
+          },
+          {
+            "id_venta": 1414,
+            "total_venta": 1140.02,
+            "total_pagado": 0,
+            "saldo_pendiente": 1140.02
+          },
+          {
+            "id_venta": 1415,
+            "total_venta": 1756.74,
+            "total_pagado": 928.37,
+            "saldo_pendiente": 828.37
+          },
+          {
+            "id_venta": 1420,
+            "total_venta": 196.2,
+            "total_pagado": 79.8,
+            "saldo_pendiente": 116.4
+          },
+          {
+            "id_venta": 1424,
+            "total_venta": 1025.1,
+            "total_pagado": 0,
+            "saldo_pendiente": 1025.1
+          },
+          {
+            "id_venta": 1430,
+            "total_venta": 13.53,
+            "total_pagado": 7.98,
+            "saldo_pendiente": 5.55
+          },
+          {
+            "id_venta": 1431,
+            "total_venta": 1479.76,
+            "total_pagado": 0,
+            "saldo_pendiente": 1479.76
+          },
+          {
+            "id_venta": 1432,
+            "total_venta": 2677.36,
+            "total_pagado": 0,
+            "saldo_pendiente": 2677.36
+          },
+          {
+            "id_venta": 1434,
+            "total_venta": 1427.7,
+            "total_pagado": 0,
+            "saldo_pendiente": 1427.7
+          },
+          {
+            "id_venta": 1435,
+            "total_venta": 2467.82,
+            "total_pagado": 0,
+            "saldo_pendiente": 2467.82
+          },
+          {
+            "id_venta": 1437,
+            "total_venta": 1157.65,
+            "total_pagado": 728.3,
+            "saldo_pendiente": 429.35
+          },
+          {
+            "id_venta": 1444,
+            "total_venta": 717.8,
+            "total_pagado": 0,
+            "saldo_pendiente": 717.8
+          },
+          {
+            "id_venta": 1445,
+            "total_venta": 2617.96,
+            "total_pagado": 1416.97,
+            "saldo_pendiente": 1200.99
+          },
+          {
+            "id_venta": 1446,
+            "total_venta": 1369.2,
+            "total_pagado": 988.39,
+            "saldo_pendiente": 380.81
+          },
+          {
+            "id_venta": 1450,
+            "total_venta": 2290.52,
+            "total_pagado": 0,
+            "saldo_pendiente": 2290.52
+          },
+          {
+            "id_venta": 1454,
+            "total_venta": 1205.04,
+            "total_pagado": 839.15,
+            "saldo_pendiente": 365.89
+          },
+          {
+            "id_venta": 1456,
+            "total_venta": 2179.39,
+            "total_pagado": 0,
+            "saldo_pendiente": 2179.39
+          },
+          {
+            "id_venta": 1460,
+            "total_venta": 751.81,
+            "total_pagado": 467.07,
+            "saldo_pendiente": 284.74
+          },
+          {
+            "id_venta": 1462,
+            "total_venta": 392.16,
+            "total_pagado": 0,
+            "saldo_pendiente": 392.16
+          },
+          {
+            "id_venta": 1471,
+            "total_venta": 427.13,
+            "total_pagado": 0,
+            "saldo_pendiente": 427.13
+          },
+          {
+            "id_venta": 1473,
+            "total_venta": 1422.68,
+            "total_pagado": 0,
+            "saldo_pendiente": 1422.68
+          },
+          {
+            "id_venta": 1484,
+            "total_venta": 1913.1,
+            "total_pagado": 0,
+            "saldo_pendiente": 1913.1
+          },
+          {
+            "id_venta": 1487,
+            "total_venta": 1922.59,
+            "total_pagado": 0,
+            "saldo_pendiente": 1922.59
+          },
+          {
+            "id_venta": 1490,
+            "total_venta": 1497.45,
+            "total_pagado": 0,
+            "saldo_pendiente": 1497.45
+          },
+          {
+            "id_venta": 1493,
+            "total_venta": 688.5,
+            "total_pagado": 0,
+            "saldo_pendiente": 688.5
+          },
+          {
+            "id_venta": 1497,
+            "total_venta": 2615.01,
+            "total_pagado": 0,
+            "saldo_pendiente": 2615.01
+          },
+          {
+            "id_venta": 1504473366,
+            "total_venta": 0,
+            "total_pagado": 0,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1573027219,
+            "total_venta": 0,
+            "total_pagado": 0,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1573027220,
+            "total_venta": 0,
+            "total_pagado": 0,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1892196321,
+            "total_venta": 150,
+            "total_pagado": 0,
+            "saldo_pendiente": 150
+          },
+          {
+            "id_venta": 1892196322,
+            "total_venta": 0,
+            "total_pagado": 0,
+            "saldo_pendiente": 0
+          },
+          {
+            "id_venta": 1892196568,
+            "total_venta": 150,
+            "total_pagado": 0,
+            "saldo_pendiente": 150
+          },
+          {
+            "id_venta": 1892196569,
+            "total_venta": 0,
+            "total_pagado": 0,
+            "saldo_pendiente": 0
+          }
+        ]
+      }
+    }
+  ],
+  "origen": "Capturas directas del navegador consultando la API local. Sin reconstruccion HTML ni sustitucion de respuestas."
+}
