@@ -1,0 +1,247 @@
+\section{Sistema implementado}
+Comercial La Estrella administra el inventario de productos por tienda, el registro de ventas y sus abonos. La segunda fase traslada el modelo de 19 tablas a SQL Server 2022 y expone sus operaciones mediante una API REST. La instalación incluye el motor en Docker, la inicialización automática de su estructura, el servidor Express y las colecciones de Postman utilizadas para operar y verificar el sistema.
+
+La estructura de datos conserva las claves del proyecto anterior. Las existencias se gestionan por combinación de tienda y producto; el detalle conserva el precio aplicado al vender y los pagos se acumulan por venta. Las reglas de inventario y de estado se ejecutan en SQL Server, de manera que una petición HTTP no puede confirmar un movimiento que incumpla esas reglas.
+
+La operación se realiza desde Postman. La consulta estructural de tablas, restricciones, vistas y triggers puede efectuarse con DBeaver. La solución entregada no incluye frontend: las operaciones solicitadas se exponen y demuestran mediante los endpoints del backend.
+
+\subsection{Distribución de los componentes}
+\begin{center}
+\begin{tikzpicture}[node distance=7mm,box/.style={draw=accentblue!60,rounded corners=4pt,fill=codebg,text width=13cm,align=center,inner sep=7pt},arr/.style={-{Latex},thick,accentblue}]
+\node[box] (client) {\textbf{Postman}\\Peticiones CRUD, importación y consultas analíticas};
+\node[box,below=of client] (api) {\textbf{Express y TypeScript}\\Rutas por entidad, validación, controladores y respuestas HTTP};
+\node[box,below=of api] (orm) {\textbf{TypeORM y mssql}\\Repositorios, parámetros, pools y transacción de importación};
+\node[box,below=of orm] (db) {\textbf{SQL Server 2022}\\Tablas, integridad referencial, inventario, pagos y reportes};
+\node[box,below=of db] (volume) {\textbf{Docker Compose y volumen persistente}\\Motor aislado, inicialización y conservación de datos};
+\draw[arr] (client)--(api);\draw[arr] (api)--(orm);\draw[arr] (orm)--(db);\draw[arr] (db)--(volume);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Secuencia de atención de una operación}
+Express recibe el JSON y selecciona el módulo de rutas de la entidad. La validación comprueba campos, tipos y claves antes de llegar al repositorio. TypeORM ejecuta la escritura con valores parametrizados. SQL Server evalúa las restricciones y los triggers dentro de la misma operación; si se produce un rechazo, la API comunica el código y el mensaje correspondientes. Después de una escritura correcta, el servidor consulta el registro resultante para devolver su estado efectivo.
+
+En una venta, esta secuencia es especialmente importante: el resultado del POST de detalle depende de las existencias de la tienda y el estado posterior de la venta depende de los pagos efectivamente almacenados. El backend no mantiene una copia del stock ni calcula un estado independiente del motor.
+
+\section{Instalación y puesta en servicio}
+\subsection{Condiciones del entorno}
+Se utiliza Docker con contenedores Linux y el complemento Docker Compose, Node.js 22 o superior, npm y Python 3 para preparar la configuración. Postman se utiliza como cliente del servicio. Los puertos predeterminados son 1433 para SQL Server y 3000 para la API. Ambos se publican en la interfaz local.
+
+SQL Server tiene un presupuesto interno configurado de 2048 MB. Además del motor, el equipo debe disponer de memoria para Node, Postman y el sistema operativo. Ese valor no constituye un límite de memoria del contenedor. Las dependencias se instalan desde package-lock.json para conservar la versión del árbol utilizado por el proyecto.
+
+\subsection{Preparación de la configuración}
+Los comandos se ejecutan en la raíz de \texttt{Proyecto 2}:
+\begin{lstlisting}
+python3 scripts/setup-env.py
+npm ci
+\end{lstlisting}
+El primer comando crea .env a partir de la plantilla y asigna secretos aleatorios. No reemplaza un archivo existente. La configuración distingue el usuario administrativo del contenedor, el usuario normal del backend y el usuario exclusivo de la carga histórica.
+
+\begin{itemize}
+\item \path{DB_HOST}, \path{DB_PORT} y \path{DB_NAME}: servidor, puerto y base ComercialLaEstrella.
+\item \path{DB_USER} y \path{DB_PASSWORD}: credenciales del login estrella\_api.
+\item \path{IMPORT_DB_USER} y \path{IMPORT_DB_PASSWORD}: credenciales de estrella\_import.
+\item \path{IMPORT_ENABLED}: false durante la operación habitual.
+\item \path{HOST} y \path{PORT}: dirección y puerto de escucha HTTP.
+\end{itemize}
+
+El archivo local de credenciales no forma parte del repositorio ni de la entrega. Modificar una contraseña en .env no actualiza un login ya creado en el volumen: la contraseña del motor y la del archivo deben mantenerse coordinadas.
+
+\subsection{Inicio del motor e inicialización}
+\begin{lstlisting}
+docker compose up -d
+docker compose ps -a
+docker compose logs db-init
+\end{lstlisting}
+El servicio sqlserver inicia SQL Server 2022 y conserva sus archivos en el volumen del proyecto. La imagen está fijada por digest. La comprobación de salud ejecuta una consulta al motor; después de que sea satisfactoria, db-init ejecuta init.sql mediante sqlcmd.
+
+La instalación se considera preparada cuando el motor está saludable y db-init ha terminado con código 0. El inicializador crea ComercialLaEstrella, las tablas ausentes, las restricciones, los índices, las vistas, los triggers y los usuarios. No inserta los registros del histórico. Las vistas y los triggers se definen con CREATE OR ALTER, mientras que las tablas y los logins se crean únicamente si no existen.
+
+Para reaplicar la inicialización sobre el esquema previsto sin eliminar datos:
+\begin{lstlisting}
+docker compose run --rm db-init
+\end{lstlisting}
+La repetición del script no constituye una migración automática de tablas que hayan cambiado de definición. Cualquier modificación estructural posterior requiere revisar el DDL antes de aplicarla a una base existente.
+
+\subsection{Inicio y comprobación del backend}
+\begin{lstlisting}
+npm run build
+npm start
+\end{lstlisting}
+El servidor establece su conexión SQL antes de abrir el puerto HTTP. Si no consigue autenticarse o encontrar la base, no inicia el servicio normalmente. La terminal permanece abierta mientras la API está disponible. El cierre con Ctrl+C detiene la escucha y libera los pools.
+
+La comprobación inicial se realiza con GET /api/health. El servidor ejecuta SELECT 1; la respuesta satisfactoria es HTTP 200 con estado ok y database SQL Server 2022. Esta consulta permite distinguir un backend activo y conectado de un proceso que únicamente tiene abierto el puerto.
+
+% EVIDENCIA_ARRANQUE
+
+\subsection{Arranque de una instalación existente}
+Cuando el histórico ya está cargado, se inicia Compose, se verifica el motor y se ejecuta npm start con IMPORT\_ENABLED=false. No se vuelve a importar ni a generar credenciales. Si se ha modificado TypeScript, se compila antes de iniciar; para desarrollo se dispone de npm run dev.
+
+Los reinicios conservan el volumen. docker compose stop y docker compose start permiten detener y recuperar los servicios. docker compose down conserva los datos; down -v elimina el volumen y no se utiliza como procedimiento de reinicio.
+
+\section{Persistencia y adaptación del modelo}
+El modelo se organiza en ubicación, catálogos comerciales, personas y establecimientos, productos e inventario, y transacciones. pais, departamento y municipio establecen la jerarquía territorial. persona contiene los datos compartidos por cliente y empleado; tienda identifica el establecimiento donde se realiza la venta.
+
+producto conserva descripción, categoría y marca. catalogo\_producto añade el precio vigente y la existencia de ese producto en una tienda concreta. Esta separación permite que un mismo producto tenga distinta disponibilidad y precio en cada establecimiento. La venta identifica tienda, empleado, cliente, fecha y estado; detalle\_venta conserva cantidades y precios históricos; pago registra cada abono y su método.
+
+\subsection{Claves y consistencia entre establecimientos}
+catalogo\_producto utiliza la PK compuesta id\_tienda, id\_producto. detalle\_venta utiliza id\_venta, id\_producto. Estas claves impiden duplicar la misma asociación y se conservan en el orden de los segmentos HTTP.
+
+La FK compuesta de venta sobre empleado(id\_empleado,id\_tienda) impide registrar una operación en una tienda distinta de la asignada al empleado. La integridad no depende de que Postman seleccione correctamente el empleado: el motor rechaza la combinación inválida.
+
+\subsection{Tipos y conservación de los datos}
+Los identificadores se mantienen explícitos y no utilizan IDENTITY. Los valores NUMBER de la fase anterior se expresan como INT o DECIMAL(12,2); los textos se almacenan como NVARCHAR y las fechas como DATETIME2(0). Los valores de fecha se interpretan en UTC para evitar desplazamientos durante la carga y la lectura.
+
+Los 45 correos ausentes del histórico se conservan como NULL. El índice único filtrado de persona incluye únicamente correos no nulos; así se permiten varios registros sin correo y se conserva la unicidad de los correos presentes. Los importes deben ser positivos, las existencias no negativas y el subtotal debe coincidir con cantidad por precio unitario.
+
+\section{Carga histórica y conciliación}
+La carga inicial procede de las 19 hojas del dataset de la fase 1. Se entrega su conversión JSON y un manifiesto de conteos. El proceso conserva identificadores, importes, fechas, estados y existencias originales. El resumen de filas se presenta al final de esta sección.
+
+\subsection{Procedimiento de carga inicial}
+La importación solo se realiza sobre las 19 tablas de negocio vacías. Se detiene la API, se habilita temporalmente IMPORT\_ENABLED=true y se inicia de nuevo. Desde otra terminal se ejecuta:
+\begin{lstlisting}
+npm run import:historico
+\end{lstlisting}
+El cliente envía POST /api/admin/importacion con el archivo completo y la cabecera X-Import-Key. La respuesta correcta es HTTP 201, mensaje Historico importado y conciliado y total 9068. Terminada la carga, se restaura IMPORT\_ENABLED=false y se reinicia el backend. GET /api/admin/importacion debe confirmar importado=true y detalle.filas=9068.
+
+La colección separada de importación permite enviar el mismo archivo desde Postman mediante Body en modo binary. La clave se define localmente. Esta colección no interviene en las ejecuciones habituales de CRUD y triggers.
+
+\subsection{Control del archivo y exclusión de cargas simultáneas}
+El servicio compara la representación canónica del cuerpo con el archivo original mediante SHA-256 y valida cada campo con las reglas de la entidad. Un archivo modificado se rechaza antes de escribir. La exclusión en memoria se reserva antes de la primera lectura asíncrona; dentro de SQL se adquiere además un bloqueo exclusivo de aplicación asociado a la transacción.
+
+La transacción SERIALIZABLE consulta el registro de importación y comprueba que las tablas están vacías. La carga se realiza en orden de dependencias y en bloques de 50 filas. Una segunda carga completa se rechaza con 409; una ruta deshabilitada responde 404 y una clave incorrecta, cuando está habilitada, responde 401.
+
+\subsection{Conservación del inventario histórico}
+Las existencias del dataset ya representan su situación histórica. Descontar nuevamente todos sus detalles produciría un saldo distinto del original. Para esta única carga se utiliza estrella\_import, miembro del rol importador, y un contexto de sesión temporal. Los triggers operativos reconocen la combinación de ambas condiciones para omitir el descuento y el recálculo del estado durante la importación.
+
+Las PK, FK, CHECK e índices siguen activos. El login normal de la API no pertenece al rol y no puede habilitar esa excepción únicamente asignando el contexto. La excepción tampoco permite introducir un archivo arbitrario: la comparación previa exige el contenido original.
+
+\subsection{Conciliación antes de confirmar}
+El servicio vuelve a leer todas las tablas, ordena por clave y compara todos sus valores con el contenido de origen. Las fechas se normalizan antes de comparar. Si difiere un valor o falla una sentencia, se revierte la carga completa. Solo después de conciliar se registra fecha, número de filas y hash y se confirma la transacción. Finalmente se limpia el contexto y se destruye el pool especial, incluso en una salida por error.
+
+El total 9068 corresponde a esa carga, no al conteo permanente de la base. Las operaciones de prueba posteriores pueden añadir filas sin cambiar el registro de importación.
+
+% TABLA_HISTORICO
+
+\section{Operación del servicio REST}
+La base de las peticiones es \url{http://127.0.0.1:3000/api}. POST y PUT utilizan Content-Type application/json. La API admite campos declarados por entidad; un campo desconocido, una clave primaria en PUT o un objeto de actualización vacío se rechazan antes de la escritura.
+
+\subsection{Alta, consulta, modificación y eliminación}
+POST /api/entidad crea un registro con sus identificadores explícitos y devuelve 201 con el objeto almacenado. GET del listado devuelve data, total, limit y offset. GET de una clave devuelve el registro o 404. PUT modifica uno o varios campos permitidos y devuelve el registro actualizado. DELETE devuelve 204 sin cuerpo; las referencias o protecciones de negocio pueden impedirlo con 409.
+
+Los listados se ordenan por PK. limit admite 1 a 500 y usa 100 por defecto; offset comienza en cero. Para recorrer una tabla grande se conserva el límite y se aumenta offset. El valor total indica las filas de la entidad y no solo las de la página.
+
+% EVIDENCIA_CRUD
+
+\subsection{Validación aplicada}
+Los IDs y las cantidades se envían como números enteros positivos; existencia\_actual admite cero. Los importes se envían como números JSON con hasta dos decimales. Las fechas aceptan YYYY-MM-DD o YYYY-MM-DDTHH:mm:ss; el servidor puede devolverlas con Z al representarlas en JSON. correo admite una dirección válida o NULL. Las longitudes de texto corresponden al esquema SQL.
+
+En pago, id\_venta no puede cambiarse mediante PUT. En venta, las restricciones adicionales dependen del estado y de la existencia de detalles o pagos. Los errores de integridad se traducen a respuestas HTTP sin exponer consultas completas ni credenciales.
+
+% TABLA_RUTAS
+
+\section{Gestión del inventario y registro del detalle}
+El alta de un detalle requiere una venta REGISTRADA sin pagos y un catálogo del producto en la tienda de esa venta. El precio unitario se conserva en el detalle; no se recalcula a partir del precio vigente al consultar operaciones históricas. cantidad debe ser positiva y subtotal igual a cantidad multiplicada por precio\_unitario.
+
+\subsection{Ajuste aplicado por Insert\_Detalle}
+Insert\_Detalle reúne las ventas afectadas, bloquea sus encabezados y verifica que admitan cambios. Después agrupa las filas nuevas y anteriores por tienda y producto. El ajuste utilizado es la suma de cantidades nuevas menos la suma de cantidades anteriores.
+
+Con una inserción de dos unidades se descuentan dos. Al modificar de dos a tres se descuenta solo una adicional. Al eliminar ese detalle se devuelven las tres unidades. La operación se calcula por conjunto de filas, por lo que también cubre los lotes.
+
+La actualización del catálogo exige existencias suficientes y usa UPDLOCK y HOLDLOCK. El trigger comprueba que se hayan actualizado todos los grupos del movimiento. Si falta un catálogo o no alcanza alguna existencia, lanza el error 51001; la API devuelve 400 con Stock insuficiente. Se revierten tanto el detalle como los descuentos efectuados por esa sentencia.
+
+\subsection{Resultado de una venta válida y de un rechazo}
+La comprobación realizada para este manual utiliza un producto nuevo, existencia 10 y una venta registrada en tienda 1. Una solicitud de 11 unidades se rechaza y la consulta posterior conserva existencia 10; tampoco existe el detalle rechazado. Una solicitud de dos unidades se acepta y deja existencia 8. Las capturas de la sección de resultados corresponden al GET de la API después de cada operación.
+
+% EVIDENCIA_INVENTARIO
+
+\subsection{Lotes y solicitudes concurrentes}
+POST /api/detalle\_venta/lote admite de 1 a 100 objetos. La inserción se envía como una sola sentencia. Si dos filas del lote consumen el mismo producto de una tienda, el trigger valida su suma; no evalúa cada fila como si dispusiera del stock inicial por separado. Si una falla, el lote no conserva cambios parciales.
+
+Las solicitudes concurrentes también se resuelven en el motor. La condición de disponibilidad y los bloqueos protegen las mismas existencias frente a operaciones que llegan simultáneamente. Los conflictos de bloqueo clasificados por el middleware responden 409 y pueden requerir reintento. La prueba de concurrencia verifica que no se vendan las mismas últimas unidades dos veces.
+
+\section{Registro de pagos y conciliación de la venta}
+Cada pago almacena venta, método e importe. La venta debe tener detalles y no estar anulada. El pago se registra con un ID propio y no se traslada posteriormente a otra venta. La corrección de su monto o su eliminación sí provoca un nuevo cálculo del estado.
+
+\subsection{Actualización realizada por Insert\_Pago}
+El trigger identifica las ventas afectadas y bloquea sus encabezados. Obtiene por separado la suma de subtotales y la suma de abonos. Si el total de la venta es mayor que cero y los abonos lo cubren o superan, asigna PAGADA; en otro caso mantiene o restablece REGISTRADA.
+
+La implementación acepta un importe abonado superior al total. En ese caso el saldo calculado puede ser negativo. El comportamiento no debe confundirse con un rechazo por sobrepago: el criterio del estado es cobertura del total, no igualdad estricta.
+
+\subsection{Secuencia comprobada con abonos}
+En la venta de dos unidades a Q25 el total es Q50. El primer pago de Q20 conserva REGISTRADA, total\_pagado=20 y saldo\_pendiente=30. El segundo pago de Q30 hace que SQL Server asigne PAGADA, con total\_pagado=50 y saldo\_pendiente=0. El resultado se obtiene mediante GET de la venta, que consulta la vista auxiliar con los importes consolidados.
+
+% EVIDENCIA_PAGOS
+
+\subsection{Correcciones y protección de movimientos}
+Reducir o eliminar un abono puede devolver la venta a REGISTRADA cuando los pagos restantes no cubren el total. Los detalles no se modifican mientras existen pagos, evitando que una venta abonada cambie de importe por una edición del detalle. Una venta sin detalles no recibe pagos y una venta anulada tampoco admite nuevos abonos.
+
+\section{Cambios de estado, anulación y protección del histórico}
+Las ventas nuevas comienzan REGISTRADA. Validar\_Venta bloquea el cambio manual a PAGADA y permite el cambio interno que realiza Insert\_Pago. Cuando existen detalles o pagos, la tienda, el empleado, el cliente y la fecha dejan de ser modificables: cambiar esos datos alteraría la asociación de movimientos ya registrados.
+
+Una venta REGISTRADA sin pagos puede anularse. El trigger agrupa las cantidades de sus detalles y devuelve el inventario a cada catálogo. La devolución ocurre únicamente en la transición al estado ANULADA. Un intento posterior de repetir la transición se rechaza, evitando devolver las unidades más de una vez. La venta anulada queda protegida y se excluye de los reportes operativos.
+
+Proteger\_Catalogo impide borrar un catálogo que da contexto a detalles existentes. Las FK impiden borrar ventas con detalles o pagos asociados. No se configura borrado en cascada de esos movimientos. Los estados del sistema se mantienen fijos: 1 REGISTRADA, 2 PAGADA y 3 ANULADA; su modificación o eliminación se rechaza.
+
+\section{Consultas analíticas}
+Los endpoints de reportes consultan las vistas definidas en init.sql. Las agregaciones se ejecutan en SQL Server y el backend aplica un orden de presentación. Las respuestas contienen data como arreglo; los valores reflejan los datos presentes al momento de la consulta, incluidos los movimientos de prueba que no se hayan eliminado.
+
+\subsection{Ventas por ubicación}
+Vista\_Ventas\_Ubicacion relaciona la venta con tienda, municipio, departamento y país. Antes de agrupar por tienda obtiene el total de cada venta desde sus detalles; así el número de ventas no se multiplica por la cantidad de productos de cada una. Excluye ventas ANULADA y devuelve cantidad\_ventas y total\_facturado junto con la ubicación.
+
+La vista parte de las ventas existentes. Una tienda sin ventas no aparece solamente por existir en el catálogo de tiendas. El endpoint /api/reportes/ventas-ubicacion ordena por id\_tienda.
+
+\subsection{Productos vendidos}
+Vista\_Top\_Productos agrupa los detalles de ventas no anuladas por producto, categoría y marca. Suma unidades e importe vendido y conserva el código del producto. El endpoint /api/reportes/top-productos ordena por unidades descendentes y código como desempate; devuelve todos los productos presentes en la agregación, no únicamente diez.
+
+\subsection{Saldos y consulta consolidada de ventas}
+Vista\_Consulta\_Ventas preagrupa los detalles y los pagos en dos conjuntos distintos, y después los relaciona con el encabezado. Una unión directa de varios detalles con varios abonos repetiría los importes. Al agregarlos antes, cada venta recibe un único total vendido y un único total pagado. COALESCE representa los conjuntos ausentes con cero.
+
+El saldo se calcula como total\_venta menos total\_pagado. Vista\_Saldos\_Pendientes selecciona de esa consulta las ventas REGISTRADA. El endpoint /api/reportes/saldos-pendientes devuelve sus IDs e importes. Los GET de venta utilizan la vista auxiliar para mostrar también estado y saldos. Algunos agregados BIGINT pueden aparecer como cadenas JSON en la respuesta del controlador.
+
+% EVIDENCIA_REPORTES
+
+\section{Uso de las colecciones de Postman}
+Se importan ComercialLaEstrella.postman\_collection.json y local.postman\_environment.json. El primero crea Comercial La Estrella - Fase 2 en Collections; el segundo crea Comercial La Estrella local en Environments. Debe seleccionarse el entorno antes de enviar las peticiones.
+
+La colección se ejecuta en el orden Preparacion, CRUD por entidad, Limpieza auxiliares, Triggers y Vistas. La preparación crea las dependencias que necesitan las entidades posteriores; la limpieza elimina los auxiliares del CRUD respetando sus referencias. Las pruebas de triggers mantienen movimientos identificables para consultar sus resultados.
+
+\subsection{Preparación de cada ejecución}
+baseUrl toma la dirección del servidor. runId, auxId y payId se generan en el script Pre-request de Iniciar ejecucion y comprobar conexion. Se conserva ese conjunto de identificadores durante toda la ejecución. Repetir un POST Crear sin regenerarlos vuelve a intentar la misma PK y puede responder 409.
+
+Para una nueva sesión se ejecuta una vez esa primera petición y se continúa en orden. No borra registros, no reinicia el backend y no repite la carga histórica. Tampoco se debe ejecutar a mitad de un CRUD: las consultas siguientes pasarían a referirse a otros IDs. El rango aleatorio reduce colisiones, pero no garantiza que nunca coincidan con una ejecución anterior.
+
+\subsection{Interpretación de los resultados}
+El CRUD habitual debe producir 201 al crear, 200 al listar, buscar y actualizar, 204 al eliminar y 404 al confirmar que ya no existe. En estado\_venta se esperan 409 en las escrituras protegidas. En inventario se espera 400 al pedir más unidades que las disponibles. En cada caso se verifica la aserción de Test Results y el cuerpo, no solamente el color del código HTTP.
+
+Run collection con una iteración ejecuta la secuencia completa. Las carpetas aisladas requieren haber preparado antes las dependencias correspondientes. La colección de importación se reserva para la carga inicial de una base vacía y no forma parte de este recorrido habitual.
+
+\section{Acceso a datos y control de errores}
+El backend utiliza un módulo de rutas por entidad y un controlador común construido desde los metadatos declarados. Los campos del JSON y sus restricciones se validan con Zod. EntitySchema conserva nombres, claves y tipos SQL; las relaciones físicas se mantienen en el DDL. synchronize y migrationsRun permanecen desactivados para que el arranque del ORM no reescriba la estructura.
+
+El pool habitual permite hasta cinco conexiones y el de importación una. disableOutputReturning evita que el ORM genere OUTPUT sin INTO en escrituras sobre tablas con triggers. Después de insertar o actualizar, el controlador consulta el registro y devuelve el resultado definitivo.
+
+El error SQL 51001 se traduce a 400 con Stock insuficiente. Los rechazos de negocio 51002 se comunican como 409. Los duplicados 2601 y 2627, las referencias 547 y los conflictos de bloqueo clasificados también se comunican como 409. La entrada inválida responde 400; un recurso inexistente, 404; y un cuerpo que supera el límite de 10 MB, 413. Los errores no clasificados responden 500 sin divulgar consultas o credenciales.
+
+\section{Verificación de la instalación y mantenimiento}
+\subsection{Comprobaciones automatizadas}
+\begin{lstlisting}
+npm test
+npm run test:integration
+npm run postman
+\end{lstlisting}
+Las pruebas de integración y Postman requieren la API iniciada y el histórico cargado. Realizan escrituras por HTTP y dejan algunos escenarios de demostración. La evidencia de la ejecución inicial registra cuatro pruebas unitarias, ocho escenarios de integración y 144 peticiones de Postman con 155 aserciones aprobadas.
+
+La cobertura incluye CRUD de entidades relacionadas, rechazos de entrada, ajustes de inventario por inserción, actualización y eliminación, abonos y correcciones, lotes atómicos, competencia por existencias, anulación y comparación de las vistas con una referencia calculada a partir de las consultas HTTP.
+
+\subsection{Persistencia}
+La verificación de persistencia conserva las respuestas del estado de importación y de una venta pagada, reinicia SQL Server y vuelve a consultarlas. Se comparan ID, estado, total vendido, total abonado, saldo y hash del histórico. El registro guardado confirma que se conservaron después del reinicio. Esta operación utiliza el volumen existente y no requiere cargar nuevamente los datos.
+
+\subsection{Diagnóstico operativo}
+Si Postman no puede conectarse, se revisan la terminal de Node, baseUrl y el puerto de la API. Si falla la autenticación SQL, se comprueban salud del motor, salida de db-init y coincidencia de las credenciales con el volumen. Un db-init terminado con código 0 es normal; cualquier otro código requiere revisar su log antes de operar.
+
+Un 409 de duplicado exige revisar el ID utilizado; uno por referencias exige tratar los registros asociados en el orden del negocio. Un 400 de inventario se verifica consultando el catálogo de la tienda y producto de la venta. Una ruta de importación deshabilitada devuelve 404 de forma prevista. Ninguno de esos casos se corrige borrando el volumen o desactivando restricciones.
+
+\subsection{Inspección y resguardo}
+DBeaver se conecta a ComercialLaEstrella con los parámetros locales y permite revisar el esquema dbo, sus restricciones, vistas y triggers. Las modificaciones de negocio se realizan mediante la API. El modo de solo lectura de la herramienta no sustituye los permisos SQL del usuario utilizado.
+
+Las credenciales se conservan en .env fuera del control de versiones. El acceso HTTP y SQL se mantiene local; el backend no implementa autenticación general para publicación en Internet. La entrega se prepara con el código, el DDL, Compose, datos, colecciones y documentación, excluyendo secretos y dependencias instaladas.
