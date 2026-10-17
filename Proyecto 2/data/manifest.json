@@ -1,0 +1,26 @@
+{
+  "source": "Proyecto 1/data/dataset_comercial_la_estrella.xlsx",
+  "counts": {
+    "pais": 3,
+    "departamento": 32,
+    "municipio": 80,
+    "tipo_tienda": 4,
+    "tipo_identificacion": 3,
+    "cargo": 4,
+    "categoria": 10,
+    "marca": 15,
+    "estado_venta": 3,
+    "metodo_pago": 4,
+    "persona": 388,
+    "tienda": 20,
+    "empleado": 88,
+    "cliente": 300,
+    "producto": 114,
+    "catalogo_producto": 1424,
+    "venta": 1500,
+    "detalle_venta": 3687,
+    "pago": 1389
+  },
+  "total": 9068,
+  "nullEmails": 45
+}
